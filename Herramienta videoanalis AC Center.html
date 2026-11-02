@@ -1821,8 +1821,8 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <span class="time" id="vZoomLbl">Zoom ×1</span>
       <button class="btn" id="vZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
       <span class="vPlayMode" id="vPlayMode" hidden role="group" aria-label="Qué parte del vídeo se ve en la línea de tiempo">
-        <button type="button" class="btn" id="vModePlay" aria-pressed="true" title="Solo el tiempo de juego (1ª y 2ª parte seguidas)">En juego</button>
-        <button type="button" class="btn" id="vModeAll" aria-pressed="false" title="Vídeo entero: lo anterior, el descanso y lo posterior al partido">Sin juego</button>
+        <button type="button" class="btn" id="vModePlay" aria-pressed="true" title="Solo el tiempo de juego (1ª y 2ª parte seguidas)">Solo juego</button>
+        <button type="button" class="btn" id="vModeAll" aria-pressed="false" title="Vídeo entero: lo anterior, el descanso y lo posterior al partido">Con sobrante</button>
       </span>
       <button class="btn" id="vZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
       <input type="range" id="vZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
@@ -2208,7 +2208,6 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <div id="edMsg">Sube uno o varios vídeos, realiza cortes, asigna el nombre al evento y descárgalos a tu ordenador.</div>
         <div class="row" style="justify-content:center">
           <label class="btn primary" for="edFile">Subir vídeo</label>
-          <button class="btn" id="edUseVisor">Usar el vídeo del visor</button>
           <button class="btn" id="edTutorial" title="Mira paso a paso cómo se usa el editor">▶ Ver tutorial</button>
         </div>
         <div class="edDropNote" style="font-size:12px;opacity:.8">También puedes arrastrarlo aquí. Puedes seleccionar varios archivos a la vez.</div>
@@ -2274,12 +2273,11 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <span class="time" id="edZoomLbl">Zoom ×1</span>
       <button class="btn" id="edZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
       <span class="vPlayMode" id="edPlayMode" hidden role="group" aria-label="Qué parte del vídeo se ve en la línea de tiempo">
-        <button type="button" class="btn" id="edModePlay" aria-pressed="false" title="Ajusta la línea de tiempo al tiempo de juego (de inicio de 1ª parte a fin del partido)">En juego</button>
-        <button type="button" class="btn" id="edModeAll" aria-pressed="true" title="Vídeo entero: lo anterior, el descanso y lo posterior al partido">Sin juego</button>
+        <button type="button" class="btn" id="edModePlay" aria-pressed="false" title="Solo el tiempo de juego (1ª y 2ª parte seguidas, sin descanso)">Solo juego</button>
+        <button type="button" class="btn" id="edModeAll" aria-pressed="true" title="Vídeo entero: lo anterior, el descanso y lo posterior al partido">Con sobrante</button>
       </span>
       <button class="btn" id="edZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
       <input type="range" id="edZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
-      <button type="button" class="btn acfcLink" id="edRegEvToggle" aria-pressed="false" title="Ver en la línea de tiempo los eventos registrados en el Registro con vídeo">Ver eventos registrados</button>
       <button type="button" class="btn acfcLink" id="edCtlAllToggle" title="Ocultar/mostrar toda la barra de botones (A/B, marcas de partes) y los datos del evento">Ocultar controles</button>
     </div>
     <div id="edRegEv" hidden>
@@ -2498,6 +2496,9 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
           <option value="720" selected>720p</option>
         </select>
       </label>
+      <label>Fotogramas
+        <select id="convFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select>
+      </label>
       <button type="button" class="btn primary" id="convGo" disabled>Convertir a MP4</button>
       <button type="button" class="btn" id="convCancel" hidden>Cancelar</button>
     </div>
@@ -2537,6 +2538,9 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
           <option value="1080">1080p</option>
           <option value="720" selected>720p</option>
         </select>
+      </label>
+      <label>Fotogramas
+        <select id="fusFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select>
       </label>
       <button type="button" class="btn primary" id="fusGo" disabled>Unir vídeos</button>
       <button type="button" class="btn" id="fusCancel" hidden>Cancelar</button>
@@ -2896,7 +2900,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <div class="tutVid" hidden><b>Partido.mp4</b></div>
         <div class="tutEmpty">
           <div>Sube uno o varios vídeos, realiza cortes, asigna el nombre al evento y descárgalos a tu ordenador.</div>
-          <div class="tutRow"><span class="tutB red" data-k="up">Subir vídeo</span><span class="tutB">Usar el vídeo del visor</span><span class="tutB">▶ Ver tutorial</span></div>
+          <div class="tutRow"><span class="tutB red" data-k="up">Subir vídeo</span><span class="tutB">▶ Ver tutorial</span></div>
           <small>También puedes arrastrarlo aquí. Puedes seleccionar varios archivos a la vez.</small>
         </div>
         <div class="tutBusy" hidden><b>Exportando…</b><div class="tutBar"><i></i></div><span>Cada tramo se guarda como un archivo</span></div>
@@ -6654,7 +6658,6 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     e.target.value=""; };
   $("edStage").addEventListener("dragover",e=>e.preventDefault());
   $("edStage").addEventListener("drop",e=>{ e.preventDefault(); Array.from(e.dataTransfer.files).forEach(addSourceFromFile); });
-  $("edUseVisor").onclick=addSourceFromVisor;
 
   // ---------- modelo ----------
   const redoMap=new WeakMap();
@@ -6947,7 +6950,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     const curId=sources[curSrc]&&sources[curSrc].id;
     added.forEach((it,i)=>{ if(it.srcId!==curId) return;
       const b=document.createElement("div"); b.className="doneCut"; b.style.setProperty("--dc",evColor(it.name));
-      b.style.left=(it.s/d*100)+"%"; b.style.width=((it.e-it.s)/d*100)+"%";
+      b.style.left=epc(it.s)+"%"; b.style.width=(epc(it.e)-epc(it.s))+"%";
       if(!matchF(it)) b.classList.add("dimF");
       // si el tramo asoma por fuera de los marcadores A–B actuales, no se pinta esa parte sobrante
       if(it!==activeAdded&&(inP>0.05||outP<d-0.05)&&it.s<outP&&it.e>inP&&(it.s<inP||it.e>outP)){
@@ -6959,21 +6962,21 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       b.dataset.add=i; b.title=`Corte añadido${it.name?": "+it.name:" #"+(i+1)} · ${fmt(it.s)}–${fmt(it.e)} (clic para seleccionarlo, arrastra para moverlo)`; wrap.append(b);
     });
     stills.forEach((k,i)=>{ if(k.srcId!==curId) return;
-      const m=document.createElement("div"); m.className="stillMk"; m.style.left=(k.t/d*100)+"%";
+      const m=document.createElement("div"); m.className="stillMk"; m.style.left=epc(k.t)+"%";
       m.title="Captura pintada "+(i+1)+" · "+fmt(k.t); wrap.append(m); });
     segs.forEach((g,i)=>{
       const n=document.createElement("div"); n.className="seg"+(g.off?" off":"")+(i===sel?" sel":"");
-      n.style.left=(g.s/d*100)+"%"; n.style.width=((g.e-g.s)/d*100)+"%"; n.title=`Tramo ${i+1}: ${fmt(g.s)}–${fmt(g.e)}`;
+      n.style.left=epc(g.s)+"%"; n.style.width=(epc(g.e)-epc(g.s))+"%"; n.title=`Tramo ${i+1}: ${fmt(g.s)}–${fmt(g.e)}`;
       n.dataset.i=i; wrap.append(n);
     });
     if(bPend&&(activeAdded||inP<=0.05||outP<d-0.05)) bPend=false;
     ["hOut","hOutTime","trimDur","shOut"].forEach(k=>{ $(k).style.display=bPend?"none":""; });
-    $("shIn").style.left="0"; $("shIn").style.width=(inP/d*100)+"%";
-    $("shOut").style.left=(outP/d*100)+"%"; $("shOut").style.right="0";
-    $("hIn").style.left=(inP/d*100)+"%"; $("hOut").style.left=(outP/d*100)+"%";
-    $("hInTime").style.left=(inP/d*100)+"%"; $("hInTime").textContent=matchClockText(inP);
-    $("hOutTime").style.left=(outP/d*100)+"%"; $("hOutTime").textContent=matchClockText(outP);
-    $("trimDur").style.left=((inP+outP)/2/d*100)+"%"; $("trimDur").textContent=fmt(outP-inP);
+    $("shIn").style.left="0"; $("shIn").style.width=epc(inP)+"%";
+    $("shOut").style.left=epc(outP)+"%"; $("shOut").style.right="0";
+    $("hIn").style.left=epc(inP)+"%"; $("hOut").style.left=epc(outP)+"%";
+    $("hInTime").style.left=epc(inP)+"%"; $("hInTime").textContent=matchClockText(inP);
+    $("hOutTime").style.left=epc(outP)+"%"; $("hOutTime").textContent=matchClockText(outP);
+    $("trimDur").style.left=((epc(inP)+epc(outP))/2)+"%"; $("trimDur").textContent=fmt(outP-inP);
     { const pl=[marks.p1,marks.p1e,marks.p2,marks.end]; const jug=pl.every(x=>typeof x==="number")?(marks.p1e-marks.p1)+(marks.end-marks.p2):null;
       const fmtS=t=>{ const s=Math.round(Math.max(0,t||0)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); };
       $("edTrimInfo").textContent=bPend?"· Inicio "+matchClockText(inP)+"\n· Marca el punto B para fijar el fin":"· Inicio "+matchClockText(inP)+" · Fin "+matchClockText(outP)+"\n· Duración "+fmtS(outP-inP);
@@ -6981,10 +6984,9 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=true; renderMarks(d); tick(); if(window.acfcABWin&&window.acfcABWin.refresh) window.acfcABWin.refresh(); // el botón «+ Añadir» ya no se muestra: Punto B añade el tramo
   }
   // ---------- eventos registrados (los del Registro con vídeo), en filas por categoría y de solo lectura ----------
-  var regEvOn=false; try{ regEvOn=localStorage.getItem("acfcEdRegEv")==="1"; }catch(e){}
+  var regEvOn=false; // el botón «Ver eventos registrados» se ha quitado: la vista queda siempre oculta
   function renderRegEv(){
-    const box=$("edRegEv"), tb=$("edRegEvToggle");
-    tb.setAttribute("aria-pressed",regEvOn); tb.textContent=regEvOn?"Ocultar eventos registrados":"Ver eventos registrados";
+    const box=$("edRegEv");
     box.hidden=!regEvOn; if(!regEvOn) return;
     const lbl=$("edRegLbl"), rows=$("edRegRows"); lbl.replaceChildren(); rows.replaceChildren();
     const d=dur(), src=sources[curSrc], api=window.acfcRegEvents, say=t=>{ const m=document.createElement("div"); m.className="edRegEmpty"; m.textContent=t; rows.append(m); };
@@ -7002,17 +7004,16 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       l.append(dot,nm,cn); lbl.append(l);
       const row=document.createElement("div"); row.className="catRow";
       its.forEach(e=>{ if(e.b<=0||e.a>=d) return;
-        const w=Math.max(0.25,(e.b-e.a)/d*100), chip=document.createElement("div");
-        chip.className="chip"; chip.style.left=(e.a/d*100)+"%"; chip.style.minWidth="max("+w+"%, 8px)"; chip.style.background=color;
+        if(edPM()&&edPM().out(e.a,e.b)) return; const w=Math.max(0.25,epc(e.b)-epc(e.a)), chip=document.createElement("div");
+        chip.className="chip"; chip.style.left=epc(e.a)+"%"; chip.style.minWidth="max("+w+"%, 8px)"; chip.style.background=color;
         chip.title=e.min+" · "+e.cat+(e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+" · "+fmt(e.b-e.a);
         row.append(chip); });
       row.onclick=ev=>{ // clic en la fila: salta al evento bajo el cursor, o al más cercano
-        const r=$("edRegZoom").getBoundingClientRect(), t=(ev.clientX-r.left)/r.width*d;
+        const r=$("edRegZoom").getBoundingClientRect(), t=ept((ev.clientX-r.left)/r.width);
         const hit=its.find(x=>t>=x.a&&t<=x.b)||its.reduce((p,x)=>Math.abs(x.a-t)<Math.abs(p.a-t)?x:p,its[0]);
         V.currentTime=Math.max(0,hit.a); tick(); };
       rows.append(row); });
     tick(); }
-  $("edRegEvToggle").onclick=()=>{ regEvOn=!regEvOn; try{ localStorage.setItem("acfcEdRegEv",regEvOn?"1":"0"); }catch(e){} renderRegEv(); applyZoom(); };
   document.addEventListener("acfcRegEv",()=>{ if(regEvOn) renderRegEv(); });
   $("tabBtnEditor").addEventListener("click",()=>{ if(regEvOn) renderRegEv(); });
   // el rótulo del corte se adapta a su anchura: reduce letra y espaciado hasta que quepa (mínimo 6px; si aun así no cabe, puntos suspensivos)
@@ -7035,9 +7036,9 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc+" · 🎬 "+fmt(t).replace(/\.\d$/,"")):"";
     $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
-    $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
-    $("edRegHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
-    if(edZoom>1&&d&&Date.now()-edPanTs>2500){ const f=t/d; if(f<edZv||f>edZv+1/edZoom){ edZv=f-0.5/edZoom; applyZoom(); } } // el zoom sigue al cabezal
+    $("edHead").style.left=(d?epc(t):0)+"%";
+    $("edRegHead").style.left=(d?epc(t):0)+"%";
+    if(edZoom>1&&d&&Date.now()-edPanTs>2500){ const f=epc(t)/100; if(f<edZv||f>edZv+1/edZoom){ edZv=f-0.5/edZoom; applyZoom(); } } // el zoom sigue al cabezal
     // etiqueta sobre el vídeo (como en el registro de eventos): corte añadido que contiene el cabezal
     const curId=sources[curSrc]&&sources[curSrc].id, ov=$("edOv");
     let hit=-1; added.forEach((it,i)=>{ if(it.srcId===curId&&t>=it.s&&t<=it.e&&(hit<0||it===activeAdded||added[hit]!==activeAdded&&it.s>=added[hit].s)) hit=i; });
@@ -7059,18 +7060,21 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     Object.keys(MARK_IDS).forEach(k=>{
       const t=marks[k], id=MARK_IDS[k], ln=$("ml"+id), lb=$("ml"+id+"Lbl"), btn=$("edMark"+id);
       const label=MARK_LABELS[k];
-      if(t==null||!d){ ln.style.display="none"; lb.classList.remove("on"); btn.textContent=label; }
+      if(t==null||!d||edPM()){ ln.style.display="none"; lb.classList.remove("on"); btn.textContent=label; }
       else{ const pctv=t/d*100; ln.style.display="block"; ln.style.left=pctv+"%";
         lb.classList.add("on"); lb.style.left=pctv+"%"; lb.textContent=MARK_SHORT[k]+"\n"+fmt(t);
         btn.textContent=label; btn.title=label+" · "+fmt(t); }
     });
-    window.renderHalfBands($("edBandP1"),$("edBandP2"),marks,d);
+    window.renderHalfBands($("edBandP1"),$("edBandP2"),marks,d,!!edPM());
     edModeUI(d);
   }
   // «En juego» / «Sin juego»: En juego ajusta la línea de tiempo del editor de inicio de 1ª parte a fin del partido; Sin juego muestra el vídeo entero
   var edOnly=false;
+  function edPM(){ const d=dur(); return edOnly&&d?window.acfcPlayMap(marks,d):null; }
+  function epc(t){ const d=dur(), pm=edPM(); return pm?pm.f(t)*100:Math.max(0,Math.min(100,t/d*100)); }
+  function ept(f){ const pm=edPM(); f=Math.max(0,Math.min(1,f)); return pm?pm.t(f):f*dur(); }
   function edModeUI(d){
-    const full=!!d&&[marks.p1,marks.p1e,marks.p2,marks.end].every(x=>typeof x==="number")&&marks.p1<marks.end;
+    const full=!!d&&!!window.acfcPlayMap(marks,d);
     const g=$("edPlayMode"); if(!g) return; g.hidden=!full;
     $("edModePlay").setAttribute("aria-pressed",edOnly); $("edModeAll").setAttribute("aria-pressed",!edOnly);
   }
@@ -7138,13 +7142,11 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     else if(edZoom>1&&(e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))){ e.preventDefault(); edZv+=(e.deltaX||e.deltaY)/tr.clientWidth/edZoom; edPanTs=Date.now(); applyZoom(); } },{passive:false});
   V.addEventListener("loadedmetadata",()=>{ edZoom=1; edZv=0; applyZoom(); edOnly=false; edModeUI(dur()); });
   function edSetMode(on){
-    const d=dur(); if(!d||!(marks.p1<marks.end)) return; edOnly=on;
-    if(on){ edZoom=Math.min(ZMAX,d/(marks.end-marks.p1)); edZv=marks.p1/d; } else { edZoom=1; edZv=0; }
-    edPanTs=Date.now(); applyZoom(); edModeUI(d); }
+    const d=dur(); if(!d||!window.acfcPlayMap(marks,d)) return; edOnly=on;
+    edZoom=1; edZv=0; edPanTs=Date.now(); applyZoom(); render(); edModeUI(d); }
   $("edModePlay").onclick=()=>edSetMode(true);
   $("edModeAll").onclick=()=>edSetMode(false);
-  $("edZoomReset").addEventListener("click",()=>{ edOnly=false; edModeUI(dur()); });
-  const tAt=e=>{ const r=zw.getBoundingClientRect(); return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*dur(); };
+  const tAt=e=>{ const r=zw.getBoundingClientRect(); return ept((e.clientX-r.left)/r.width); };
   tr.addEventListener("pointerdown",e=>{ if(!dur()||exporting) return; tr.setPointerCapture(e.pointerId);
     if(e.target.id==="hIn"||e.target.id==="hOut"){ snap(); drag=e.target.id; return; }
     const t=tAt(e);
@@ -7634,7 +7636,7 @@ window.tutPaint=(()=>{
   const G1={s:20,e:26,name:"Gol a favor"}, G2={s:62,e:67,name:"Ocasión a favor"};
   const STEPS=[
     {s:"Subir vídeos",t:"Sube uno o varios vídeos",opt:false,
-     d:"Pulsa «Subir vídeo» (o «Usar el vídeo del visor»). Puedes elegir varios a la vez. Para sumar más después, usa «+ Añadir vídeo» en el panel Vídeos.",
+     d:"Pulsa «Subir vídeo». Puedes elegir varios a la vez. Para sumar más después, usa «+ Añadir vídeo» en el panel Vídeos.",
      pre(){ S.vid=true; },
      async run(W){ await go(W,q('.tutB[data-k="up"]'),.5,.5,900,"Subir vídeo: puedes subir uno o varios vídeos"); S.hot="up"; draw(); await tap(W); S.hot=null; S.vid=true; draw(); await wait(W,1200,"Vídeo cargado");
        await go(W,q('[data-k="addv"]'),.5,.5,900,"Añadir vídeo: suma más vídeos cuando quieras"); await W(700); }},
@@ -12005,7 +12007,7 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
     bar(undefined); msg("Preparando el motor de conversión (la primera vez tarda unos segundos)…",false);
     var src=file, base=src.name.replace(/\.[^.]+$/,"")||"video";
     var ext=(src.name.match(/\.[a-z0-9]+$/i)||[".bin"])[0].toLowerCase();
-    var IN="entrada"+ext, OUT="salida.mp4", q=$c("convQ").value, inst;
+    var IN="entrada"+ext, OUT="salida.mp4", q=$c("convQ").value, cfps=+$c("convFps").value||0, inst;
     getEngine().then(function(e){
       inst=e; msg("Convirtiendo "+src.name+" a MP4… Mantén esta pestaña abierta.",false);
       return src.arrayBuffer();
@@ -12019,8 +12021,8 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
         var vcodec=((logs.join("\n").match(/Video: (\w+)/))||[])[1];
         var common=["-c:a","aac","-b:a","128k","-movflags","+faststart","-y",OUT];
         // Altura de salida según la resolución elegida; la anchura se calcula y min(…,ih) evita ampliar vídeos más pequeños
-        var reenc=["-i",IN,"-vf","scale=-2:min("+q+"\\,ih)","-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p"].concat(common);
-        if(vcodec!=="h264") return inst.exec(reenc);
+        var reenc=["-i",IN,"-vf","scale=-2:min("+q+"\\,ih)"+(cfps?",fps="+cfps:""),"-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p"].concat(common);
+        if(vcodec!=="h264"||cfps) return inst.exec(reenc);
         // Ya es H.264: solo cambia el contenedor (segundos, sin perder calidad); si falla, se recodifica
         msg("Vídeo H.264: solo se cambia el contenedor a MP4, sin recodificar.",false);
         return inst.exec(["-i",IN,"-c:v","copy"].concat(common)).then(function(code){ return code===0?0:inst.exec(reenc); });
@@ -12299,7 +12301,7 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
     bar(undefined); jmsg("Preparando el motor de conversión (la primera vez tarda unos segundos)…");
     var q=$f("fusQ").value, W=q==="1080"?1920:1280, H=q==="1080"?1080:720;
     // Todos los clips salen con el mismo tamaño, fps y códecs para poder unirlos sin recodificar
-    var vf="scale="+W+":"+H+":force_original_aspect_ratio=decrease,pad="+W+":"+H+":(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30,format=yuv420p";
+    var vf="scale="+W+":"+H+":force_original_aspect_ratio=decrease,pad="+W+":"+H+":(ow-iw)/2:(oh-ih)/2,setsar=1,fps="+(+$f("fusFps").value||30)+",format=yuv420p";
     var list=clips.slice(), n=list.length, inst=null;
     window.acfcFF.get().then(function(e){
       inst=e;
