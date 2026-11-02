@@ -333,6 +333,8 @@ dialog#dlgBot{width:min(620px,94vw);height:calc(100vh - 24px);max-height:calc(10
 .botAdd input:not([type]){flex:1;min-width:0}
 #botSel{flex:1;min-width:0;padding:10px 12px;font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:0}
 .botColor{width:46px!important;padding:2px!important;flex:none}
+.botTRow{margin-top:6px;gap:8px}.botTRow label{font-size:12px;color:var(--muted);white-space:nowrap}
+.botTRow input.botTNum{flex:none;width:84px}
 .botChk{display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap}
 .botChk input{width:auto}
 .botEmpty{font-size:13px;color:var(--muted)}
@@ -1039,7 +1041,7 @@ html #regPintBtn svg,html #edPintBtn svg{width:26px;height:26px}
 #tabLive .liveAdj:has(#liveJugName){display:none!important}
 /* Pantalla completa en móvil: solo la botonera (y el minuto + botón de salir) */
 @media (max-width:900px){
-  #tabLive:fullscreen #liveSub,#tabLive:fullscreen #liveVidPanel,#tabLive:fullscreen #liveEvPanel,#tabLive:fullscreen #livePB,#tabLive:fullscreen #liveActsPanel,
+  #tabLive:fullscreen #liveSub,#tabLive:fullscreen #liveVidPanel,#tabLive:fullscreen #liveEvPanel,#tabLive:fullscreen #liveTLPanel,#tabLive:fullscreen #livePB,#tabLive:fullscreen #liveActsPanel,
   #tabLive:fullscreen .liveMain>.livePanel:first-child>h2,#tabLive:fullscreen .liveMain>.livePanel:first-child>.liveHelp,#tabLive:fullscreen #liveTut{display:none!important}
   #tabLive:fullscreen .liveMain>.livePanel:first-child{padding:8px 12px}
   #tabLive:fullscreen .liveClockRow{flex-wrap:wrap;align-items:center;gap:6px}
@@ -1050,6 +1052,22 @@ html #regPintBtn svg,html #edPintBtn svg{width:26px;height:26px}
   #tabLive:fullscreen .liveMarks .btn{min-height:42px}
   #tabLive:fullscreen .liveClock{font-size:30px}
 }
+/* línea de tiempo de eventos (debajo del registro): una fila por categoría, cabezal rojo en el instante actual */
+#tabLive #liveTLPanel{margin-top:14px}
+#tabLive #liveTLPanel[hidden]{display:none}
+#tabLive .liveTL{display:grid;grid-template-columns:96px minmax(0,1fr);border:1px solid var(--line);background:var(--bg)}
+#tabLive .liveTLLbls>div,#tabLive .liveTLLane{height:36px;box-sizing:border-box;border-bottom:1px solid var(--line)}
+#tabLive .liveTLLbls>div{display:flex;align-items:center;justify-content:space-between;gap:4px;padding:0 8px;font-family:var(--f-disp);font-weight:700;font-size:13px;border-left:4px solid var(--ink);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#tabLive .liveTLLbls small{color:var(--muted);font-weight:400}
+#tabLive .liveTLTracks{position:relative;min-width:0;border-left:1px solid var(--line)}
+#tabLive .liveTLLane{position:relative}
+#tabLive .liveTLEv{position:absolute;top:5px;height:24px;min-width:12px;transform:translateX(-50%);border:2px solid transparent;border-radius:2px;padding:0;cursor:pointer}
+#tabLive .liveTLEv.rival{background:transparent!important;border-color:currentColor}
+#tabLive .liveTLEv.sel{outline:2px solid var(--ink);outline-offset:1px}
+#tabLive .liveTLMark{position:absolute;top:0;bottom:0;border-left:1px dashed var(--muted);pointer-events:none}
+#tabLive .liveTLHead{position:absolute;top:0;bottom:0;width:0;border-left:2px solid var(--red);pointer-events:none}
+#tabLive .liveTLAxis{grid-column:2;display:flex;justify-content:space-between;padding:2px 4px;font-size:11px;color:var(--muted)}
+@media (max-width:640px){#tabLive .liveTL{grid-template-columns:72px minmax(0,1fr)}}
 #tabLive .liveSyncRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center;font-size:13px}
 #tabLive .liveSyncRow .btn{min-height:36px;padding:4px 10px;font-size:12px}
 #tabLive .liveSyncRow small{display:block;color:var(--muted)}
@@ -1732,7 +1750,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <button class="btn histBtn" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
         <button class="btn histBtn" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
         <button class="btn primary vTagBtn" id="vTagNow" title="Etiquetar en el instante actual (T)">REGISTRO AUTO</button>
-        <button class="btn primary vTagBtn" id="vTagManual" title="Registro manual: tú marcas el inicio (REC) y el final (PAUSE) del corte">REGISTRO MANUAL</button>
+        <button class="btn primary vTagBtn" id="vTagManual" title="Registro manual: tú marcas el inicio (GRABAR) y el final (STOP) del corte">REGISTRO MANUAL</button>
         <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
       <span id="vMarkBtns" style="display:contents">
         <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">Inicio primera parte</button>
@@ -1849,7 +1867,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       </div>
       <div class="row" id="tagRow">
         <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="display:none">REGISTRO AUTO</button>
-        <button class="btn primary" id="tagManual" title="Registro manual: tú marcas el inicio (REC) y el final (PAUSE) del corte" style="display:none">REGISTRO MANUAL</button>
+        <button class="btn primary" id="tagManual" title="Registro manual: tú marcas el inicio (GRABAR) y el final (STOP) del corte" style="display:none">REGISTRO MANUAL</button>
       </div>
       <div class="row bulkbar" id="bulkBar">
         <span style="font-size:13px;color:var(--muted)" id="bulkCount"></span>
@@ -2339,7 +2357,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       </div>
       <div class="livePanel" id="liveEvPanel">
         <h2>Eventos <span id="liveCount" style="color:var(--muted);font-weight:400"></span></h2>
-        <div class="liveAdj" style="justify-content:flex-end"><button type="button" class="btn" id="liveDelAll" title="Borrar todos los eventos de este registro">Borrar todos los eventos</button></div>
+        <div class="liveAdj" style="justify-content:flex-end"><button type="button" class="btn" id="liveTLBtn" aria-expanded="false" title="Muestra u oculta la línea de tiempo de eventos, debajo de todo">Ver eventos abajo</button><button type="button" class="btn" id="liveDelAll" title="Borrar todos los eventos de este registro">Borrar todos los eventos</button></div>
         <div class="row bulkbar" id="liveBulk">
           <span style="font-size:13px;color:var(--muted)" id="liveBulkCount"></span>
           <span class="row" style="gap:6px;margin:0">
@@ -2356,6 +2374,10 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <input type="file" id="liveFile" accept="video/*" hidden>
       </div>
     </div>
+  </div>
+  <div class="livePanel" id="liveTLPanel" hidden>
+    <h2>Eventos en el tiempo</h2>
+    <div class="liveTL" id="liveTL"></div>
   </div>
 </section>
 
@@ -2548,10 +2570,10 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
     <div class="row" style="justify-content:flex-end;margin:0 0 4px"><button type="button" class="btn edGreen" id="dlgSaveBot" title="Descarga la botonera (categorías, detalles y jugadores) para guardarla en el proyecto de botoneras">💾 Guardar botonera</button></div>
     <div id="manBar" hidden style="border:1px solid var(--line);border-top:3px solid var(--ink);padding:8px;margin:6px 0">
       <div class="row" style="flex-wrap:nowrap;gap:6px;margin:0">
-        <button type="button" class="btn primary" id="manRec" style="flex:1" title="Marca el inicio del corte en el instante actual y reproduce">● REC</button>
-        <button type="button" class="btn" id="manPause" style="flex:1" title="Marca el final del corte en el instante actual y pausa">⏸ PAUSE</button>
+        <button type="button" class="btn primary" id="manRec" style="flex:1" title="Marca el inicio del corte en el instante actual y reproduce">● GRABAR</button>
+        <button type="button" class="btn" id="manPause" style="flex:1" title="Marca el final del corte en el instante actual y pausa">⏸ STOP</button>
       </div>
-      <div id="manInfo" style="font-size:13px;color:var(--muted);margin-top:6px">Pulsa REC para empezar el corte y PAUSE para terminarlo.</div>
+      <div id="manInfo" style="font-size:13px;color:var(--muted);margin-top:6px">Pulsa GRABAR para empezar el corte y STOP para terminarlo.</div>
     </div>
     <div class="row" style="justify-content:flex-end;margin:2px 0"><button type="button" class="btn acfcLink" id="dlgMinToggle" title="Ocultar/mostrar el minuto y los datos del corte">Mostrar</button></div>
     <div id="dlgMinBody">
@@ -2630,6 +2652,10 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <input id="botCatColor" type="color" value="#3D4852" aria-label="Color de la nueva categoría" class="botColor">
         <button type="button" class="btn" id="botCatCancel" hidden>Cancelar</button>
         <button type="button" class="btn primary" id="botCatAdd">Añadir</button>
+      </div>
+      <div class="row botAdd botTRow">
+        <label for="botCatPre">Segundos antes</label><input id="botCatPre" type="number" min="0" max="600" step="0.5" class="botTNum" placeholder="general" title="Segundos de vídeo antes de la acción. Vacío = valor general («Arrancar antes»)">
+        <label for="botCatPost">Segundos después</label><input id="botCatPost" type="number" min="0.2" max="600" step="0.5" class="botTNum" placeholder="general" title="Segundos de vídeo después de la acción. Vacío = valor general («Finalizar en»)">
       </div>
       <div id="botCatErr" class="botErr"></div>
     </section>
@@ -3462,7 +3488,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function saveCatBase(){ try{ localStorage.setItem(CAT_HID_KEY,JSON.stringify(catHid)); localStorage.setItem(CAT_COL_KEY,JSON.stringify(catCol)); localStorage.setItem(CAT_T_KEY,JSON.stringify(catT)); }catch(e){} botSyncActiva(); }
   function removeCat(n){ if(!CATS[n]||CAT_FIJAS.includes(n)) return;
     const custom=CATS[n].custom; delete CATS[n];
+    delete catT[n];
     if(custom) saveCats(); else { if(!catHid.includes(n)) catHid.push(n); delete catCol[n]; saveCatBase(); }
+    saveCatBase();
     events.forEach(e=>{ if(e.cat===n) e.cat="OTRO"; }); save(); }
   // cambia nombre y/o color; los eventos y los detalles de la categoría la siguen
   function editCat(old,nw,color){
@@ -3474,6 +3502,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       Object.keys(CATS).forEach(k=>delete CATS[k]); ent.forEach(([k,v])=>{ CATS[k]=v; });
       if(!o.custom){ if(!catHid.includes(old)) catHid.push(old); delete catCol[old]; saveCatBase(); }
       if(DETS[old]){ DETS[nw]=DETS[old]; delete DETS[old]; saveDets(); }
+      if(catT[old]){ catT[nw]=catT[old]; delete catT[old]; saveCatBase(); }
       events.forEach(e=>{ if(e.cat===old) e.cat=nw; }); save(); saveCats();
     } else {
       o.c=color;
@@ -3984,7 +4013,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(k==="OTRO"||o.ret) return; // «Otro» y las categorías solo de eventos no se muestran como botón
       const b=el("button",{type:"button",className:"catbtn"+(k===botCat?" active":""),textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c,title:"Editar los detalles de «"+k+"»"});
       b.onclick=()=>{ botCat=k; renderBot(); };
-      addEditE(b,"Editar nombre y color de «"+k+"»",()=>{ botCat=k; botEditCat=k; $("botCatName").value=k.charAt(0)+k.slice(1).toLowerCase(); $("botCatColor").value=cssToHex(o.c); $("botCatErr").textContent=""; renderBot(); $("botCatName").focus(); });
+      addEditE(b,"Editar nombre y color de «"+k+"»",()=>{ botCat=k; botEditCat=k; $("botCatName").value=k.charAt(0)+k.slice(1).toLowerCase(); $("botCatColor").value=cssToHex(o.c); $("botCatErr").textContent=""; botTFill(k); renderBot(); $("botCatName").focus(); });
       if(!CAT_FIJAS.includes(k)) addDelX(b,k,()=>{
         if($("fCat").value===k) $("fCat").value="OTRO";
         if(botEditCat===k) botEditCat=null;
@@ -4018,21 +4047,34 @@ window.renderHalfBands = function(b1,b2,mk,d){
       wj.append(b);
     });
   }
-  function botCancelEdit(){ botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor(); renderBot(); }
+  // Tiempo previo/posterior de la categoría (segundos). Vacío = valores generales («Arrancar antes» / «Finalizar en»)
+  function botTFill(k){ const t=k&&catT[k]; $("botCatPre").value=t?t.pre:""; $("botCatPost").value=t?t.post:""; }
+  function botTRead(){ // devuelve {err} o {t:null|{pre,post}}
+    const sp=$("botCatPre").value.trim(), sq=$("botCatPost").value.trim();
+    if(sp===""&&sq==="") return {t:null};
+    const p=sp===""?(+$("pre").value||0):+sp, q=sq===""?Math.max(0.2,+$("post").value||10):+sq;
+    if(!isFinite(p)||p<0||p>600) return {err:"Los segundos antes deben estar entre 0 y 600."};
+    if(!isFinite(q)||q<0.2||q>600) return {err:"Los segundos después deben estar entre 0,2 y 600."};
+    return {t:{pre:p,post:q}};
+  }
+  function botTApply(n,t){ if(t) catT[n]=t; else delete catT[n]; saveCatBase(); }
+  function botCancelEdit(){ botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor(); botTFill(null); renderBot(); }
   function botAddCat(){
     const n=$("botCatName").value.trim().replace(/\s+/g," ").toUpperCase().slice(0,24);
     if(!n){ $("botCatErr").textContent="Escribe un nombre para la categoría."; return; }
+    const tr=botTRead(); if(tr.err){ $("botCatErr").textContent=tr.err; return; }
     if(botEditCat){
       const err=editCat(botEditCat,n,$("botCatColor").value);
       if(err){ $("botCatErr").textContent=err; return; }
+      botTApply(n,tr.t);
       botCat=n; if($("fCat").value===botEditCat) $("fCat").value=n;
-      botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
+      botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor(); botTFill(null);
       botSync(); renderBot(); refresh(); return;
     }
-    if(CATS[n]&&CATS[n].ret){ CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botCat=n; $("botCatName").value=""; $("botCatColor").value=nextBotColor(); botSync(); renderBot(); return; }
+    if(CATS[n]&&CATS[n].ret){ CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botTApply(n,tr.t); botCat=n; $("botCatName").value=""; $("botCatColor").value=nextBotColor(); botTFill(null); botSync(); renderBot(); return; }
     if(n==="__NEW__"||CATS[n]){ $("botCatErr").textContent=CATS[n]?"Ya existe esa categoría.":"Ese nombre no es válido."; return; }
-    CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botCat=n;
-    $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
+    CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botTApply(n,tr.t); botCat=n;
+    $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor(); botTFill(null);
     botSync(); renderBot();
   }
   function botAddDet(){
@@ -4059,7 +4101,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   document.addEventListener("webkitfullscreenchange",placeBotDlgForFullscreen);
   $("btnBotonera").onclick=()=>{
     $("botCatErr").textContent=$("botDetErr").textContent=$("botJugErr").textContent="";
-    $("botCatColor").value=nextBotColor();
+    $("botCatColor").value=nextBotColor(); botEditCat=null; botTFill(null);
     renderBotSel(); renderBot(); placeBotDlgForFullscreen(); if(!dlgBot.open) dlgBot.showModal();
   };
   $("btnBotoneraMov").onclick=()=>$("btnBotonera").click();
@@ -5058,7 +5100,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     // por defecto, en ventana emergente (salvo que se haya elegido «Fijo» o no esté disponible, p. ej. en móvil)
     // (en pantallas estrechas ≤640 px no se abre sola: el botón EMERGENTE queda para hacerlo a mano)
     if(!dlgFijo && !popoutWin && dlgEl.ownerDocument===document && !matchMedia("(max-width:640px)").matches && getComputedStyle($("popOutDlg")).display!=="none") openDlgInPopout(true); }
-  // ---------- registro manual: REC marca el inicio del corte y PAUSE el final ----------
+  // ---------- registro manual: GRABAR marca el inicio del corte y STOP el final ----------
   let manualMode=false, manA=null, manB=null;
   function manReset(){ manA=null; manB=null; }
   // Inicio, fin y duración del corte que se va a guardar (o del evento que se edita)
@@ -5079,8 +5121,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!manualMode) return;
     $("manSaveErr").hidden=true;
     $("manRec").classList.toggle("on",manA!==null&&manB===null);
-    $("manInfo").textContent=manA===null?"Pulsa REC para empezar el corte y PAUSE para terminarlo."
-      :manB===null?"● Grabando desde "+fmt(manA)+" · pulsa PAUSE para terminar."
+    $("manInfo").textContent=manA===null?"Pulsa GRABAR para empezar el corte y STOP para terminarlo."
+      :manB===null?"● Grabando desde "+fmt(manA)+" · pulsa STOP para terminar."
       :"Corte de "+fmt(manA)+" a "+fmt(manB)+" ("+(manB-manA).toFixed(1)+" s). Elige categoría y pulsa Guardar.";
   }
   $("manRec").onclick=()=>{
@@ -5100,7 +5142,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!manualMode||editId) return;
     if(manA===null||manB===null){
       ev.preventDefault();
-      const msg=manA===null?"Debes darle primero al botón REC y después al botón PAUSE.":"Debes darle primero al botón PAUSE.";
+      const msg=manA===null?"Debes darle primero al botón GRABAR y después al botón STOP.":"Debes darle primero al botón STOP.";
       const se=$("manSaveErr"); se.textContent=msg; se.hidden=false;
     }
   });
@@ -6051,7 +6093,41 @@ window.renderHalfBands = function(b1,b2,mk,d){
     };
     d.showModal();
   }
-  function liveRender(){ liveRenderMarks(); liveRenderCats(); liveRenderCompl(); liveSyncRender(); liveRenderList(); liveTick(); }
+  // línea de tiempo de eventos: una fila por categoría con eventos; eje = segundos del cronómetro
+  const LIVE_TL_KEY="acfcLiveTL";
+  function liveRenderTL(){
+    const p=$("liveTLPanel"); if(p.hidden) return;
+    const w=$("liveTL"); w.replaceChildren();
+    const ev=live.events, now=liveNow();
+    if(!ev.length){ w.style.display="block"; w.append(el("div",{className:"liveHelp",style:"padding:10px",textContent:"Todavía no hay eventos."})); return; }
+    w.style.display="";
+    const total=Math.max(60,now,...ev.map(e=>e.t))*1.03, pc=t=>Math.min(100,Math.max(0,t/total*100))+"%";
+    const cats=Object.keys(CATS).filter(k=>ev.some(e=>e.cat===k));
+    const lb=el("div",{className:"liveTLLbls"}), tr=el("div",{className:"liveTLTracks"});
+    cats.forEach(k=>{
+      const c=CATS[k].c, list=ev.filter(e=>e.cat===k);
+      lb.append(el("div",{style:"border-left-color:"+c},[el("span",{textContent:k.charAt(0)+k.slice(1).toLowerCase()}),el("small",{textContent:String(list.length)})]));
+      const lane=el("div",{className:"liveTLLane"});
+      list.forEach(e=>{
+        const b=el("button",{type:"button",className:"liveTLEv"+(e.eq==="rival"?" rival":"")+(e.id===liveSel?" sel":""),title:e.min+" · "+k+(e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+(e.eq==="rival"?" · Rival":""),style:"left:"+pc(e.t)+";background:"+c+";color:"+c});
+        b.setAttribute("aria-label",b.title);
+        b.onclick=()=>{ liveSel=e.id; liveRender(); };
+        lane.append(b);
+      });
+      tr.append(lane);
+    });
+    LIVE_KEYS.forEach(k=>{ if(live.marks[k]!=null) tr.append(el("div",{className:"liveTLMark",title:LIVE_LBL[k],style:"left:"+pc(live.marks[k])})); });
+    tr.append(el("div",{className:"liveTLHead",title:liveMinText(now),style:"left:"+pc(now)}));
+    w.append(lb,tr,el("div",{className:"liveTLAxis"},[el("span",{textContent:"0:00"}),el("span",{textContent:"Cronómetro "+fmt(total)})]));
+  }
+  function liveSetTL(on){
+    $("liveTLPanel").hidden=!on; $("liveTLBtn").textContent=on?"Ocultar eventos abajo":"Ver eventos abajo"; $("liveTLBtn").setAttribute("aria-expanded",String(on));
+    try{ localStorage.setItem(LIVE_TL_KEY,on?"1":"0"); }catch(e){}
+    liveRenderTL();
+  }
+  $("liveTLBtn").onclick=()=>{ const on=$("liveTLPanel").hidden; liveSetTL(on); if(on) $("liveTLPanel").scrollIntoView({block:"nearest",behavior:"smooth"}); };
+  setInterval(()=>{ if(live.run&&!$("liveTLPanel").hidden&&!$("tabLive").hidden) liveRenderTL(); },1000);
+  function liveRender(){ liveRenderMarks(); liveRenderCats(); liveRenderCompl(); liveSyncRender(); liveRenderList(); liveRenderTL(); liveTick(); }
   // vídeo propio de esta pestaña: se elige en el equipo del usuario
   function liveLoadVideo(f){
     if(!f) return;
@@ -6098,6 +6174,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   };
   window.acfcClearLive=()=>{ livePause(); live=liveBlank(); liveSel=null; liveChk.clear(); liveCommit(); };
   window.acfcLive={render:liveRender};
+  try{ if(localStorage.getItem(LIVE_TL_KEY)==="1") liveSetTL(true); }catch(e){}
   liveRender();
 })();
 </script>
@@ -7375,9 +7452,9 @@ window.tutPaint=(()=>{
     const hd=mk("div","tutFhd"); hd.append(mk("b","tutFh","Evento"),mk("span","tutB","Emergente"),mk("span","tutB","✕ Cerrar")); FORM.append(hd);
     const r0=mk("div","tutFr"); r0.append(mk("i",null,"Botonera"),mk("span","tutInp","Botonera 1 ▾")); FORM.append(r0);
     if(f.man){ const r=mk("div","tutFr");
-      const rec=mk("span","tutB trec"+(f.ma!=null&&f.mb==null?" set":""),"● REC"); rec.dataset.f="rec";
-      const pa=mk("span","tutB trec"+(f.mb!=null?" set":""),"⏸ PAUSE"); pa.dataset.f="pause";
-      r.append(rec,pa); FORM.append(r); FORM.append(mk("small",null,"Pulsa REC para empezar el corte y PAUSE para terminarlo.")); }
+      const rec=mk("span","tutB trec"+(f.ma!=null&&f.mb==null?" set":""),"● GRABAR"); rec.dataset.f="rec";
+      const pa=mk("span","tutB trec"+(f.mb!=null?" set":""),"⏸ STOP"); pa.dataset.f="pause";
+      r.append(rec,pa); FORM.append(r); FORM.append(mk("small",null,"Pulsa GRABAR para empezar el corte y STOP para terminarlo.")); }
     const r1=mk("div","tutFr"); r1.append(mk("i",null,"Minuto"),mk("span","tutInp",fmt(f.man&&f.ma!=null?f.ma:f.p))); FORM.append(r1);
     let tt;
     if(f.man) tt=f.ma==null?"Inicio: —   Fin: —   Duración: —":"Inicio: "+fmt(f.ma)+"   Fin: "+(f.mb==null?"—":fmt(f.mb))+"   Duración: "+(f.mb==null?"—":Math.round((f.mb-f.ma)*DUR/100)+" s");
@@ -7471,11 +7548,11 @@ window.tutPaint=(()=>{
      pre(){ S.head=22; S.form=null; S.ev=SEED(); },
      async run(W){ await register(W,22); await pick(W,"cat","Gol"); await pick(W,"det","Situación jugada"); await typeCom(W,EV1.com); await save(W,EV1); await W(700); }},
     {s:"Manual",t:"Registro manual",
-     d:"Pulsa «REGISTRO MANUAL»: «REC» marca el inicio del corte y «PAUSE» el final. Elige la categoría y guarda.",
+     d:"Pulsa «REGISTRO MANUAL»: «GRABAR» marca el inicio del corte y «STOP» el final. Elige la categoría y guarda.",
      pre(){ S.head=40.4; S.form=null; S.ev=SEED(); },
      async run(W){ await register(W,40,true);
-       await pressF(W,"rec","REC, inicio"); S.form.ma=40; draw(); await W(300); S.head=40.4; draw(); await W(1200);
-       await pressF(W,"pause","PAUSE, final"); S.form.mb=40.4; draw(); await W(400);
+       await pressF(W,"rec","GRABAR, inicio"); S.form.ma=40; draw(); await W(300); S.head=40.4; draw(); await W(1200);
+       await pressF(W,"pause","STOP, final"); S.form.mb=40.4; draw(); await W(400);
        await pick(W,"cat","Ocasión"); await save(W,EV3); await W(700); }},
     {s:"Duración",t:"Ajusta la duración de los eventos",
      d:"En «Tiempo del evento» indica cuántos segundos antes de la jugada empieza el corte («Arrancar antes») y cuántos después termina («Finalizar en»). En la botonera puedes dar a cada categoría su propio tiempo.",
