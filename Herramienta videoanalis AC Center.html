@@ -4409,7 +4409,8 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   // «En juego» (solo tiempo de juego) / «Sin juego» (vídeo entero: antes, después y descanso)
   window.acfcOnlyPlay=true; try{ if(localStorage.getItem("acfcOnlyPlay")==="0") window.acfcOnlyPlay=false; }catch(e){}
   function vPM(){ if(window.acfcOnlyPlay===false) return null; try{ return window.acfcPlayMap(halfMarks,v.duration); }catch(err){ return null; } }
-  function setOnlyPlay(on){ window.acfcOnlyPlay=on; try{ localStorage.setItem("acfcOnlyPlay",on?"1":"0"); }catch(e){} renderHalfMarks(); }
+  let vAutoSin=true; // false = el usuario eligió «En juego» estando fuera del juego: no volver a saltar hasta que entre en juego
+  function setOnlyPlay(on,manual){ if(on&&manual) vAutoSin=false; window.acfcOnlyPlay=on; try{ localStorage.setItem("acfcOnlyPlay",on?"1":"0"); }catch(e){} renderHalfMarks(); }
   function vPos(t,pm){ const d=v.duration; return pm?pm.f(t)*100:Math.max(0,Math.min(100,t/d*100)); }
   function vPlace(tickEl,c,pm){ const d=v.duration, a=vPos(c.a,pm), b=vPos(c.b,pm);
     tickEl.style.left=a+"%"; tickEl.style.width=Math.max(0,pm?b-a:(c.b-c.a)/d*100)+"%"; }
@@ -4578,7 +4579,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   // el editor básico empuja aquí sus marcas (inicio/fin de partes) para que el registro con vídeo use la misma calibración
   window.acfcRegMarks={ get(){ return {...halfMarks}; }, set(m){ Object.keys(HALF_MARK_IDS).forEach(k=>{ halfMarks[k]=typeof m?.[k]==="number"?m[k]:null; }); saveHalfMarks(); renderHalfMarks(); } };
 
-  $("vModePlay").addEventListener("click",()=>setOnlyPlay(true));
+  $("vModePlay").addEventListener("click",()=>setOnlyPlay(true,true));
   $("vModeAll").addEventListener("click",()=>setOnlyPlay(false));
   document.querySelectorAll(".markLine").forEach(ln=>{ const lb=$(ln.id+"Lbl"); if(!lb) return;
     ln.addEventListener("mouseenter",()=>lb.classList.add("show")); ln.addEventListener("mouseleave",()=>lb.classList.remove("show")); });
@@ -4882,6 +4883,8 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); setMatchClock($("matchClock"),t,mc);
     $("fsClock").textContent=$("clock").textContent; setMatchClock($("fsMatch"),t,mc);
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
+    { const pm0=d?vPM():null; // en «En juego», si el vídeo cae fuera del juego (antes, descanso o después) pasa solo a «Sin juego» para que se vea el cursor
+      if(pm0){ const fuera=pm0.out(t-0.3,t+0.3); if(!fuera) vAutoSin=true; else if(vAutoSin){ vAutoSin=false; setOnlyPlay(false); return; } } }
     const pv=d?vPos(t,vPM()):0;
     if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=pv/100; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
     const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=pv+"%"; $("vHeadClock").style.left=pv+"%"; { const hc=$("vHeadClock"); hc.textContent=mc?"⏱ "+mc+" · ":""; // segundo valor (vídeo) en gris
