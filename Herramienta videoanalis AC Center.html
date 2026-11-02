@@ -1004,14 +1004,12 @@ html #regPintBtn svg,html #edPintBtn svg{width:26px;height:26px}
 #tabLive .liveAdj[hidden]{display:none}
 #tabLive .liveAdj .btn{min-height:36px;padding:4px 10px}
 @media (min-width:900px){#tabLive .liveWrap{grid-template-columns:minmax(0,1.4fr) minmax(320px,1fr)}}
-/* escritorio: botonera compacta, como en la ventana de edición (botones a su tamaño y en fila); en móvil vertical se mantienen los grandes */
-@media (min-width:641px){
-  #tabLive .livePanel .catbtns{gap:4px}
-  #tabLive .livePanel .catbtn,#tabLive .livePanel .optbtn,html.acfc-imm #tabLive .livePanel .catbtn,html.acfc-imm #tabLive .livePanel .optbtn{min-height:30px;padding:3px 22px 3px 9px;font-size:13px;line-height:1.1;flex:0 0 auto}
-  #tabLive .livePanel .catbtn.add,#tabLive .livePanel .optbtn.add{padding-right:9px}
-  #tabLive .liveCats .catbtn,#tabLive .liveEq .optbtn{min-height:34px;font-size:14px;flex:0 0 auto}
-  #tabLive .liveSep{margin:2px 0;opacity:.35}
-}
+/* botonera del registro sin vídeo: mismo diseño que la ventana EVENTO del registro con vídeo (botones grandes en dos columnas) */
+#tabLive #liveEq,#tabLive #liveCats,#tabLive #liveDets,#tabLive #liveJugs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+#tabLive #liveCats .catbtn,#tabLive #liveEq .optbtn,#tabLive #liveDets .optbtn,#tabLive #liveJugs .optbtn{min-height:52px;padding:6px 24px 6px 10px;font-size:16px;font-weight:700;line-height:1.15;display:flex;align-items:center;justify-content:center;text-align:center;border-width:2px;border-radius:2px;flex:none}
+#tabLive #liveCats>.catbtn:last-child:nth-child(odd),#tabLive #liveDets>.optbtn:last-child:nth-child(odd),#tabLive #liveJugs>.optbtn:last-child:nth-child(odd){grid-column:1/-1}
+#tabLive #liveDets>.optbtn.nodet{grid-column:1/-1}
+#tabLive .liveSep{margin:2px 0;opacity:.35}
 @media (max-width:640px){
   #tabLive{padding:10px 12px 24px}
   #tabLive .liveClock{font-size:38px}
@@ -2298,6 +2296,9 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       </div>
       <div class="livePanel">
         <h2>Registrar acción</h2>
+        <label class="liveBotSelRow" style="display:flex;align-items:center;gap:8px;margin:0 0 8px;font-family:var(--f-body);font-size:12px;color:var(--muted);text-transform:uppercase">Botonera
+          <select id="liveBotSel" aria-label="Botonera" title="Elige la botonera con la que registras: cambia las categorías, detalles y jugadores" style="flex:1;min-width:0;padding:8px 10px;font:inherit;text-transform:none;color:var(--ink);border:1px solid var(--line);background:var(--panel);border-radius:0"></select>
+        </label>
         <div class="catbtns liveEq" id="liveEq" role="group" aria-label="Equipo"></div>
         <hr class="liveSep">
         <div class="catbtns liveCats" id="liveCats" role="group" aria-label="Categoría"></div>
@@ -4109,9 +4110,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("botDel").hidden=BOTS.lista.length<2;
     const d=$("dlgBotSel"); // el mismo selector en la ventana de registrar un evento
     if(d){ d.replaceChildren(); BOTS.lista.forEach(o=>d.append(el("option",{value:o.id,textContent:o.n,selected:o.id===BOTS.act}))); }
+    const l=$("liveBotSel"); // y en el panel «Registrar acción» del registro sin vídeo
+    if(l){ l.replaceChildren(); BOTS.lista.forEach(o=>l.append(el("option",{value:o.id,textContent:o.n,selected:o.id===BOTS.act}))); }
   }
   $("botSel").onchange=ev=>botIr(ev.target.value);
   $("dlgBotSel").onchange=ev=>botIr(ev.target.value);
+  $("liveBotSel").onchange=ev=>{ botIr(ev.target.value); renderBotSel(); if(typeof liveRender==="function") liveRender(); };
   renderBotSel();
   $("botNew").onclick=()=>{
     const n=String(prompt("Nombre de la nueva botonera (se mantienen las categorías; detalles y jugadores empiezan vacíos):","Botonera "+(BOTS.lista.length+1))||"").trim().slice(0,40);
