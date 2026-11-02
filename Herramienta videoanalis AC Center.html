@@ -137,6 +137,11 @@ html.acfc-imm .stageTL{display:none!important}
 .chipHdl.l{left:0;border-radius:6px 0 0 6px}
 .chipHdl.r{right:0;border-radius:0 6px 6px 0}
 .chipHdl:hover{background:rgba(255,255,255,.4)}
+/* asas en los extremos reales del corte (el cuadro del clip tiene un mínimo de 30 px aunque el corte dure menos) */
+.chipHdl.bh{top:6px;bottom:auto;height:28px;width:8px;border-radius:2px;background:var(--ink);opacity:.55;z-index:3;touch-action:none}
+.chipHdl.bh.l{margin-left:-8px}.chipHdl.bh.r{margin-left:0}
+.chipHdl.bh:hover,.chip.dragging~.chipHdl.bh{opacity:1;background:var(--red)}
+.chip.sel+.chipHdl.bh,.chip.sel+.chipHdl.bh+.chipHdl.bh{opacity:.9;width:10px}.chip.sel+.chipHdl.bh.l{margin-left:-10px}
 /* Eventos registrados en la línea de tiempo del editor (solo lectura) */
 #edRegEv{display:flex;align-items:flex-start;margin-top:8px;border:1px solid var(--line);background:var(--panel);overflow:hidden}
 #edRegEv[hidden]{display:none}
@@ -233,6 +238,10 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .edTlFlt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0}
 .edTlFlt select{min-width:0;max-width:100%}
 .doneCut:hover{background:color-mix(in srgb,var(--dc) 85%,transparent)}
+/* asas en los bordes de cada corte: arrastrar acorta o alarga el corte directamente */
+.doneCut .dcH{position:absolute;top:0;bottom:0;width:min(9px,35%);cursor:ew-resize;z-index:2;touch-action:none;background:transparent}
+.doneCut .dcH.l{left:-1px}.doneCut .dcH.r{right:-1px}
+.doneCut:hover .dcH{background:rgba(255,255,255,.35)}.doneCut .dcH:hover{background:var(--ink)}
 .doneCut .evLbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;font-family:var(--f-disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:.8;text-shadow:0 0 4px rgba(0,0,0,.65),0 0 8px rgba(0,0,0,.45)}
 /* «Insertar en el vídeo» parpadea mientras hay un pintado por terminar */
 @keyframes pintStillBlink{0%,100%{background:var(--red);color:#fff;box-shadow:0 0 0 3px rgba(211,41,30,.35)}50%{background:var(--panel);color:var(--red);box-shadow:0 0 0 0 rgba(211,41,30,0)}}
@@ -266,6 +275,7 @@ html:not(.acfc-imm) #edCtl1.ctlAllHid,html:not(.acfc-imm) #edCtl2.ctlAllHid{disp
 #edCtlAllToggle{margin-left:auto}
 .headClock{position:absolute;top:-19px;transform:translate(-50%,-100%);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1;color:var(--red);background:var(--panel);border:1px solid var(--red);padding:2px 6px;white-space:nowrap;pointer-events:none;z-index:7}
 .headClock:empty{display:none}
+.mcIco{width:.85em;height:.85em;vertical-align:-.1em;margin-right:3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .headClock .hcV{color:var(--muted)}
 #matchClock .hcV{color:var(--muted);font-size:15px;font-weight:600}
 .fsBar .fsMatch .hcV{color:#ccc;font-size:.8em;font-weight:600}
@@ -982,6 +992,23 @@ html #regPintBtn svg,html #edPintBtn svg{width:26px;height:26px}
 /* arrastrable desde la cabecera: el cursor avisa y touch-action deja arrastrar con el dedo */
 #pintWin .pbHead,#edPintWin .pbHead,#lvPintWin .pbHead{cursor:move;touch-action:none;user-select:none}
 #pintWin .pbHead button,#edPintWin .pbHead button,#lvPintWin .pbHead button{cursor:pointer}
+/* panel compacto: botones pequeños de tamaño fijo en lugar de columnas que se estiran */
+.pintBlock .pintBar,.pintBlock .pintGrid{grid-template-columns:repeat(auto-fill,34px);gap:4px;margin-bottom:0}
+.pintBlock .pintTool{min-height:34px;padding:2px}
+.pintBlock .pintTool svg{width:18px;height:18px}
+.pintBlock #pintMode,.pintBlock #pintModeEd,.pintBlock #pintModeLv{min-width:0;min-height:34px;border-width:1px;box-shadow:none}
+.pintBlock #pintMode svg,.pintBlock #pintModeEd svg,.pintBlock #pintModeLv svg{width:18px;height:18px}
+.pintBlock .pintDiv{margin:6px 0 4px;padding-top:5px;font-size:11px}
+.pintBlock .pintDiv:first-child{margin-top:2px}
+.pintBlock .pintRail{padding:4px 8px 8px}
+.pintBlock .pintNums,.pintBlock .pintNums.hasNames{grid-template-columns:repeat(6,1fr);gap:4px}
+.pintBlock .pintNums.hasNames{grid-template-columns:repeat(3,1fr)}
+.pintBlock .pintNum{min-height:28px;font-size:14px}
+.pintBlock .pintNum.named{padding:3px 2px}
+.pintBlock .pintRoster{margin-top:4px;padding:3px 6px}
+.pintBlock .pintStyle{gap:4px}
+.pintBlock .pbHead{margin-bottom:2px}
+#pintWin .pintBlock,#edPintWin .pintBlock,#lvPintWin .pintBlock{padding:8px 10px 8px}
 /* ===== fin pintado de acciones ===== */
 /* ===== Registro sin vídeo (prefijo live) ===== */
 #tabLive{padding:16px 20px 28px;max-width:1280px;margin:0 auto}
@@ -1302,6 +1329,37 @@ html.acfc-imm #tabBtnFus::after{content:"";display:block;width:20px;height:20px;
 #tabLive #liveDets .optbtn.grpHead:not(.active){background:#15181D;border-color:#15181D;border-bottom:5px solid #8A8F96;color:#fff;text-transform:uppercase;letter-spacing:.6px}
 #tabLive #liveDets .optbtn.grpHead.g-juego:not(.active){border-bottom-color:#3D4852}
 #tabLive #liveDets .optbtn.grpHead.active{border-bottom-width:5px}
+/* Registro sin vídeo · versión compacta: paneles, textos y botones más pequeños */
+#tabLive{padding:10px 14px 20px}
+#tabLive .liveWrap,#tabLive .liveMain,#tabLive .liveSide{gap:8px}
+#tabLive .livePanel{padding:8px 10px;gap:6px}
+#tabLive .livePanel h2{font-size:13px;gap:6px}
+#tabLive .livePanel h2::before{width:5px;height:5px}
+#tabLive .liveHelp,#tabLive .liveCur{font-size:12px}
+#tabLive .liveCur{padding:4px 8px}
+#tabLive .liveLbl{font-size:10px}
+#tabLive .liveClock{font-size:30px}
+#tabLive .liveClockRow{gap:8px}
+#tabLive .liveClockRow>.btn{min-height:32px!important;padding:3px 10px;font-size:12px}
+#tabLive .liveCfg{gap:4px 10px;margin:0 0 4px;font-size:10px}
+#tabLive .liveCfg select,#tabLive .liveCfg input{padding:3px 6px;font-size:12px}
+#tabLive .liveMarks{gap:4px}
+#tabLive .liveMarks .btn{min-height:34px;padding:3px 4px;font-size:11px}
+#tabLive #liveEq,#tabLive #liveCats,#tabLive #liveDets,#tabLive #liveJugs{gap:4px}
+#tabLive #liveCats .catbtn,#tabLive #liveEq .optbtn,#tabLive #liveDets .optbtn,#tabLive #liveJugs .optbtn{min-height:30px;padding:3px 18px 3px 6px;font-size:12px;line-height:1.1;border-width:1px}
+#tabLive #liveCats .catbtn.active,#tabLive #liveEq .optbtn.active,#tabLive #liveDets .optbtn.active,#tabLive #liveJugs .optbtn.active{border-width:2px}
+#tabLive #liveDets .optbtn.grpHead:not(.active),#tabLive #liveDets .optbtn.grpHead.active{border-bottom-width:3px}
+#tabLive .liveSep{margin:0}
+#tabLive .liveAdj .btn,#tabLive .liveActs .btn{min-height:30px;padding:3px 8px;font-size:12px}
+#tabLive .liveActs{gap:4px}
+#tabLive .liveItem{padding:5px 6px;gap:6px}
+#tabLive .liveItem span.liveTxt{font-size:12px}
+@media (max-width:640px){
+  #tabLive{padding:8px 10px 18px}
+  #tabLive .liveClock{font-size:28px}
+  #tabLive .liveClockRow>.btn{min-height:32px!important;font-size:12px}
+  #tabLive .liveAdj .btn{min-height:32px}
+}
 .optbtn[data-eq="propio"]{background:#2e8b4a;border-color:#2e8b4a;color:#fff}
 .optbtn[data-eq="rival"]{background:#D3291E;border-color:#D3291E;color:#fff}
 .optbtn[data-eq="ambos"]{background:#8A8F96;border-color:#8A8F96;color:#fff}
@@ -1952,7 +2010,7 @@ dialog#dlgBot .botChk{font-size:12px}
         <input type="number" id="off" step="0.5" value="0">
       </div>
       <div class="row" hidden style="display:none">
-        <label for="pre">Arrancar antes</label><input type="number" id="pre" min="0" step="0.5" value="2"><label>s</label>
+        <label for="pre">Arrancar antes</label><input type="number" id="pre" min="0" step="0.5" value="5"><label>s</label>
         <label for="post" style="margin-left:6px">Finalizar en</label><input type="number" id="post" min="0.2" step="0.5" value="5"><label>s</label>
       </div>
       <div class="row" id="botMovRow"><button class="btn" id="btnBotoneraMov" type="button" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">Editar botonera</button></div>
@@ -2467,18 +2525,7 @@ dialog#dlgBot .botChk{font-size:12px}
         <div class="liveAdj"><input class="liveInp" id="liveJugName" maxlength="40" placeholder="Nuevo jugador" aria-label="Nuevo jugador" style="flex:1;min-width:140px;width:auto"><button type="button" class="btn" id="liveJugAdd">Añadir jugador</button></div>
         <div class="liveLbl">Comentario</div>
         <input class="liveInp" id="liveComent" maxlength="200" placeholder="Comentario libre (opcional)" aria-label="Comentario">
-      </div>
-      <div class="livePanel" id="livePB">
-        <h2>Proyectos y botoneras</h2>
-        <div class="liveAdj">
-          <button type="button" class="btn edGreen" id="liveSave" title="Descarga el registro sin vídeo (.json) para abrirlo en otro dispositivo">💾 Guardar proyecto</button>
-          <label class="btn" for="liveImp" style="text-align:center;cursor:pointer" title="Carga un registro sin vídeo guardado antes">📂 Cargar proyecto</label>
-          <input type="file" id="liveImp" accept="application/json,.json" hidden>
-          <button type="button" class="btn edGreen" id="liveBotSave" title="Descarga solo las categorías, detalles y jugadores (la botonera), sin eventos ni vídeo">💾 Guardar botonera</button>
-          <label class="btn" for="impBot" style="text-align:center;cursor:pointer" title="Carga una botonera (categorías, detalles y jugadores) guardada previamente; se añade a la actual">📂 Cargar botonera</label>
-          <button type="button" class="btn primary" id="liveBotEdit" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">🎛️ Botonera</button>
-          <button type="button" class="btn" id="liveTut" title="Guía paso a paso del registro sin vídeo">❓ Tutorial</button>
-        </div>
+        <div class="liveAdj"><button type="button" class="btn primary" id="liveEvSave" title="Guarda el detalle, jugador y comentario del evento seleccionado">Guardar</button></div>
       </div>
     </div>
     <div class="liveSide">
@@ -2508,6 +2555,18 @@ dialog#dlgBot .botChk{font-size:12px}
       <div class="livePanel liveActs" id="liveActsPanel">
         <button type="button" class="btn primary" id="liveToVideo" title="Elige el vídeo en tu ordenador y sincroniza los eventos con él aquí mismo">Añadir el vídeo y sincronizar</button>
         <input type="file" id="liveFile" accept="video/*" hidden>
+      </div>
+      <div class="livePanel" id="livePB">
+        <h2>Proyectos y botoneras</h2>
+        <div class="liveAdj">
+          <button type="button" class="btn edGreen" id="liveSave" title="Descarga el registro sin vídeo (.json) para abrirlo en otro dispositivo">💾 Guardar proyecto</button>
+          <label class="btn" for="liveImp" style="text-align:center;cursor:pointer" title="Carga un registro sin vídeo guardado antes">📂 Cargar proyecto</label>
+          <input type="file" id="liveImp" accept="application/json,.json" hidden>
+          <button type="button" class="btn edGreen" id="liveBotSave" title="Descarga solo las categorías, detalles y jugadores (la botonera), sin eventos ni vídeo">💾 Guardar botonera</button>
+          <label class="btn" for="impBot" style="text-align:center;cursor:pointer" title="Carga una botonera (categorías, detalles y jugadores) guardada previamente; se añade a la actual">📂 Cargar botonera</label>
+          <button type="button" class="btn primary" id="liveBotEdit" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">🎛️ Botonera</button>
+          <button type="button" class="btn" id="liveTut" title="Guía paso a paso del registro sin vídeo">❓ Tutorial</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2721,6 +2780,10 @@ dialog#dlgBot .botChk{font-size:12px}
     <div id="dlgMinBody">
     <label>Minuto (texto del registro)<input id="fMin" required maxlength="8"></label>
     <div id="dlgClipInfo" aria-live="polite" style="display:flex;gap:16px;flex-wrap:wrap;margin:6px 0;padding:6px 8px;border:1px solid var(--line);border-left:3px solid var(--red);font-size:13px"></div>
+    </div>
+    <div id="dlgClipEdit" hidden class="row" style="flex-wrap:nowrap;gap:8px;margin:6px 0;align-items:flex-end">
+      <label style="flex:1;margin:0">Inicio del corte (m:ss)<input id="fClipA" inputmode="decimal" maxlength="9" placeholder="0:00" autocomplete="off"></label>
+      <label style="flex:1;margin:0">Fin del corte (m:ss)<input id="fClipB" inputmode="decimal" maxlength="9" placeholder="0:00" autocomplete="off"></label>
     </div>
     <div id="stEq">
     <label>Equipo</label>
@@ -3055,7 +3118,7 @@ dialog#dlgBot .botChk{font-size:12px}
       <div class="tutHr"><h3>Vídeos</h3><span class="tutOc">Ocultar</span></div>
       <div class="tutSrc" hidden><b>1. cortes3.mp4</b><small>1:35:00</small><i>✕</i></div>
       <div class="tutHr"><h3>Tiempo del evento</h3><span class="tutOc">Ocultar</span></div>
-      <div class="tutFr2"><span>Arrancar antes</span><span class="tutNum" data-k="pre">2</span><span>s</span><span>Finalizar en</span><span class="tutNum" data-k="post">5</span><span>s</span></div>
+      <div class="tutFr2"><span>Arrancar antes</span><span class="tutNum" data-k="pre">5</span><span>s</span><span>Finalizar en</span><span class="tutNum" data-k="post">5</span><span>s</span></div>
       <div class="tutHr"><h3>Filtros</h3><span class="tutOc">Ocultar</span></div>
       <div class="tutSelR"><span class="tutB set">Ambos</span><span class="tutB">Mi equipo</span><span class="tutB">Rival</span></div>
       <div class="tutSelR"><span class="tutInp" data-k="flt">Todas ▾</span><span class="tutB trd">Limpiar</span></div>
@@ -3772,7 +3835,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     const row=el("div",{style:"display:grid;grid-template-columns:20px 1fr auto;gap:8px;align-items:center;padding:5px 6px;border-radius:5px;border-left:4px solid "+CATS[e.cat].c+";background:var(--bg)"});
     row.append(
       el("span",{textContent:String(i+1),style:"font-family:'Barlow Condensed',sans-serif;color:var(--muted);text-align:center"}),
-      el("div",{},[el("b",{textContent:e.cat,style:"font-size:13px"}),el("div",{textContent:e.min+(eqLabel(e)?" · "+eqLabel(e):"")+" · "+e.det+(e.jug?" · "+e.jug:"")+" · "+clipLen(e).toFixed(1)+" s",style:"font-size:12px;color:var(--muted)"})])
+      el("div",{},[el("b",{textContent:e.cat,style:"font-size:13px"}),el("div",{textContent:e.min+(eqLabel(e)?" · "+eqLabel(e):"")+" · "+e.det+(e.jug?" · "+e.jug:"")+" · "+Math.round(clipLen(e))+" s",style:"font-size:12px;color:var(--muted)"})])
     );
     const acts=el("div",{style:"display:flex;gap:3px"});
     const bX=el("button",{textContent:"✕",className:"btn",title:"Quitar de la lista"}); bX.style.padding="2px 7px";
@@ -3790,7 +3853,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       const row=el("div",{style:"display:grid;gap:6px;padding:6px 8px;background:var(--bg);border:1px solid var(--line);border-left:4px solid "+(cur?"var(--red)":"var(--line)")});
       const name=el("button",{type:"button",className:"btn",title:"Seleccionar esta lista",style:"text-align:left;border:0;background:none;padding:0;font-family:var(--f-disp);font-weight:700;font-size:15px;color:var(--ink)",textContent:p.name});
       name.onclick=()=>{ curPlId=p.id; renderPlaylist(); };
-      const info=el("div",{textContent:items.length? items.length+" evento"+(items.length===1?"":"s")+" · "+items.reduce((a,e)=>a+clipLen(e),0).toFixed(1)+" s" : "vacía",style:"font-size:12px;color:var(--muted)"});
+      const info=el("div",{textContent:items.length? items.length+" evento"+(items.length===1?"":"s")+" · "+Math.round(items.reduce((a,e)=>a+clipLen(e),0))+" s" : "vacía",style:"font-size:12px;color:var(--muted)"});
       const acts=el("div",{className:"row",style:"margin:0;gap:6px"});
       const b1=el("button",{type:"button",className:"btn edGreen plDl",textContent:"⬇ 1 vídeo",title:"Descarga «"+p.name+"» unida en un solo vídeo",style:"font-size:12px"});
       const b2=el("button",{type:"button",className:"btn edGreen plDl",textContent:"⬇ Separados",title:"Descarga cada clip de «"+p.name+"» como vídeo independiente",style:"font-size:12px"});
@@ -3808,7 +3871,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     const L=$("plList"); L.replaceChildren();
     const items=pl.items.map(id=>events.find(x=>x.id===id)).filter(Boolean);
     if(items.length!==pl.items.length){ pl.items=items.map(e=>e.id); savePlaylists(); }
-    $("plInfo").textContent=items.length? items.length+" evento"+(items.length===1?"":"s")+" · "+items.reduce((a,e)=>a+clipLen(e),0).toFixed(1)+" s en total" : "vacía";
+    $("plInfo").textContent=items.length? items.length+" evento"+(items.length===1?"":"s")+" · "+Math.round(items.reduce((a,e)=>a+clipLen(e),0))+" s en total" : "vacía";
     $("plExport").disabled=!items.length; $("plExportSep").disabled=!items.length;
     items.forEach((e,i)=>L.append(plItemRow(e,i,items)));
   }
@@ -4510,21 +4573,28 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       const row=el("div",{className:"catRow"});
       const items=sorted().filter(x=>x.e.cat===cat).map(({e})=>({e,c:clipOf(e)})).filter(x=>x.c.b>0&&x.c.a<d);
       items.forEach(({e,c})=>{
-        const bar=el("div",{className:"evBar"+(selEv===e.id?" sel":""),title:`${e.min} · ${clipLen(e).toFixed(1)} s`});
+        const bar=el("div",{className:"evBar"+(selEv===e.id?" sel":""),title:`${e.min} · ${Math.round(clipLen(e))} s`});
         bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%"; bar.style.background=CATS[cat].c; bar.style.pointerEvents="none";
-        const chip=el("div",{className:"chip"+(selEv===e.id?" sel":""),title:`${e.min} · ${e.cat} · ${e.det}${e.jug?" · "+e.jug:""} · ${clipLen(e).toFixed(1)} s · arrastra el centro para mover, o los bordes para acortar/alargar`});
+        const chip=el("div",{className:"chip"+(selEv===e.id?" sel":""),title:`${e.min} · ${e.cat} · ${e.det}${e.jug?" · "+e.jug:""} · ${Math.round(clipLen(e))} s · arrastra el centro para mover, o los bordes para acortar/alargar`});
         chip.style.left=pct(c.a,0,d); chip.style.minWidth="max("+Math.max(0.25,(c.b-c.a)/d*100)+"%, 30px)"; chip.style.background=CATS[cat].c;
         const hdlL=el("div",{className:"chipHdl l",title:"Arrastra para acortar o alargar el inicio del clip"});
         const hdlR=el("div",{className:"chipHdl r",title:"Arrastra para acortar o alargar el final del clip"});
-        chip.append(hdlL,hdlR);
-        chip.onclick=ev=>{ev.stopPropagation(); if(chip.dataset.dragged){delete chip.dataset.dragged; return;} go(e);};
+        hdlL.classList.add("bh"); hdlR.classList.add("bh"); // fuera del chip, en el inicio y el final reales
+        hdlL.style.left=pct(c.a,0,d); hdlR.style.left=pct(c.b,0,d); chip._hl=hdlL; chip._hr=hdlR;
+        chip.onclick=ev=>{ev.stopPropagation(); if(chip.dataset.dragged){delete chip.dataset.dragged; return;} vFitClip(e); go(e);};
         bindEvDrag(e,"move",chip,chip,bar);
         bindEvDrag(e,"l",hdlL,chip,bar);
         bindEvDrag(e,"r",hdlR,chip,bar);
-        row.append(bar,chip);
+        row.append(bar,chip,hdlL,hdlR);
       });
       rows.append(row);
     });
+  }
+  // al seleccionar un corte pequeño, acerca la línea de tiempo para que se puedan arrastrar sus asas con precisión
+  function vFitClip(e){
+    const d=v.duration; if(!d) return; const c=clipOf(e), len=Math.max(c.b-c.a,1);
+    if(len/d*vZoom>=0.06) return; // ya se ve lo bastante grande
+    vZoom=Math.min(VZMAX,0.12*d/len); vZv=(c.a+c.b)/2/d-0.5/vZoom; vPanTs=Date.now(); vApplyZoom();
   }
   // arrastre directo de los eventos sobre la línea de tiempo por categorías: acortar/alargar/mover
   function bindEvDrag(e,mode,handle,chip,bar){
@@ -4537,6 +4607,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       chip.classList.add("dragging"); bar.classList.add("dragging");
       function place(c){
         chip.style.left=pct(c.a,0,d); chip.style.minWidth="max("+Math.max(0.25,(c.b-c.a)/d*100)+"%, 30px)"; bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%";
+        if(chip._hl){ chip._hl.style.left=pct(c.a,0,d); chip._hr.style.left=pct(c.b,0,d); }
       }
       function onMove(mv){
         const dx=mv.clientX-startX; if(Math.abs(dx)>3) moved=true;
@@ -4692,7 +4763,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   }
   (function initEdEvToggle(){
     const st=document.createElement("style");
-    st.textContent="body.edEvHid #edList,body.edEvHid #edFilter,body.edEvHid #edResultRow,body.edEvHid #edStills,body.edStillsShow #edList,body.edStillsShow #edFilter,body.edStillsShow #edResultRow{display:none !important}";
+    st.textContent="body.edEvHid #edList,body.edEvHid #edFilter,body.edEvHid #edResultRow,body.edEvHid #edStills,body.edStillsShow #edList,body.edStillsShow #edFilter,body.edStillsShow #edResultRow,body.edStillsShow #evBot{display:none !important}";
     document.head.appendChild(st);
     let hidden=false;
     try{ hidden=localStorage.getItem(ED_EV_HIDE_KEY)==="1"; }catch(e){}
@@ -4837,10 +4908,13 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     return fmtHM(2700+(t-halfMarks.p2));
   }
   // Marcador de partido: ⏱ minuto de partido · 🎬 tiempo de vídeo (mismo formato que el cabezal)
+  const MC_ICO_CLOCK='<svg class="mcIco" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+  const MC_ICO_VIDEO='<svg class="mcIco" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="M15 10l7-4v12l-7-4z"/></svg>';
   function setMatchClock(el,t,mc){
-    el.textContent=mc?("⏱ "+mc+" · "):"";
+    el.textContent="";
     if(!mc) return;
-    const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); el.appendChild(v);
+    el.insertAdjacentHTML("beforeend",MC_ICO_CLOCK); el.append(mc+" · ");
+    const v=document.createElement("span"); v.className="hcV"; v.insertAdjacentHTML("beforeend",MC_ICO_VIDEO); v.append(fmt(t).replace(/\.\d$/,"")); el.appendChild(v);
   }
   { const tr=$("vSeekTrack"); let drag=false;
     const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); const f=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width)), pm=vPM(); playing=null; v.currentTime=pm?pm.t(f):f*d; };
@@ -4900,7 +4974,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       pwFl.open();
       const t=pwBlk.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=$("pintMode"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); } }); }
   // Zoom de las líneas de tiempo del registro (la de arriba y la de categorías van juntas)
-  let vZoom=1, vZv=0, vPanTs=0; const VZMAX=64;
+  let vZoom=1, vZv=0, vPanTs=0; const VZMAX=256;
   function vApplyZoom(){
     vZoom=Math.max(1,Math.min(VZMAX,vZoom)); vZv=Math.max(0,Math.min(1-1/vZoom,vZv));
     const w=(vZoom*100)+"%", l=(-vZv*vZoom*100)+"%";
@@ -4937,11 +5011,10 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       if(pm0){ const fuera=pm0.out(t-0.3,t+0.3); if(!fuera) vAutoSin=true; else if(vAutoSin){ vAutoSin=false; setOnlyPlay(false); return; } } }
     const pv=d?vPos(t,vPM()):0;
     if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=pv/100; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
-    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=pv+"%"; $("vHeadClock").style.left=pv+"%"; { const hc=$("vHeadClock"); hc.textContent=mc?"⏱ "+mc+" · ":""; // segundo valor (vídeo) en gris
-      if(mc){ const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); hc.appendChild(v); } }
+    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=pv+"%"; $("vHeadClock").style.left=pv+"%"; setMatchClock($("vHeadClock"),t,mc);
     { const b=$("vPintGo"); // icono de pintar junto al cabezal cuando está sobre un evento
       const fl=$("flt").value, over=d&&events.some(e=>{ if(!CATS[e.cat]||(fl&&fl!==e.cat)||!passEq(e)) return false; const c=clipOf(e); return t>=c.a&&t<=c.b; });
-      b.hidden=!over; if(over){ b.style.left=pv+"%"; b.classList.toggle("left",pv>90); } }
+      b.hidden=true; } // el lápiz junto al cabezal ya no se muestra: las herramientas se abren con los botones de pintar; el botón sigue en el DOM porque otros controles lo activan por código
     { const pl=[halfMarks.p1,halfMarks.p1e,halfMarks.p2,halfMarks.end]; const jug=pl.every(x=>typeof x==="number")?(halfMarks.p1e-halfMarks.p1)+(halfMarks.end-halfMarks.p2):null;
       const fS=x=>{ const q=Math.round(Math.max(0,x||0)); return Math.floor(q/60)+":"+String(q%60).padStart(2,"0"); };
       $("vTrimInfo").textContent="· Inicio "+fS(0)+" · Fin "+fS(d)+"\n· Duración "+fS(d)+(jug!=null&&jug>=0?"\n· Tiempo jugado "+fS(jug):""); }
@@ -5301,7 +5374,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     if(e) manualMode=false; else manReset();
     placeDlgForFullscreen(); editId=e?e.id:null; const cur=v.currentTime||0;
     $("fMin").value=e?e.min:(matchClockText(cur)||(Math.floor(cur/60)+":"+String(Math.floor(cur%60)).padStart(2,"0")));
-    dlgEditCancel(); $("newCatErr").textContent=""; $("fCat").value=e&&CATS[e.cat]?e.cat:(CATS[prevCat]?prevCat:"OCASIÓN"); syncCatBtns(); setEq(e?e.eq:"propio"); fillDets(e?e.det:""); fillJugs(e?e.jug:""); setStage(e?2:0); $("fComent").value=e?(e.coment||""):""; positionDlgOverList(); if(!dlgEl.open){ try{ dlgEl.show(); }catch(err){ console.error("No se pudo abrir la botonera:",err); dlgEl.setAttribute("open",""); } } updatePopOutBtn(); manUI(); updateClipInfo();
+    dlgEditCancel(); $("newCatErr").textContent=""; $("fCat").value=e&&CATS[e.cat]?e.cat:(CATS[prevCat]?prevCat:"OCASIÓN"); syncCatBtns(); setEq(e?e.eq:"propio"); fillDets(e?e.det:""); fillJugs(e?e.jug:""); setStage(e?2:0); $("fComent").value=e?(e.coment||""):""; positionDlgOverList(); if(!dlgEl.open){ try{ dlgEl.show(); }catch(err){ console.error("No se pudo abrir la botonera:",err); dlgEl.setAttribute("open",""); } } updatePopOutBtn(); manUI(); updateClipInfo(); fillClipEdit();
     // por defecto, en ventana emergente (salvo que se haya elegido «Fijo» o no esté disponible, p. ej. en móvil)
     // (en pantallas estrechas ≤640 px no se abre sola: el botón EMERGENTE queda para hacerlo a mano)
     if(!dlgFijo && !popoutWin && dlgEl.ownerDocument===document && !matchMedia("(max-width:640px)").matches && getComputedStyle($("popOutDlg")).display!=="none") openDlgInPopout(true); }
@@ -5316,7 +5389,24 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     else if(manualMode){ a=manA; b=manB; }
     else { const c=clipOf({min:"",fixed:v.currentTime||0}); a=c.a; b=c.b; }
     const cell=(k,val)=>el("span",{innerHTML:k+": <b>"+val+"</b>"});
-    box.replaceChildren(cell("Registro",man?"Manual":"Automático"), cell("Inicio",a==null?"—":fmt(a)), cell("Fin",b==null?"—":fmt(b)), cell("Duración",a==null||b==null?"—":(b-a).toFixed(1)+" s"));
+    box.replaceChildren(cell("Registro",man?"Manual":"Automático"), cell("Inicio",a==null?"—":fmt(a)), cell("Fin",b==null?"—":fmt(b)), cell("Duración",a==null||b==null?"—":Math.round(b-a)+" s"));
+  }
+  // Edición manual de inicio y fin al modificar un evento ya hecho
+  const clipTxt=t=>{ const s=Math.max(0,Math.round(t)), m=Math.floor(s/60), r=s-m*60; return m+":"+String(r).padStart(2,"0"); };
+  function parseClipT(s){ s=String(s||"").trim().replace(",","."); const m=/^(?:(\d{1,3}):)?(\d{1,5}(?:\.\d+)?)$/.exec(s); if(!m) return null; return (m[1]?+m[1]*60:0)+(+m[2]); }
+  function fillClipEdit(){
+    const box=$("dlgClipEdit"), ev=editId&&events.find(x=>x.id===editId);
+    box.hidden=!ev;
+    if(!ev) return;
+    const c=clipOf(ev); $("fClipA").value=$("fClipA").dataset.o=clipTxt(c.a); $("fClipB").value=$("fClipB").dataset.o=clipTxt(c.b);
+  }
+  // Devuelve el clip con los nuevos extremos, conservando los tramos ya recortados dentro del rango
+  function reclip(old,a,b){
+    const segs=[]; let pos=a;
+    (old.segs||[]).slice().sort((x,y)=>x.s-y.s).forEach(g=>{ const s=Math.max(g.s,a), e=Math.min(g.e,b); if(e<=s) return;
+      if(s>pos) segs.push({s:pos,e:s,off:false}); segs.push({s,e,off:!!g.off}); pos=e; });
+    if(pos<b) segs.push({s:pos,e:b,off:false});
+    return {...old,a,b,segs:segs.length?segs:[{s:a,e:b,off:false}]};
   }
   v.addEventListener("timeupdate",updateClipInfo); v.addEventListener("seeked",updateClipInfo);
   ["pre","post"].forEach(id=>$(id).addEventListener("input",updateClipInfo));
@@ -5328,7 +5418,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     $("manRec").classList.toggle("on",manA!==null&&manB===null);
     $("manInfo").textContent=manA===null?"Pulsa GRABAR para empezar el corte y STOP para terminarlo."
       :manB===null?"● Grabando desde "+fmt(manA)+" · pulsa STOP para terminar."
-      :"Corte de "+fmt(manA)+" a "+fmt(manB)+" ("+(manB-manA).toFixed(1)+" s). Elige categoría y pulsa Guardar.";
+      :"Corte de "+fmt(manA)+" a "+fmt(manB)+" ("+Math.round(manB-manA)+" s). Elige categoría y pulsa Guardar.";
   }
   $("manRec").onclick=()=>{
     if(!v.src) return;
@@ -5453,7 +5543,11 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     if($("fJug").value==="__new__"){ if($("newJugName").value.trim()) addJug(); else $("fJug").value=""; }
     if($("fJug").value) addJugTo($("fJug").value);
     const data={min:$("fMin").value.trim().slice(0,8),cat:$("fCat").value,eq:eqOk($("fEq").value),det:$("fDet").value.trim().slice(0,60),jug:$("fJug").value.trim().slice(0,40),coment:$("fComent").value.trim().slice(0,200)};
-    if(editId){ Object.assign(events.find(x=>x.id===editId),data); }
+    if(editId){ const ev=events.find(x=>x.id===editId); Object.assign(ev,data);
+      const oc=clipOf(ev), tA=$("fClipA").value.trim(), tB=$("fClipB").value.trim();
+      // los campos muestran m:ss: solo se toca el corte si el texto cambió (así no se pierden los decimales originales)
+      const na=tA===$("fClipA").dataset.o?oc.a:parseClipT(tA), nb=tB===$("fClipB").dataset.o?oc.b:parseClipT(tB);
+      if(na!==null&&nb!==null&&nb-na>=0.2&&(Math.abs(na-oc.a)>0.05||Math.abs(nb-oc.b)>0.05)) ev.clip=reclip(oc,na,nb); }
     else if(manualMode&&manA!==null&&manB!==null) events.push({id:"u"+Date.now(),...data,...window.acfcVidTag(),man:true,fixed:+manA.toFixed(2),clip:{a:manA,b:manB,segs:[{s:manA,e:manB,off:false}]}});
     else events.push({id:"u"+Date.now(),...data,...window.acfcVidTag(),fixed:+(v.currentTime||0).toFixed(2)});
     save(); refresh();
@@ -5924,7 +6018,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     if(!ceView) ceView=[Math.max(0,c.a-3),Math.min(d,c.b+3)]; ceView=[Math.min(ceView[0],c.a),Math.max(ceView[1],c.b)];
     const [va,vb]=ceView; $("ceDot").style.background=CATS[e.cat].c;
     $("ceTitle").textContent=e.min+" · "+e.cat+" · "+e.det+(e.jug?" · "+e.jug:"");
-    if(!flash.t||$("ceSub").style.color==="") $("ceSub").textContent="Clip "+(matchClockText(c.a)||fmt(c.a))+" – "+(matchClockText(c.b)||fmt(c.b))+" · se reproducen "+clipLen(e).toFixed(1)+" s"+(c.segs.some(g=>g.off)?" (con tramos quitados)":"");
+    if(!flash.t||$("ceSub").style.color==="") $("ceSub").textContent="Clip "+(matchClockText(c.a)||fmt(c.a))+" – "+(matchClockText(c.b)||fmt(c.b))+" · se reproducen "+Math.round(clipLen(e))+" s"+(c.segs.some(g=>g.off)?" (con tramos quitados)":"");
     const wrap=$("ceSegs"); wrap.replaceChildren(); wrap.style.setProperty("--c",CATS[e.cat].c);
     const tNow=v.currentTime; c.segs.forEach((g,i)=>{ const gs=Math.max(g.s,c.a), ge=Math.min(g.e,c.b); if(ge<=gs) return;
       const n=el("div",{className:"seg"+(g.off?" off":"")+(tNow>=gs&&tNow<ge?" sel":""),title:(g.off?"Quitado":"Se conserva")+": "+fmt(gs)+" – "+fmt(ge)});
@@ -5932,7 +6026,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     $("ceShA").style.left="0"; $("ceShA").style.width=pct(c.a,va,vb); $("ceShB").style.left=pct(c.b,va,vb); $("ceShB").style.right="0";
     $("ceHA").style.left=pct(c.a,va,vb); $("ceHB").style.left=pct(c.b,va,vb);
     const lA=$("ceLblA"), lB=$("ceLblB"), lD=$("ceLblD"), wide=($("ceTrack").clientWidth*(c.b-c.a)/(vb-va))>230;
-    lA.textContent=matchClockText(c.a)||fmt(c.a); lB.textContent=matchClockText(c.b)||fmt(c.b); lD.textContent=clipLen(e).toFixed(1)+" s";
+    lA.textContent=matchClockText(c.a)||fmt(c.a); lB.textContent=matchClockText(c.b)||fmt(c.b); lD.textContent=Math.round(clipLen(e))+" s";
     lA.style.left="calc("+pct(c.a,va,vb)+" + 12px)"; lB.style.left="calc("+pct(c.b,va,vb)+" - 12px)"; lD.style.left=pct((c.a+c.b)/2,va,vb);
     lA.style.display=lB.style.display=wide?"":"none";
     const tEv=timeOf(e), rel=n=>(n>=0?"+":"-")+Math.abs(n).toFixed(1);
@@ -6203,6 +6297,12 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   }
   $("liveJugAdd").onclick=liveAddJug;
   $("liveJugName").onkeydown=k=>{ if(k.key==="Enter"){ k.preventDefault(); liveAddJug(); } };
+  $("liveEvSave").onclick=()=>{
+    const b=$("liveEvSave"), e=liveCur();
+    if(!e){ b.textContent="Sin evento"; }
+    else{ e.coment=$("liveComent").value.slice(0,200); liveSave(); b.textContent="Guardado"; }
+    clearTimeout(b._t); b._t=setTimeout(()=>{ b.textContent="Guardar"; },1600);
+  };
   $("liveComent").oninput=()=>{ const e=liveCur(); if(!e) return; e.coment=$("liveComent").value.slice(0,200); liveSave(); };
   // Sincronización con el vídeo: cada marca del directo se empareja con la del vídeo; los eventos se colocan por interpolación.
   // Dentro del descanso (fin 1ª → inicio 2ª) se mantiene el ritmo real, porque el vídeo suele recortarlo.
@@ -7011,7 +7111,9 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       if(it.name){ const lb=document.createElement("span"); lb.className="evLbl"; lb.textContent=it.name;
         if(b.dataset.cl!=null){ lb.style.left=b.dataset.cl+"%"; lb.style.right=b.dataset.cr+"%"; } // el rótulo se centra en la parte visible
         b.append(lb); if(evLblRO) evLblRO.observe(b); }
-      b.dataset.add=i; b.title=`Corte añadido${it.name?": "+it.name:" #"+(i+1)} · ${fmt(it.s)}–${fmt(it.e)} (clic para seleccionarlo, arrastra para moverlo)`; wrap.append(b);
+      if(!b.style.clipPath) ["l","r"].forEach(sd=>{ const h=document.createElement("i"); h.className="dcH "+sd; h.dataset.add=i; h.dataset.edge=sd;
+        h.title=sd==="l"?"Arrastra para acortar o alargar el inicio del corte":"Arrastra para acortar o alargar el final del corte"; b.append(h); });
+      b.dataset.add=i; b.title=`Corte añadido${it.name?": "+it.name:" #"+(i+1)} · ${fmt(it.s)}–${fmt(it.e)} (clic para seleccionarlo, arrastra para moverlo, los bordes acortan o alargan)`; wrap.append(b);
     });
     stills.forEach((k,i)=>{ if(k.srcId!==curId) return;
       const m=document.createElement("div"); m.className="stillMk"; m.style.left=epc(k.t)+"%";
@@ -7035,19 +7137,22 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       $("edJug").textContent=jug!=null&&jug>=0?"Tiempo jugado "+fmt(jug):""; }
     $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=true; renderMarks(d); tick(); if(window.acfcABWin&&window.acfcABWin.refresh) window.acfcABWin.refresh(); // el botón «+ Añadir» ya no se muestra: Punto B añade el tramo
   }
-  // ---------- eventos registrados (los del Registro con vídeo), en filas por categoría y de solo lectura ----------
-  var regEvOn=false; // el botón «Ver eventos registrados» se ha quitado: la vista queda siempre oculta
+  // ---------- línea de tiempo por categorías (como la del Registro con vídeo): cortes del editor + eventos registrados ----------
+  var regEvOn=true;
   function renderRegEv(){
-    const box=$("edRegEv");
-    box.hidden=!regEvOn; if(!regEvOn) return;
+    const box=$("edRegEv"), d=dur(), src=sources[curSrc];
+    box.hidden=!regEvOn||!d||!src; if(box.hidden) return;
     const lbl=$("edRegLbl"), rows=$("edRegRows"); lbl.replaceChildren(); rows.replaceChildren();
-    const d=dur(), src=sources[curSrc], api=window.acfcRegEvents, say=t=>{ const m=document.createElement("div"); m.className="edRegEmpty"; m.textContent=t; rows.append(m); };
-    if(!d||!src) return say("Carga un vídeo para ver los eventos registrados.");
-    const data=api?api.get():{cats:[],events:[]};
-    // solo los eventos de este vídeo (los que no llevan vídeo asociado valen para cualquiera)
-    const list=data.events.filter(e=>!e.vid||e.vid===src.name);
-    if(!list.length) return say("No hay eventos registrados para este vídeo. Regístralos en «Registro con vídeo».");
-    data.cats.filter(c=>list.some(e=>e.cat===c)).forEach(cat=>{
+    const api=window.acfcRegEvents, say=t=>{ const m=document.createElement("div"); m.className="edRegEmpty"; m.textContent=t; rows.append(m); };
+    // cortes añadidos en el editor para este vídeo
+    const list=[]; added.forEach((it,i)=>{ if(it.srcId!==src.id) return; const o=edOvOf(it,i);
+      list.push({cat:o.cat,color:o.color,a:it.s,b:it.e,title:o.min+" · "+o.det+" · "+fmt(it.e-it.s)}); });
+    // eventos del Registro con vídeo de este vídeo (los que no llevan vídeo asociado valen para cualquiera), sin repetir los ya añadidos
+    (api?api.get().events:[]).forEach(e=>{ if(e.vid&&e.vid!==src.name) return;
+      if(list.some(x=>x.cat===e.cat&&Math.abs(x.a-e.a)<0.2&&Math.abs(x.b-e.b)<0.2)) return;
+      list.push({cat:e.cat,color:e.color,a:e.a,b:e.b,title:e.min+" · "+e.cat+(e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+" · "+fmt(e.b-e.a)}); });
+    if(!list.length) return say("Aquí aparecerán los cortes y eventos por categoría.");
+    [...new Set(list.map(x=>x.cat))].forEach(cat=>{
       const its=list.filter(e=>e.cat===cat).sort((x,y)=>x.a-y.a), color=its[0].color;
       const l=document.createElement("div"); l.className="catLabel";
       const dot=document.createElement("i"); dot.className="dot"; dot.style.background=color;
@@ -7058,7 +7163,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       its.forEach(e=>{ if(e.b<=0||e.a>=d) return;
         if(edPM()&&edPM().out(e.a,e.b)) return; const w=Math.max(0.25,epc(e.b)-epc(e.a)), chip=document.createElement("div");
         chip.className="chip"; chip.style.left=epc(e.a)+"%"; chip.style.minWidth="max("+w+"%, 8px)"; chip.style.background=color;
-        chip.title=e.min+" · "+e.cat+(e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+" · "+fmt(e.b-e.a);
+        chip.title=e.title;
         row.append(chip); });
       row.onclick=ev=>{ // clic en la fila: salta al evento bajo el cursor, o al más cercano
         const r=$("edRegZoom").getBoundingClientRect(), t=ept((ev.clientX-r.left)/r.width);
@@ -7085,8 +7190,10 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     s.addEventListener("input",()=>{ const d=dur(); if(d){ V.currentTime=s.value/1000*d; tick(); } });
     s.addEventListener("keydown",e=>e.stopPropagation()); }
   function tick(){ const d=dur(), t=V.currentTime||0; $("edClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d||0).replace(/\.\d$/,"");
-    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc+" · 🎬 "+fmt(t).replace(/\.\d$/,"")):"";
-    $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
+    const mc=matchClockText(t);
+    const IC='<svg class="mcIco" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>', IV='<svg class="mcIco" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="M15 10l7-4v12l-7-4z"/></svg>';
+    { const m=$("edMatchClock"); m.textContent=""; if(mc){ m.insertAdjacentHTML("beforeend",IC); m.append(mc+" · "); m.insertAdjacentHTML("beforeend",IV); m.append(fmt(t).replace(/\.\d$/,"")); } }
+    $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); { const m=$("edFsMatch"); m.textContent=""; if(mc){ m.insertAdjacentHTML("beforeend",IC); m.append(mc); } }
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
     $("edHead").style.left=(d?epc(t):0)+"%";
     $("edRegHead").style.left=(d?epc(t):0)+"%";
@@ -7202,6 +7309,10 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   tr.addEventListener("pointerdown",e=>{ if(!dur()||exporting) return; tr.setPointerCapture(e.pointerId);
     if(e.target.id==="hIn"||e.target.id==="hOut"){ snap(); drag=e.target.id; return; }
     const t=tAt(e);
+    if(e.target.dataset&&e.target.dataset.edge&&added[+e.target.dataset.add]){ // asa de un corte: lo selecciona y arrastra su inicio o su final
+      e.preventDefault(); const ai=+e.target.dataset.add, sd=e.target.dataset.edge;
+      if(added[ai]!==activeAdded) gotoAdded(ai,true);
+      snap(); drag=sd==="l"?"hIn":"hOut"; mv=null; return; }
     if(e.target.dataset&&e.target.dataset.add!==undefined){ e.preventDefault(); const ai=+e.target.dataset.add, it=added[ai];
       // el corte ya añadido tapa la franja verde: si se arrastra dentro de la selección actual (no vinculada a él), se mueve la selección
       // dentro de la selección actual (también si es el corte activo): arrastrar desplaza el cursor; con Mayús mueve el corte entero
@@ -11316,6 +11427,8 @@ if(visorBlock&&lvPanel&&lvV){
 /* Limpiar proyecto: borrado masivo de eventos y pintados de la pestaña activa */
 html #acfcClearProj{background:var(--red);border-color:var(--red);color:#fff}
 html #acfcClearProj:hover{filter:brightness(.88);color:#fff}
+/* Desplegable de filtros del registro: texto más pequeño */
+#flt,#flt option,#fltVid,#fltVid option{font-size:12px}
 </style>
 <script>
 /* Limpiar proyecto: una sola confirmación y borra eventos + pintados de la pestaña abierta */
