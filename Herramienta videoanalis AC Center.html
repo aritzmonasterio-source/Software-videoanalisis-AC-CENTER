@@ -4410,7 +4410,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   window.acfcOnlyPlay=true; try{ if(localStorage.getItem("acfcOnlyPlay")==="0") window.acfcOnlyPlay=false; }catch(e){}
   function vPM(){ if(window.acfcOnlyPlay===false) return null; try{ return window.acfcPlayMap(halfMarks,v.duration); }catch(err){ return null; } }
   let vAutoSin=true; // false = el usuario eligió «En juego» estando fuera del juego: no volver a saltar hasta que entre en juego
-  function setOnlyPlay(on,manual){ if(on&&manual) vAutoSin=false; window.acfcOnlyPlay=on; try{ localStorage.setItem("acfcOnlyPlay",on?"1":"0"); }catch(e){} renderHalfMarks(); }
+  function setOnlyPlay(on){ window.acfcOnlyPlay=on; try{ localStorage.setItem("acfcOnlyPlay",on?"1":"0"); }catch(e){} renderHalfMarks(); }
   function vPos(t,pm){ const d=v.duration; return pm?pm.f(t)*100:Math.max(0,Math.min(100,t/d*100)); }
   function vPlace(tickEl,c,pm){ const d=v.duration, a=vPos(c.a,pm), b=vPos(c.b,pm);
     tickEl.style.left=a+"%"; tickEl.style.width=Math.max(0,pm?b-a:(c.b-c.a)/d*100)+"%"; }
@@ -4579,7 +4579,10 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   // el editor básico empuja aquí sus marcas (inicio/fin de partes) para que el registro con vídeo use la misma calibración
   window.acfcRegMarks={ get(){ return {...halfMarks}; }, set(m){ Object.keys(HALF_MARK_IDS).forEach(k=>{ halfMarks[k]=typeof m?.[k]==="number"?m[k]:null; }); saveHalfMarks(); renderHalfMarks(); } };
 
-  $("vModePlay").addEventListener("click",()=>setOnlyPlay(true,true));
+  $("vModePlay").addEventListener("click",()=>{ // al volver a «En juego» desde fuera del juego, el vídeo salta al inicio del juego más cercano (así el cursor y el reproductor siguen juntos)
+    const pm=window.acfcPlayMap(halfMarks,v.duration), t=v.currentTime;
+    if(pm&&pm.out(t-0.3,t+0.3)){ const mk=halfMarks; v.currentTime=t<mk.p1?mk.p1:(t<mk.p2?mk.p2:mk.end); }
+    vAutoSin=true; setOnlyPlay(true); });
   $("vModeAll").addEventListener("click",()=>setOnlyPlay(false));
   document.querySelectorAll(".markLine").forEach(ln=>{ const lb=$(ln.id+"Lbl"); if(!lb) return;
     ln.addEventListener("mouseenter",()=>lb.classList.add("show")); ln.addEventListener("mouseleave",()=>lb.classList.remove("show")); });
