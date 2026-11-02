@@ -280,6 +280,8 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #vSeekTrack:hover .evH{opacity:.55}.evH:hover,.evH.drag{opacity:1!important;background:var(--red)}
 .halfBand{position:absolute;top:0;bottom:0;display:none;pointer-events:none;z-index:1}
 .halfBand span{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-family:var(--f-disp);font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:2px;padding:0 8px;line-height:16px;white-space:nowrap;opacity:.92}
+.halfSplit{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--red);z-index:3;pointer-events:none;display:none}
+.halfSplit span{position:absolute;bottom:2px;left:4px;font-family:var(--f-disp);font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--ink);background:var(--panel);border:1px solid var(--line);padding:0 4px;line-height:13px;white-space:nowrap}
 .halfDiscard{position:absolute;top:0;bottom:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--muted) 45%,transparent) 0 4px,color-mix(in srgb,var(--panel) 70%,transparent) 4px 9px);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--muted) 40%,transparent)}
 #edBandP1,#vBandP1{background:color-mix(in srgb,#1f6fd1 16%,transparent)}
 #edBandP2,#vBandP2{background:color-mix(in srgb,#2f8a4a 16%,transparent)}
@@ -1451,11 +1453,13 @@ html.acfc-imm #tabVisor #belowStageWrap>.controls:first-child,html.acfc-imm #edC
   width:118px;margin:0;display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:6px;padding:8px;
   background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--glass-bd)}
 html.acfc-imm #tabVisor #belowStageWrap>.controls:first-child>*,html.acfc-imm #edCtl1>*{display:none}
-html.acfc-imm #vTagNow,html.acfc-imm #vTagManual,html.acfc-imm #edSetA,html.acfc-imm #edSetB,html.acfc-imm #edAddSel:not([hidden]){display:block!important;min-height:42px;font-size:11.5px;letter-spacing:.1em;padding:4px 6px;white-space:normal;line-height:1.15}
+html.acfc-imm #vTagNow,html.acfc-imm #vTagManual,html.acfc-imm #vSetA,html.acfc-imm #vSetB,html.acfc-imm #edSetA,html.acfc-imm #edSetB,html.acfc-imm #edAddSel:not([hidden]){display:block!important;min-height:42px;font-size:11.5px;letter-spacing:.1em;padding:4px 6px;white-space:normal;line-height:1.15}
 html.acfc-imm #edAddSel{background:#fff;border-color:#fff;color:#15181D}
 html.acfc-imm #vMarkBtns,html.acfc-imm #edMarkBtns{display:grid!important;grid-template-columns:1fr;gap:4px;margin-top:2px}
 html.acfc-imm .abL{display:none}
-html.acfc-imm #edSetA,html.acfc-imm #edSetB{font-size:17px!important;letter-spacing:.04em!important}
+html.acfc-imm #edSetA,html.acfc-imm #edSetB,html.acfc-imm #vSetA,html.acfc-imm #vSetB{font-size:17px!important;letter-spacing:.04em!important}
+/* Registro con vídeo en móvil: A y B ocupan el ancho que dejan deshacer y rehacer */
+@media (max-width:640px){html:not(.acfc-imm) #vSetA,html:not(.acfc-imm) #vSetB{min-width:64px;min-height:44px;font-size:13px}}
 html.acfc-imm #tabVisor main>section:has(.empty:not([hidden])) #belowStageWrap,html.acfc-imm #tabEditor .edgrid>section:has(.empty:not([hidden])) #edCtl1{display:none!important}
 html.acfc-imm #vMarkBtns .btn,html.acfc-imm #edMarkBtns .btn:not(#edCtlToggle){min-height:28px;padding:2px 6px;font-size:11px;text-align:left;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);white-space:nowrap}
 html.acfc-imm #edMarkBtns #edCtlToggle,html.acfc-imm #vMarkBtns .mt,html.acfc-imm #edMarkBtns .mt{display:none!important}
@@ -1818,6 +1822,8 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <button class="btn histBtn" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
         <button class="btn primary vTagBtn" id="vTagNow" title="Etiquetar en el instante actual (T)">REGISTRO AUTO</button>
         <button class="btn primary vTagBtn" id="vTagManual" title="Registro manual: tú marcas el inicio (GRABAR) y el final (STOP) del corte">REGISTRO MANUAL</button>
+        <button class="btn primary" id="vSetA" title="Punto A: abre el registro manual y marca el inicio del corte en el instante actual">A</button>
+        <button class="btn primary" id="vSetB" title="Punto B: marca el final del corte en el instante actual y pausa">B</button>
         <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
       <span id="vMarkBtns" style="display:contents">
         <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">Inicio primera parte</button>
@@ -2331,9 +2337,10 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <div class="evBotH">
         <h2>Botonera de eventos</h2>
         <span class="hint" style="margin:0;font-size:12px;color:var(--muted)">Tipos que usarás al registrar</span>
+        <button type="button" class="btn acfcLink" id="evBotToggle" title="Ocultar/mostrar la botonera de eventos">Ocultar</button>
       </div>
       <div id="evBotList"></div>
-      <div class="evBotNew">
+      <div class="evBotNew" id="evBotNew">
         <input id="evBotInp" type="text" maxlength="60" placeholder="Otro nombre…" aria-label="Nuevo tipo de evento">
         <button type="button" class="btn primary" id="evBotAdd">Añadir</button>
       </div>
@@ -3504,7 +3511,30 @@ window.VidExport=(()=>{
 })();
 </script>
 <script>
-window.renderHalfBands = function(b1,b2,mk,d){
+// Mapa de tiempo de juego: con las cuatro marcas definidas, la línea de tiempo del registro oculta lo que no es juego
+// y solo muestra 1ª parte + 2ª parte seguidas. f(t) = posición 0..1; t(f) = instante del vídeo.
+window.acfcPlayMap = function(mk,d){
+  if(!d||!mk||![mk.p1,mk.p1e,mk.p2,mk.end].every(x=>typeof x==="number")) return null;
+  if(!(mk.p1<mk.p1e&&mk.p1e<=mk.p2&&mk.p2<mk.end)) return null;
+  const L1=mk.p1e-mk.p1, T=L1+(mk.end-mk.p2);
+  return {T,L1,split:L1/T,
+    f(t){ if(t<=mk.p1e) return Math.max(0,t-mk.p1)/T; if(t>=mk.p2) return (L1+Math.min(t,mk.end)-mk.p2)/T; return L1/T; },
+    t(f){ const x=Math.min(1,Math.max(0,f))*T; return x<=L1?mk.p1+x:mk.p2+(x-L1); },
+    // ¿el tramo a..b cae entero fuera del juego?
+    out(a,b){ return b<=mk.p1||a>=mk.end||(a>=mk.p1e&&b<=mk.p2); }};
+};
+window.renderHalfBands = function(b1,b2,mk,d,compact){
+  const pm=compact?window.acfcPlayMap(mk,d):null;
+  if(pm){
+    const host=b1&&b1.parentNode; if(!host) return;
+    const s=pm.split*100;
+    b1.style.display="flex"; b1.style.left="0"; b1.style.width=s+"%";
+    b2.style.display="flex"; b2.style.left=s+"%"; b2.style.width=(100-s)+"%";
+    (b1._disc||[]).forEach(e=>{ if(e) e.style.display="none"; });
+    let sp=b1._split; if(!sp){ sp=b1._split=document.createElement("div"); sp.className="halfSplit"; sp.title="Cambio de parte (descanso oculto)"; sp.innerHTML="<span>DESCANSO</span>"; host.insertBefore(sp,b1); }
+    sp.style.display="block"; sp.style.left=s+"%"; return;
+  }
+  if(b1&&b1._split) b1._split.style.display="none";
   const band=(el,s,e)=>{ if(!el||s==null||!d){ if(el) el.style.display="none"; return; }
     const e2=e==null?d:e; if(e2<=s){ el.style.display="none"; return; }
     el.style.display="flex"; el.style.left=(s/d*100)+"%"; el.style.width=((e2-s)/d*100)+"%"; };
@@ -4365,13 +4395,19 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(tw()>w+0.5){ lb.style.justifyContent="flex-start"; lb.style.textOverflow="ellipsis"; }
   };
   const seekLblRO=new ResizeObserver(es=>es.forEach(e=>window.acfcFitEvLbl(e.target)));
+  // línea de tiempo superior del registro: con las 4 marcas definidas solo muestra el tiempo de juego (ver acfcPlayMap)
+  function vPM(){ try{ return window.acfcPlayMap(halfMarks,v.duration); }catch(err){ return null; } }
+  function vPos(t,pm){ const d=v.duration; return pm?pm.f(t)*100:Math.max(0,Math.min(100,t/d*100)); }
+  function vPlace(tickEl,c,pm){ const d=v.duration, a=vPos(c.a,pm), b=vPos(c.b,pm);
+    tickEl.style.left=a+"%"; tickEl.style.width=Math.max(0,pm?b-a:(c.b-c.a)/d*100)+"%"; }
   function renderSeekTicks(){
     const box=$("vEvTicks"); if(!box) return; box.replaceChildren();
-    const d=v.duration; if(!d) return; const flt=$("flt").value;
+    const d=v.duration; if(!d) return; const flt=$("flt").value; const pm=vPM();
     events.filter(passEq).filter(e=>CATS[e.cat]&&(!flt||flt===e.cat)).forEach(e=>{
       const c=clipOf(e); if(!(c.b>0&&c.a<d)) return;
+      if(pm&&pm.out(c.a,c.b)) return;
       const t=el("div",{className:"evTick",title:`${e.min} · ${e.cat}${e.det?" · "+e.det:""}`});
-      t.style.left=pct(c.a,0,d); t.style.width=Math.max(0,(c.b-c.a)/d*100)+"%"; t.style.background=CATS[e.cat].c;
+      vPlace(t,c,pm); t.style.background=CATS[e.cat].c;
       const ds=Math.round(Math.max(0,clipLen(e)));
       t.append(el("span",{className:"evLbl",textContent:e.cat}),el("span",{className:"evDur",textContent:Math.floor(ds/60)+":"+String(ds%60).padStart(2,"0")}),seekTickHandle(e,t,"a"),seekTickHandle(e,t,"b"));
       if(pintCount(e)){ t.classList.add("hasPint"); t.append(el("span",{className:"evPintMk",title:"Contiene pintado (vídeo congelado 5 s)"})); }
@@ -4385,11 +4421,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const d=v.duration; if(!d||ev.button>0) return;
       ev.stopPropagation(); ev.preventDefault(); h.setPointerCapture(ev.pointerId); h.classList.add("drag");
       const r=$("vZoomWrap").getBoundingClientRect(), c=clipEnsure(e); let moved=false;
-      const at=x=>Math.min(1,Math.max(0,(x-r.left)/r.width))*d;
+      const pm=vPM();
+      const at=x=>{ const f=Math.min(1,Math.max(0,(x-r.left)/r.width)); return pm?pm.t(f):f*d; };
       const move=m=>{ moved=true; const t=at(m.clientX);
         if(side==="a"){ c.a=Math.max(0,Math.min(t,c.b-0.2)); if(c.a<c.segs[0].s) c.segs[0].s=c.a; }
         else{ c.b=Math.min(d,Math.max(t,c.a+0.2)); const L=c.segs[c.segs.length-1]; if(c.b>L.e) L.e=c.b; }
-        tickEl.style.left=pct(c.a,0,d); tickEl.style.width=Math.max(0,(c.b-c.a)/d*100)+"%";
+        vPlace(tickEl,c,pm);
         v.currentTime=side==="a"?c.a:c.b; };
       const end=()=>{ h.removeEventListener("pointermove",move); h.removeEventListener("pointerup",end); h.removeEventListener("pointercancel",end); h.classList.remove("drag"); if(moved){ save(); refresh(); } };
       h.addEventListener("pointermove",move); h.addEventListener("pointerup",end); h.addEventListener("pointercancel",end);
@@ -4514,12 +4551,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const id=HALF_MARK_IDS[k], t=halfMarks[k];
       const ln=$("vml"+id), lb=$("vml"+id+"Lbl"), btn=$("vMark"+id);
       const label=HALF_MARK_LABELS[k];
-      if(t==null||!d){ ln.style.display="none"; lb.classList.remove("on"); btn.textContent=label; }
+      if(t==null||!d||vPM()){ ln.style.display="none"; lb.classList.remove("on"); btn.textContent=label; }
       else{ const p=t/d*100; ln.style.display="block"; ln.style.left=p+"%";
         lb.classList.add("on"); lb.style.left=p+"%"; lb.textContent=HALF_MARK_SHORT[k]+"\n"+fmt(t);
         btn.textContent=label; btn.title=label+" · "+fmt(t); }
     });
-    window.renderHalfBands($("vBandP1"),$("vBandP2"),halfMarks,d);
+    window.renderHalfBands($("vBandP1"),$("vBandP2"),halfMarks,d,true);
+    try{ renderSeekTicks(); if(window.acfcPintRenderMarks) window.acfcPintRenderMarks(); tick(); }catch(err){}
     if(window.acfcEdRenderMarks) window.acfcEdRenderMarks(); // el editor pinta la misma calibración
   }
   // el editor básico empuja aquí sus marcas (inicio/fin de partes) para que el registro con vídeo use la misma calibración
@@ -4662,8 +4700,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
   simpleFold("dlgMinToggle","dlgMinHidden",h=>{ $("dlgMinBody").style.display=h?"none":""; },true);
   simpleFold("evHideToggle","evHideHidden",h=>{ $("list").style.display=h?"none":""; });
   simpleFold("catTlToggle","catTlHidden",h=>{ document.querySelector(".catTimelineWrap").style.display=h?"none":""; $("clock").parentNode.style.display=h?"none":""; });
+  simpleFold("evBotToggle","evBotHidden",h=>{ $("evBotList").style.display=h?"none":""; $("evBotNew").style.display=h?"none":""; });
   // Tono azul según estado: Ocultar (claro) / Mostrar (oscuro)
-  ["catTlToggle","regSrcToggle","evHideToggle","ajToggle","fltToggle","dlgMinToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
+  ["evBotToggle","catTlToggle","regSrcToggle","evHideToggle","ajToggle","fltToggle","dlgMinToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
     const el=$(id); if(!el) return;
     el.classList.add("acfcTgl");
     const upd=()=>{ el.dataset.tgl=/mostrar/i.test(el.textContent)?"mostrar":"ocultar"; };
@@ -4736,7 +4775,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); el.appendChild(v);
   }
   { const tr=$("vSeekTrack"); let drag=false;
-    const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); v.currentTime=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width))*d; };
+    const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); const f=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width)), pm=vPM(); v.currentTime=pm?pm.t(f):f*d; };
     tr.addEventListener("pointerdown",ev=>{ drag=true; tr.setPointerCapture(ev.pointerId); seekTo(ev); });
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
@@ -4826,12 +4865,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); setMatchClock($("matchClock"),t,mc);
     $("fsClock").textContent=$("clock").textContent; setMatchClock($("fsMatch"),t,mc);
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
-    if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=t/d; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
-    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; { const hc=$("vHeadClock"); hc.textContent=mc?"⏱ "+mc+" · ":""; // segundo valor (vídeo) en gris
+    const pv=d?vPos(t,vPM()):0;
+    if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=pv/100; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
+    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=pv+"%"; $("vHeadClock").style.left=pv+"%"; { const hc=$("vHeadClock"); hc.textContent=mc?"⏱ "+mc+" · ":""; // segundo valor (vídeo) en gris
       if(mc){ const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); hc.appendChild(v); } }
     { const b=$("vPintGo"); // icono de pintar junto al cabezal cuando está sobre un evento
       const fl=$("flt").value, over=d&&events.some(e=>{ if(!CATS[e.cat]||(fl&&fl!==e.cat)||!passEq(e)) return false; const c=clipOf(e); return t>=c.a&&t<=c.b; });
-      b.hidden=!over; if(over){ b.style.left=p+"%"; b.classList.toggle("left",p>90); } }
+      b.hidden=!over; if(over){ b.style.left=pv+"%"; b.classList.toggle("left",pv>90); } }
     { const pl=[halfMarks.p1,halfMarks.p1e,halfMarks.p2,halfMarks.end]; const jug=pl.every(x=>typeof x==="number")?(halfMarks.p1e-halfMarks.p1)+(halfMarks.end-halfMarks.p2):null;
       const fS=x=>{ const q=Math.round(Math.max(0,x||0)); return Math.floor(q/60)+":"+String(q%60).padStart(2,"0"); };
       $("vTrimInfo").textContent="· Inicio "+fS(0)+" · Fin "+fS(d)+"\n· Duración "+fS(d)+(jug!=null&&jug>=0?"\n· Tiempo jugado "+fS(jug):""); }
@@ -5362,6 +5402,20 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("vTagManual").onclick=()=>$("tagManual").click();
   $("tagNow").onclick=()=>{ manualMode=false; openDlg(null); manUI(); };
   $("tagManual").onclick=()=>{ manualMode=true; openDlg(null); manUI(); };
+  // Punto A / Punto B: A abre el registro manual y marca el inicio; B marca el final (como GRABAR y STOP, pero A no reproduce)
+  $("vSetA").onclick=()=>{
+    if(!v.src) return;
+    manualMode=true; openDlg(null);
+    manA=v.currentTime||0; manB=null;
+    $("fMin").value=matchClockText(manA)||(Math.floor(manA/60)+":"+String(Math.floor(manA%60)).padStart(2,"0"));
+    manUI();
+  };
+  $("vSetB").onclick=()=>{
+    if(!v.src) return;
+    if(!manualMode||!dlgEl.open){ manualMode=true; openDlg(null); }
+    if(manA===null){ manUI(); const se=$("manSaveErr"); se.textContent="Marca primero el punto A y después el punto B."; se.hidden=false; return; }
+    $("manPause").click();
+  };
 
   // ---------- exportar / importar ----------
   async function download(name,text,type){
@@ -11080,10 +11134,12 @@ function pintRenderMarks(){
   const list=window.acfcPint?window.acfcPint.get():[]; if(!d||!list.length) return;
   const ts=[...new Set(list.filter(s=>typeof s.pt==="number").map(s=>Math.max(0,Math.round(s.pt*2)/2)))].sort((a,b)=>a-b);
   const fm=t=>Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0");
-  ts.forEach(t=>{ if(t>d) return;
-    const m=document.createElement("div"); m.className="stillMk"; m.style.left=(t/d*100)+"%";
+  const pm=window.acfcPlayMap(window.acfcRegMarks?window.acfcRegMarks.get():null,d);
+  ts.forEach(t=>{ if(t>d||(pm&&pm.out(t,t))) return;
+    const m=document.createElement("div"); m.className="stillMk"; m.style.left=(pm?pm.f(t)*100:t/d*100)+"%";
     m.title="Pintado · "+fm(t); box.append(m); });
 }
+window.acfcPintRenderMarks=pintRenderMarks;
 { const vid=g("v"); if(vid) ["loadedmetadata","durationchange","emptied"].forEach(ev=>vid.addEventListener(ev,pintRenderMarks)); }
 acfcPintMount({
   video:g("v"), host:document.querySelector("#tabVisor .stage"), block:visorBlock, sfx:"", expose:"acfcPint", freeze:true, onChange:()=>setTimeout(()=>{ pintRenderMarks(); if(window.acfcRefreshPintMarks) window.acfcRefreshPintMarks(); },0),
