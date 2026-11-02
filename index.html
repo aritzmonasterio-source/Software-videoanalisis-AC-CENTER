@@ -1479,9 +1479,12 @@ html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
 #evBot .evBotH h2{margin:0}
 #evBotList{display:flex;flex-direction:column;gap:3px}
 .evBotRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:3px;align-items:center}
-.evBotName{min-width:0;padding:6px 8px;border:1px solid var(--line);font-size:14px;overflow-wrap:anywhere}
+.evBotName{min-width:0;box-sizing:border-box;min-height:36px;display:flex;align-items:center;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:14px;overflow-wrap:anywhere;transition:background .12s,color .12s,border-color .12s}
+.evBotRow:hover .evBotName{background:var(--red);border-color:var(--red);color:#fff}
+.evBotRow>.btn{border:1px solid var(--line);background:var(--panel);color:var(--muted);min-width:40px;text-align:center;justify-content:center}
+.evBotRow>.btn:hover,.evBotRow>.btn:focus-visible{background:var(--red);border-color:var(--red);color:#fff;outline:none}
 .evBotRow input,.evBotNew input{min-width:0;box-sizing:border-box;border:1px solid var(--red);background:var(--bg);color:var(--ink);border-radius:0;padding:6px 8px;font:inherit;font-size:14px}
-.evBotRow .btn,.evBotNew .btn{min-height:34px;padding:0 10px}
+.evBotRow .btn,.evBotNew .btn{min-height:36px;padding:0 10px}
 .evBotNew{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px}
 .evBotNew input{border-color:var(--line)}
 @media (max-width:640px){
@@ -1576,8 +1579,10 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 /* Botón Home (enlace a la portada): azul como el resto de pestañas de cabecera, siempre con texto visible */
 html header .tab.tabHome,html header .tab.tabHome:hover{background:#1e40af;color:#fff;border-bottom-color:transparent;text-decoration:none;font-size:17px;margin-left:28px;padding:0 24px}
 html header .tab.tabHome:hover{background:#2554d6}
-/* Cabecera: solo queda Home; las demás pestañas están en la portada. Se ocultan (no se borran) porque el JS las usa para saber qué pestaña está activa */
-html header .tab:not(.tabHome){display:none!important}
+/* Cabecera: Home + opciones de registro (Editor básico, Registro con vídeo, Registro sin vídeo). Conversión y Fusiona siguen en la portada; se ocultan (no se borran) porque el JS las usa para saber qué pestaña está activa */
+html header #tabBtnConv,html header #tabBtnFus{display:none!important}
+html header .tab.tabHome{margin-right:10px}
+html header .hdrOpt{display:none!important}
 /* Limpiar y Ocultar/Mostrar: mismo fondo, borde y texto en toda la herramienta */
 html #fltClear,html #pintClear,html #edClearAdded,html #delAllEv,
 html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
@@ -1917,7 +1922,6 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <h2 style="margin:0">Pintado de acciones</h2>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
           <button type="button" class="btn" id="pintClear" title="Borra todo lo pintado">Limpiar</button>
-          <button type="button" class="btn acfcLink" id="pintTutL" title="Guía paso a paso del pintado de acciones">❓ Tutorial</button>
           <button type="button" class="btn acfcLink" id="pintToggle" aria-expanded="true" aria-controls="pintBody" title="Ocultar/mostrar las herramientas de pintado">Ocultar</button>
         </div>
       </div>
