@@ -94,6 +94,13 @@ html.acfc-imm .stageTL{display:none!important}
 #tabEditor:fullscreen .edgrid>aside{max-height:none;height:100%;min-height:0;overflow:auto}
 #tabEditor:fullscreen .edgrid>aside .list{flex:1;min-height:80px}
 .stage:fullscreen video,.stage:-webkit-full-screen video{width:100%;height:100%;object-fit:contain}
+/* pantalla completa del editor: el vídeo deja sitio a los botones y a la línea de tiempo (que el script mueve dentro del reproductor) */
+#edStage:fullscreen{display:flex;flex-direction:column}
+#edStage:fullscreen video{flex:1 1 0;min-height:0;height:auto}
+#edStage:fullscreen .stageControls{position:static;background:#000}
+#edStage:fullscreen .fsBar{display:none!important}
+#edStage:fullscreen .edtrack{flex:none;margin:34px 12px 4px}
+#edStage:fullscreen .edZoomBar{flex:none;margin:2px 12px 8px;color:#fff}
 .stageControls .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
 .controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
 .controls[hidden]{display:none!important}
@@ -6625,8 +6632,14 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   // En móvil la línea de tiempo va encima de los botones -5/+5 (dentro del bloque del vídeo)
   (function placeEdTrack(){
     const mq=matchMedia("(max-width:640px)"), st=$("edStage"), tr=$("edTrack"), zb=$("edZoomBar"), ctl=st.querySelector(".stageControls"), home=zb.nextElementSibling;
-    function place(){ if(mq.matches){ st.insertBefore(tr,ctl); st.insertBefore(zb,ctl); } else if(tr.parentNode===st){ home.parentNode.insertBefore(tr,home); home.parentNode.insertBefore(zb,home); } }
+    const isFs=()=>(document.fullscreenElement||document.webkitFullscreenElement)===st;
+    function place(){
+      if(mq.matches){ st.insertBefore(tr,ctl); st.insertBefore(zb,ctl); }
+      else if(isFs()){ st.append(tr,zb); }   // pantalla completa del vídeo: la línea de tiempo se ve debajo de los botones
+      else if(tr.parentNode===st){ home.parentNode.insertBefore(tr,home); home.parentNode.insertBefore(zb,home); }
+    }
     place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
+    document.addEventListener("fullscreenchange",place); document.addEventListener("webkitfullscreenchange",place);
   })();
   // El botón de ocultar controles va junto a las marcas: al final en móvil (debajo de A, B y Añadir) y a la izquierda de «Inicio 1» en escritorio
   (function placeEdCtlToggle(){
