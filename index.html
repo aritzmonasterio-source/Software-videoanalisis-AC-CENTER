@@ -1674,6 +1674,10 @@ dialog#dlgBot #botCats .catbtn.active{opacity:1;border-color:var(--red);box-shad
 dialog#dlgBot #botCats>.catbtn:last-child:nth-child(odd),dialog#dlgBot #botDets>.optbtn:last-child:nth-child(odd),dialog#dlgBot #botJugs>.optbtn:last-child:nth-child(odd){grid-column:1/-1}
 dialog#dlgBot #botDets>.optbtn.nodet{grid-column:1/-1}
 dialog#dlgBot .botEmpty{grid-column:1/-1}
+/* Botones de añadir: fondo azul (--add-bg) en toda la herramienta */
+:root{--add-bg:#1F6FD1;--add-bg-h:#1858a8}
+#edAddSel,#edFsAdd,#edAddFile,#regAddFile,#evBotAdd,#liveJugAdd,#pintRosterAdd,#liveToVideo,#newCatAdd,#newDetAdd,#newJugAdd,#botCatAdd,#botDetAdd,#botJugAdd,#plNewAdd,label[for="fileAdd"],label[for="fusFile"],.optbtn.add{background:var(--add-bg)!important;border:1px solid var(--add-bg)!important;color:#fff!important;filter:none!important}
+#edAddSel:hover:not(:disabled),#edFsAdd:hover:not(:disabled),#edAddFile:hover:not(:disabled),#regAddFile:hover:not(:disabled),#evBotAdd:hover:not(:disabled),#liveJugAdd:hover:not(:disabled),#pintRosterAdd:hover:not(:disabled),#liveToVideo:hover:not(:disabled),#newCatAdd:hover:not(:disabled),#newDetAdd:hover:not(:disabled),#newJugAdd:hover:not(:disabled),#botCatAdd:hover:not(:disabled),#botDetAdd:hover:not(:disabled),#botJugAdd:hover:not(:disabled),#plNewAdd:hover:not(:disabled),label[for="fileAdd"]:hover:not(:disabled),label[for="fusFile"]:hover:not(:disabled),.optbtn.add:hover:not(:disabled){background:var(--add-bg-h)!important;border-color:var(--add-bg-h)!important;color:#fff!important}
 </style>
 </head>
 <body>
