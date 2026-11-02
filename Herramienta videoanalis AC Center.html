@@ -6518,6 +6518,8 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   async function tryFallback(){
     const f=pendingFile; V.dataset.fallback=""; if(!f) return;
     const s=sources[curSrc];
+    // el vídeo es local: sin el servicio de subida no hay nada que reintentar, solo el aviso de formato
+    if(typeof claude==="undefined"){ msg("No se pudo abrir el vídeo en este navegador. Prueba con un MP4 (H.264) en Chrome o Edge."); return; }
     try{ const assets=await claude.use("assets"); if(!assets) throw {code:"not_granted"};
       msg("Subiendo el vídeo al editor…"); const r=await assets.upload(f);
       if(s){ if(s.url&&s.url.startsWith("blob:")) URL.revokeObjectURL(s.url); s.url=r.url; }
