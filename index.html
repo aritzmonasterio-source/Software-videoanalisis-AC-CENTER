@@ -301,6 +301,12 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 .evH{position:absolute;top:-3px;bottom:-3px;width:7px;pointer-events:auto;cursor:ew-resize;background:var(--ink);border-radius:2px;opacity:0;transition:opacity .12s}
 .evH.a{right:100%;margin-right:1px}.evH.b{left:100%;margin-left:1px}
 #vSeekTrack:hover .evH{opacity:.55}.evH:hover,.evH.drag{opacity:1!important;background:var(--red)}
+/* corte seleccionado: asas negras siempre visibles con agarre y la hora de inicio y fin, como en el Editor básico */
+.evTick.sel .evH{opacity:1;top:-4px;bottom:-4px;width:6px;touch-action:none}
+.evTick.sel .evH::after{content:"";position:absolute;left:2px;top:calc(50% - 10px);width:2px;height:20px;background:var(--panel)}
+.evTick.sel .evH:hover,.evTick.sel .evH.drag{background:var(--red)}
+.evTick .evTm{position:absolute;top:2px;font-size:10px;line-height:1;color:#fff;background:rgba(0,0,0,.65);border-radius:3px;padding:2px 4px;white-space:nowrap;pointer-events:none;z-index:5}
+.evTick .evTm.a{left:0;transform:translateX(calc(-100% - 8px))}.evTick .evTm.b{left:100%;transform:translateX(8px)}
 .halfBand{position:absolute;top:0;bottom:0;display:none;pointer-events:none;z-index:1}
 .halfBand span{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-family:var(--f-disp);font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:2px;padding:0 8px;line-height:16px;white-space:nowrap;opacity:.92}
 .halfSplit{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--red);z-index:3;pointer-events:none;display:none}
@@ -1351,6 +1357,8 @@ html.acfc-imm #tabBtnFus::after{content:"";display:block;width:20px;height:20px;
 #tabLive #liveCats .catbtn,#tabLive #liveEq .optbtn,#tabLive #liveDets .optbtn,#tabLive #liveJugs .optbtn{min-height:30px;padding:3px 18px 3px 6px;font-size:12px;line-height:1.1;border-width:1px}
 #tabLive #liveCats .catbtn.active,#tabLive #liveEq .optbtn.active,#tabLive #liveDets .optbtn.active,#tabLive #liveJugs .optbtn.active{border-width:2px}
 #tabLive #liveDets .optbtn.grpHead:not(.active),#tabLive #liveDets .optbtn.grpHead.active{border-bottom-width:3px}
+/* Lo seleccionado en el registro (equipo, categoría, detalle, jugador) queda en rojo */
+#tabLive #liveCats .catbtn.active,#tabLive #liveEq .optbtn.active,#tabLive #liveDets .optbtn.active,#tabLive #liveJugs .optbtn.active{background:var(--red)!important;border-color:var(--red);color:#fff;box-shadow:none}
 #tabLive .liveSep{margin:0}
 #tabLive .liveAdj .btn,#tabLive .liveActs .btn{min-height:30px;padding:3px 8px;font-size:12px}
 #tabLive .liveActs{gap:4px}
@@ -4525,6 +4533,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   function vPos(t,pm){ const d=v.duration; return pm?pm.f(t)*100:Math.max(0,Math.min(100,t/d*100)); }
   function vPlace(tickEl,c,pm){ const d=v.duration, a=vPos(c.a,pm), b=vPos(c.b,pm);
     tickEl.style.left=a+"%"; tickEl.style.width=Math.max(0,pm?b-a:(c.b-c.a)/d*100)+"%"; }
+  const seekClock=t=>matchClockText(t)||fmt(t);
   function renderSeekTicks(){
     const box=$("vEvTicks"); if(!box) return; box.replaceChildren();
     const d=v.duration; if(!d) return; const flt=$("flt").value; const pm=vPM();
@@ -4535,6 +4544,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       vPlace(t,c,pm); t.style.background=CATS[e.cat].c;
       const ds=Math.round(Math.max(0,clipLen(e)));
       t.append(el("span",{className:"evLbl",textContent:e.cat}),el("span",{className:"evDur",textContent:Math.floor(ds/60)+":"+String(ds%60).padStart(2,"0")}),seekTickHandle(e,t,"a"),seekTickHandle(e,t,"b"));
+      if(selEv===e.id){ t.classList.add("sel"); t.append(el("span",{className:"evTm a",textContent:seekClock(c.a)}),el("span",{className:"evTm b",textContent:seekClock(c.b)})); }
       if(pintCount(e)){ t.classList.add("hasPint"); t.append(el("span",{className:"evPintMk",title:"Contiene pintado (vídeo congelado 5 s)"})); }
       box.append(t); seekLblRO.observe(t);
     });
@@ -4552,6 +4562,9 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
         if(side==="a"){ c.a=Math.max(0,Math.min(t,c.b-0.2)); if(c.a<c.segs[0].s) c.segs[0].s=c.a; }
         else{ c.b=Math.min(d,Math.max(t,c.a+0.2)); const L=c.segs[c.segs.length-1]; if(c.b>L.e) L.e=c.b; }
         vPlace(tickEl,c,pm);
+        const ta=tickEl.querySelector(".evTm.a"), tb=tickEl.querySelector(".evTm.b"), td=tickEl.querySelector(".evDur");
+        if(ta) ta.textContent=seekClock(c.a); if(tb) tb.textContent=seekClock(c.b);
+        if(td){ const ds=Math.round(Math.max(0,c.b-c.a)); td.textContent=Math.floor(ds/60)+":"+String(ds%60).padStart(2,"0"); }
         v.currentTime=side==="a"?c.a:c.b; };
       const end=()=>{ h.removeEventListener("pointermove",move); h.removeEventListener("pointerup",end); h.removeEventListener("pointercancel",end); h.classList.remove("drag"); if(moved){ save(); refresh(); } };
       h.addEventListener("pointermove",move); h.addEventListener("pointerup",end); h.addEventListener("pointercancel",end);
@@ -6255,9 +6268,10 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   }
   function liveRenderCats(){
     const w=$("liveCats"); w.replaceChildren();
+    const cur=liveCur();
     Object.entries(CATS).forEach(([k,o])=>{
       if(k==="OTRO"||o.ret) return;
-      const b=el("button",{type:"button",className:"catbtn",textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c});
+      const b=el("button",{type:"button",className:"catbtn"+(cur&&cur.cat===k?" active":""),textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c});
       b.onclick=()=>liveAdd(k);
       w.append(b);
     });
