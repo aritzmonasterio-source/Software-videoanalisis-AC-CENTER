@@ -248,6 +248,10 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 #edMatchClock:empty{display:none}
 .edtrack .head::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--red)}
 #vSeekTrack{margin-top:26px}
+.vPlayMode{display:inline-flex;gap:0;margin-left:8px}
+.vPlayMode[hidden]{display:none}
+.vPlayMode .btn{padding:4px 10px;font-size:12px}
+.vPlayMode .btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 #vTimelineToggle .tgl,#edCtlToggle .tgl{display:none}
 .fsAB{display:none}
 #edCtl1.ctlHid #edMarkBtns>*:not(#edCtlToggle){display:none!important}
@@ -852,6 +856,11 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .optbtn.nodet.active{border-color:var(--red);background:#000;box-shadow:0 0 0 2px #fff,0 0 0 4px #000}
 /* ===== ACFC · PINTADO DE ACCIONES (herramientas de dibujo sobre el vídeo) ===== */
 #tabVisor aside,#tabEditor aside{overflow-y:auto;overflow-x:hidden}
+/* la columna nunca se ensancha más que la barra lateral: así se ven siempre los botones de cerrar (✕) de cada vídeo */
+#tabVisor aside .top,#tabEditor aside .top{grid-template-columns:minmax(0,1fr);min-width:0;max-width:100%;box-sizing:border-box}
+#tabVisor aside .top>*,#tabEditor aside .top>*{min-width:0;max-width:100%}
+#regSrcBody,#regSrcList{min-width:0;max-width:100%}
+#regSrcList>div>div:last-child{flex:none}
 #tabVisor aside .pbGroup,#tabVisor aside .pbRow{min-width:0;max-width:100%}
 #tabVisor aside .pbRow .btn{flex:1 1 auto;min-width:0;white-space:normal;padding-left:8px;padding-right:8px}
 #tabVisor aside .list,#tabEditor aside .list{min-height:220px}
@@ -1453,13 +1462,12 @@ html.acfc-imm #tabVisor #belowStageWrap>.controls:first-child,html.acfc-imm #edC
   width:118px;margin:0;display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:6px;padding:8px;
   background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--glass-bd)}
 html.acfc-imm #tabVisor #belowStageWrap>.controls:first-child>*,html.acfc-imm #edCtl1>*{display:none}
-html.acfc-imm #vTagNow,html.acfc-imm #vTagManual,html.acfc-imm #vSetA,html.acfc-imm #vSetB,html.acfc-imm #edSetA,html.acfc-imm #edSetB,html.acfc-imm #edAddSel:not([hidden]){display:block!important;min-height:42px;font-size:11.5px;letter-spacing:.1em;padding:4px 6px;white-space:normal;line-height:1.15}
+html.acfc-imm #vTagNow,html.acfc-imm #vTagManual,html.acfc-imm #edSetA,html.acfc-imm #edSetB,html.acfc-imm #edAddSel:not([hidden]){display:block!important;min-height:42px;font-size:11.5px;letter-spacing:.1em;padding:4px 6px;white-space:normal;line-height:1.15}
 html.acfc-imm #edAddSel{background:#fff;border-color:#fff;color:#15181D}
 html.acfc-imm #vMarkBtns,html.acfc-imm #edMarkBtns{display:grid!important;grid-template-columns:1fr;gap:4px;margin-top:2px}
 html.acfc-imm .abL{display:none}
-html.acfc-imm #edSetA,html.acfc-imm #edSetB,html.acfc-imm #vSetA,html.acfc-imm #vSetB{font-size:17px!important;letter-spacing:.04em!important}
+html.acfc-imm #edSetA,html.acfc-imm #edSetB{font-size:17px!important;letter-spacing:.04em!important}
 /* Registro con vídeo en móvil: A y B ocupan el ancho que dejan deshacer y rehacer */
-@media (max-width:640px){html:not(.acfc-imm) #vSetA,html:not(.acfc-imm) #vSetB{min-width:64px;min-height:44px;font-size:13px}}
 html.acfc-imm #tabVisor main>section:has(.empty:not([hidden])) #belowStageWrap,html.acfc-imm #tabEditor .edgrid>section:has(.empty:not([hidden])) #edCtl1{display:none!important}
 html.acfc-imm #vMarkBtns .btn,html.acfc-imm #edMarkBtns .btn:not(#edCtlToggle){min-height:28px;padding:2px 6px;font-size:11px;text-align:left;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);white-space:nowrap}
 html.acfc-imm #edMarkBtns #edCtlToggle,html.acfc-imm #vMarkBtns .mt,html.acfc-imm #edMarkBtns .mt{display:none!important}
@@ -1812,6 +1820,10 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <button class="btn" id="vZoomMinus" title="Alejar la línea de tiempo (Ctrl + rueda del ratón)" aria-label="Alejar">−</button>
       <span class="time" id="vZoomLbl">Zoom ×1</span>
       <button class="btn" id="vZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
+      <span class="vPlayMode" id="vPlayMode" hidden role="group" aria-label="Qué parte del vídeo se ve en la línea de tiempo">
+        <button type="button" class="btn" id="vModePlay" aria-pressed="true" title="Solo el tiempo de juego (1ª y 2ª parte seguidas)">En juego</button>
+        <button type="button" class="btn" id="vModeAll" aria-pressed="false" title="Vídeo entero: lo anterior, el descanso y lo posterior al partido">Sin juego</button>
+      </span>
       <button class="btn" id="vZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
       <input type="range" id="vZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
     </div>
@@ -1822,8 +1834,6 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <button class="btn histBtn" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
         <button class="btn primary vTagBtn" id="vTagNow" title="Etiquetar en el instante actual (T)">REGISTRO AUTO</button>
         <button class="btn primary vTagBtn" id="vTagManual" title="Registro manual: tú marcas el inicio (GRABAR) y el final (STOP) del corte">REGISTRO MANUAL</button>
-        <button class="btn primary" id="vSetA" title="Punto A: abre el registro manual y marca el inicio del corte en el instante actual">A</button>
-        <button class="btn primary" id="vSetB" title="Punto B: marca el final del corte en el instante actual y pausa">B</button>
         <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
       <span id="vMarkBtns" style="display:contents">
         <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">Inicio primera parte</button>
@@ -4396,7 +4406,10 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   };
   const seekLblRO=new ResizeObserver(es=>es.forEach(e=>window.acfcFitEvLbl(e.target)));
   // línea de tiempo superior del registro: con las 4 marcas definidas solo muestra el tiempo de juego (ver acfcPlayMap)
-  function vPM(){ try{ return window.acfcPlayMap(halfMarks,v.duration); }catch(err){ return null; } }
+  // «En juego» (solo tiempo de juego) / «Sin juego» (vídeo entero: antes, después y descanso)
+  window.acfcOnlyPlay=true; try{ if(localStorage.getItem("acfcOnlyPlay")==="0") window.acfcOnlyPlay=false; }catch(e){}
+  function vPM(){ if(window.acfcOnlyPlay===false) return null; try{ return window.acfcPlayMap(halfMarks,v.duration); }catch(err){ return null; } }
+  function setOnlyPlay(on){ window.acfcOnlyPlay=on; try{ localStorage.setItem("acfcOnlyPlay",on?"1":"0"); }catch(e){} renderHalfMarks(); }
   function vPos(t,pm){ const d=v.duration; return pm?pm.f(t)*100:Math.max(0,Math.min(100,t/d*100)); }
   function vPlace(tickEl,c,pm){ const d=v.duration, a=vPos(c.a,pm), b=vPos(c.b,pm);
     tickEl.style.left=a+"%"; tickEl.style.width=Math.max(0,pm?b-a:(c.b-c.a)/d*100)+"%"; }
@@ -4556,13 +4569,17 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
         lb.classList.add("on"); lb.style.left=p+"%"; lb.textContent=HALF_MARK_SHORT[k]+"\n"+fmt(t);
         btn.textContent=label; btn.title=label+" · "+fmt(t); }
     });
-    window.renderHalfBands($("vBandP1"),$("vBandP2"),halfMarks,d,true);
+    window.renderHalfBands($("vBandP1"),$("vBandP2"),halfMarks,d,window.acfcOnlyPlay!==false);
+    { const full=!!window.acfcPlayMap(halfMarks,d), g=$("vPlayMode"), on=window.acfcOnlyPlay!==false;
+      if(g){ g.hidden=!full; $("vModePlay").setAttribute("aria-pressed",on); $("vModeAll").setAttribute("aria-pressed",!on); } }
     try{ renderSeekTicks(); if(window.acfcPintRenderMarks) window.acfcPintRenderMarks(); tick(); }catch(err){}
     if(window.acfcEdRenderMarks) window.acfcEdRenderMarks(); // el editor pinta la misma calibración
   }
   // el editor básico empuja aquí sus marcas (inicio/fin de partes) para que el registro con vídeo use la misma calibración
   window.acfcRegMarks={ get(){ return {...halfMarks}; }, set(m){ Object.keys(HALF_MARK_IDS).forEach(k=>{ halfMarks[k]=typeof m?.[k]==="number"?m[k]:null; }); saveHalfMarks(); renderHalfMarks(); } };
 
+  $("vModePlay").addEventListener("click",()=>setOnlyPlay(true));
+  $("vModeAll").addEventListener("click",()=>setOnlyPlay(false));
   document.querySelectorAll(".markLine").forEach(ln=>{ const lb=$(ln.id+"Lbl"); if(!lb) return;
     ln.addEventListener("mouseenter",()=>lb.classList.add("show")); ln.addEventListener("mouseleave",()=>lb.classList.remove("show")); });
   const MARK_BTNS_HIDE_KEY="markBtnsHidden";
@@ -4775,7 +4792,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); el.appendChild(v);
   }
   { const tr=$("vSeekTrack"); let drag=false;
-    const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); const f=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width)), pm=vPM(); v.currentTime=pm?pm.t(f):f*d; };
+    const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); const f=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width)), pm=vPM(); playing=null; v.currentTime=pm?pm.t(f):f*d; };
     tr.addEventListener("pointerdown",ev=>{ drag=true; tr.setPointerCapture(ev.pointerId); seekTo(ev); });
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
@@ -5402,20 +5419,6 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   $("vTagManual").onclick=()=>$("tagManual").click();
   $("tagNow").onclick=()=>{ manualMode=false; openDlg(null); manUI(); };
   $("tagManual").onclick=()=>{ manualMode=true; openDlg(null); manUI(); };
-  // Punto A / Punto B: A abre el registro manual y marca el inicio; B marca el final (como GRABAR y STOP, pero A no reproduce)
-  $("vSetA").onclick=()=>{
-    if(!v.src) return;
-    manualMode=true; openDlg(null);
-    manA=v.currentTime||0; manB=null;
-    $("fMin").value=matchClockText(manA)||(Math.floor(manA/60)+":"+String(Math.floor(manA%60)).padStart(2,"0"));
-    manUI();
-  };
-  $("vSetB").onclick=()=>{
-    if(!v.src) return;
-    if(!manualMode||!dlgEl.open){ manualMode=true; openDlg(null); }
-    if(manA===null){ manUI(); const se=$("manSaveErr"); se.textContent="Marca primero el punto A y después el punto B."; se.hidden=false; return; }
-    $("manPause").click();
-  };
 
   // ---------- exportar / importar ----------
   async function download(name,text,type){
@@ -11134,7 +11137,7 @@ function pintRenderMarks(){
   const list=window.acfcPint?window.acfcPint.get():[]; if(!d||!list.length) return;
   const ts=[...new Set(list.filter(s=>typeof s.pt==="number").map(s=>Math.max(0,Math.round(s.pt*2)/2)))].sort((a,b)=>a-b);
   const fm=t=>Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0");
-  const pm=window.acfcPlayMap(window.acfcRegMarks?window.acfcRegMarks.get():null,d);
+  const pm=window.acfcOnlyPlay===false?null:window.acfcPlayMap(window.acfcRegMarks?window.acfcRegMarks.get():null,d);
   ts.forEach(t=>{ if(t>d||(pm&&pm.out(t,t))) return;
     const m=document.createElement("div"); m.className="stillMk"; m.style.left=(pm?pm.f(t)*100:t/d*100)+"%";
     m.title="Pintado · "+fm(t); box.append(m); });
