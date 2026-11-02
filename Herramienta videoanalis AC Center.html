@@ -130,6 +130,16 @@ html.acfc-imm .stageTL{display:none!important}
 .chipHdl.l{left:0;border-radius:6px 0 0 6px}
 .chipHdl.r{right:0;border-radius:0 6px 6px 0}
 .chipHdl:hover{background:rgba(255,255,255,.4)}
+/* Eventos registrados en la línea de tiempo del editor (solo lectura) */
+#edRegEv{display:flex;align-items:flex-start;margin-top:8px;border:1px solid var(--line);background:var(--panel);overflow:hidden}
+#edRegEv[hidden]{display:none}
+.edRegTrack{position:relative;flex:1;min-width:0;overflow:hidden}
+.edRegZoom{position:relative;width:100%}
+.edRegZoom .catRow{cursor:pointer}
+.edRegZoom .chip{cursor:pointer;pointer-events:none}
+.edRegHead{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--red);pointer-events:none;z-index:2}
+.edRegEmpty{padding:10px;font-size:13px;color:var(--muted)}
+html.acfc-imm #edRegEv{display:none}
 aside{background:var(--panel);border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column;max-height:calc(100vh - 110px);min-height:420px}
 aside .top{padding:14px 14px 10px;border-bottom:1px solid var(--line);display:grid;gap:8px}
 aside h2{font-family:var(--f-disp);font-size:21px;margin:0}
@@ -222,8 +232,8 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .btn.pintStillBlink{border-color:var(--red);animation:pintStillBlink .9s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.btn.pintStillBlink{animation:none;background:var(--red);color:#fff}}
 /* «Insertar en el vídeo» (5 s): siempre rojo y palpitando */
-#pintStill.pintTool{background:var(--red);color:#fff;border-color:var(--red);animation:pintStillBlink .9s ease-in-out infinite}
-@media (prefers-reduced-motion:reduce){#pintStill.pintTool{animation:none}}
+#pintStill.pintTool,#pintStillEd.pintTool{background:var(--red);color:#fff;border-color:var(--red);animation:pintStillBlink .9s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){#pintStill.pintTool,#pintStillEd.pintTool{animation:none}}
 .evPint{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 5px;border:1px solid var(--red);color:var(--red);border-radius:2px;line-height:1.3}
 .evPintMk{position:absolute;top:2px;right:2px;width:9px;height:9px;background:var(--red);border:1.5px solid #fff;border-radius:50%;z-index:6;pointer-events:none}
 .stillMk{position:absolute;top:-3px;bottom:-3px;width:3px;margin-left:-1px;z-index:5;pointer-events:none;background:var(--red);box-shadow:0 0 0 1px var(--panel)}
@@ -838,7 +848,9 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .optbtn.nodet{background:#000;border-color:#000;color:#fff}
 .optbtn.nodet.active{border-color:var(--red);background:#000;box-shadow:0 0 0 2px #fff,0 0 0 4px #000}
 /* ===== ACFC · PINTADO DE ACCIONES (herramientas de dibujo sobre el vídeo) ===== */
-#tabVisor aside,#tabEditor aside{overflow-y:auto}
+#tabVisor aside,#tabEditor aside{overflow-y:auto;overflow-x:hidden}
+#tabVisor aside .pbGroup,#tabVisor aside .pbRow{min-width:0;max-width:100%}
+#tabVisor aside .pbRow .btn{flex:1 1 auto;min-width:0;white-space:normal;padding-left:8px;padding-right:8px}
 #tabVisor aside .list,#tabEditor aside .list{min-height:220px}
 .pintBlock{flex:none;border-top:1px solid var(--line);padding:10px 14px 14px}
 .pintBlock .pbHead{margin-bottom:8px}
@@ -1461,34 +1473,47 @@ html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
 #vMarkBtns #vFwd45,#vMarkBtns #vFwd45b,#edMarkBtns #edFwd45,#edMarkBtns #edFwd45b{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 #vMarkBtns #vFwd45:hover,#vMarkBtns #vFwd45b:hover,#edMarkBtns #edFwd45:hover,#edMarkBtns #edFwd45b:hover{background:var(--red);border-color:var(--red);color:#fff}
 /* Ventana emergente de tipo de evento (editor), sobre la fila A / B / Añadir */
-.evPick{position:fixed;z-index:2147483000;width:min(260px,calc(100vw - 8px));max-height:min(70vh,420px);overflow:auto;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:0 8px 24px rgba(0,0,0,.28);padding:6px;display:flex;flex-direction:column;gap:3px;font-family:var(--f-body)}
+.evPick{position:fixed;z-index:2147483000;width:min(400px,calc(100vw - 8px));max-height:min(70vh,420px);overflow:auto;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:0 8px 24px rgba(0,0,0,.28);padding:6px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;font-family:var(--f-body)}
+.evPick>.evPickH,.evPick>.evPickNew,.evPick>.evPickSkip{grid-column:1/-1}
 .evPickH{font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.08em;font-size:13px;padding:2px 4px 4px;color:var(--muted)}
 .evPick button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:0;padding:8px 10px;min-height:36px;text-align:left;font:inherit;font-size:14px;cursor:pointer}
 .evPick button:hover,.evPick button:focus-visible{background:var(--red);border-color:var(--red);color:#fff;outline:none}
 .evPickNew{display:grid;grid-template-columns:1fr auto;gap:3px;margin-top:3px}
 .evPickNew input{min-width:0;box-sizing:border-box;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0;padding:8px;font:inherit;font-size:14px}
 .evPickNew button{text-align:center;background:var(--ink);border-color:var(--ink);color:var(--bg)}
-.evPickCus{display:grid;grid-template-columns:1fr auto auto;gap:3px}
+.evPickCus{position:relative;display:flex}
+.evPickCus>button:first-child{flex:1;min-height:52px;padding:6px 24px 6px 10px;border:2px solid var(--line);border-radius:2px;background:var(--panel);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1.15;text-align:center}
+.evPickCus>button:first-child:hover,.evPickCus>button:first-child:focus-visible{background:var(--red);border-color:var(--red);color:#fff}
+.evPickCus>.evPickDel{position:absolute;top:1px;width:16px;height:16px;min-height:0!important;padding:0!important;border:0;background:rgba(0,0,0,.28);color:inherit;font-size:12px;line-height:14px;text-align:center}
+.evPickCus>.evPickEdit{left:1px;border-radius:2px 0 2px 0;font-size:11px;line-height:16px}
+.evPickCus>.evPickDel:not(.evPickEdit){right:1px;border-radius:0 2px 0 2px}
+.evPickCus>.evPickEdit:hover{background:var(--ink);color:var(--bg)}
+.evPickCus>.evPickDel:not(.evPickEdit):hover{background:var(--red);color:#fff}
 .evPickCus[hidden],.evPickCus [hidden]{display:none}
-.evPickRen{grid-column:1 / -1;min-width:0;box-sizing:border-box;border:1px solid var(--red);background:var(--bg);color:var(--ink);border-radius:0;padding:8px 10px;font:inherit;font-size:14px}
+.evPickRen{flex:1;min-height:52px;min-width:0;box-sizing:border-box;border:1px solid var(--red);background:var(--bg);color:var(--ink);border-radius:0;padding:8px 10px;font:inherit;font-size:14px}
 .evPick .evPickDel{text-align:center;padding:8px 12px;color:var(--muted)}
 .evPick .evPickSkip{border:0;text-decoration:underline;color:var(--muted);text-align:center;min-height:30px}
 /* Botonera de eventos (columna derecha del editor básico): lista editable de tipos de evento */
 #evBot{display:flex;flex-direction:column;gap:6px;padding:8px 0;border-top:1px solid var(--line)}
 #evBot .evBotH{display:flex;justify-content:space-between;align-items:center;gap:8px}
 #evBot .evBotH h2{margin:0}
-#evBotList{display:flex;flex-direction:column;gap:3px}
-.evBotRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:3px;align-items:center}
-.evBotName{min-width:0;box-sizing:border-box;min-height:36px;display:flex;align-items:center;padding:8px 10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:14px;overflow-wrap:anywhere;transition:background .12s,color .12s,border-color .12s}
-.evBotRow:hover .evBotName{background:var(--red);border-color:var(--red);color:#fff}
-.evBotRow>.btn{border:1px solid var(--line);background:var(--panel);color:var(--muted);min-width:40px;text-align:center;justify-content:center}
-.evBotRow>.btn:hover,.evBotRow>.btn:focus-visible{background:var(--red);border-color:var(--red);color:#fff;outline:none}
+#evBotList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+/* mismo diseño que los botones de la ventana EVENTO del registro con vídeo: grandes, en dos columnas, con ✎ arriba a la izquierda y ✕ arriba a la derecha */
+.evBotRow{position:relative;display:flex;min-width:0}
+.evBotRow>input{grid-column:1/-1;width:100%;min-height:52px}
+.evBotName{flex:1;min-width:0;box-sizing:border-box;min-height:52px;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px 24px 6px 10px;border:2px solid var(--line);border-radius:2px;background:var(--panel);color:var(--ink);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1.15;overflow-wrap:anywhere;transition:border-color .12s}
+.evBotRow:hover .evBotName{border-color:var(--ink)}
+.evBotRow>.btn{position:absolute;top:1px;width:16px;height:16px;min-width:0;min-height:0!important;padding:0!important;border:0;background:rgba(0,0,0,.28);color:var(--ink);font-size:11px;line-height:16px;text-align:center;justify-content:center;cursor:pointer}
+.evBotRow>.btn:first-of-type{left:1px;border-radius:2px 0 2px 0}
+.evBotRow>.btn:last-of-type{right:1px;border-radius:0 2px 0 2px;line-height:14px;font-size:12px}
+.evBotRow>.btn:first-of-type:hover,.evBotRow>.btn:first-of-type:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+.evBotRow>.btn:last-of-type:hover,.evBotRow>.btn:last-of-type:focus-visible{background:var(--red);color:#fff;outline:none}
 .evBotRow input,.evBotNew input{min-width:0;box-sizing:border-box;border:1px solid var(--red);background:var(--bg);color:var(--ink);border-radius:0;padding:6px 8px;font:inherit;font-size:14px}
-.evBotRow .btn,.evBotNew .btn{min-height:36px;padding:0 10px}
+.evBotNew .btn{min-height:36px;padding:0 10px}
 .evBotNew{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px}
 .evBotNew input{border-color:var(--line)}
 @media (max-width:640px){
-  .evBotRow .btn,.evBotNew .btn{min-height:44px}
+  .evBotNew .btn{min-height:44px}
   .evBotNew input{font-size:16px;min-height:44px}
 }
 @media (max-width:640px){
@@ -1579,8 +1604,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 /* Botón Home (enlace a la portada): azul como el resto de pestañas de cabecera, siempre con texto visible */
 html header .tab.tabHome,html header .tab.tabHome:hover{background:#1e40af;color:#fff;border-bottom-color:transparent;text-decoration:none;font-size:17px;margin-left:28px;padding:0 24px}
 html header .tab.tabHome:hover{background:#2554d6}
-/* Cabecera: Home + opciones de registro (Editor básico, Registro con vídeo, Registro sin vídeo). Conversión y Fusiona siguen en la portada; se ocultan (no se borran) porque el JS las usa para saber qué pestaña está activa */
-html header #tabBtnConv,html header #tabBtnFus{display:none!important}
+/* Cabecera: Home + todas las pestañas (Editor básico, Registro con/sin vídeo, Conversión vídeos, Fusiona vídeos) */
 html header .tab.tabHome{margin-right:10px}
 html header .hdrOpt{display:none!important}
 /* Limpiar y Ocultar/Mostrar: mismo fondo, borde y texto en toda la herramienta */
@@ -1626,6 +1650,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   html:not(.acfc-imm) #tabVisor main>aside,html:not(.acfc-imm) #tabEditor:not(:fullscreen) .edgrid>aside{position:sticky;top:96px;align-self:start;max-height:calc(100vh - 108px);min-height:420px}
 }
 /* Móvil: solo quedan las pestañas Editor básico y Registro con vídeo */
+/* (Conversión y Fusiona vuelven a ocultarse en móvil por la regla siguiente) */
 @media (max-width:640px){
   header .tab#tabBtnLive,header .tab#tabBtnConv,header .tab#tabBtnFus{display:none!important}
   /* Móvil: se ocultan «Limpiar proyecto», la estrella (versión gratuita) y la corona (versión premium); siguen en escritorio */
@@ -1643,6 +1668,9 @@ dialog#dlgBot .btn:not(.primary):not(.edGreen):hover{background:var(--ink);borde
 /* botones de la botonera con el mismo diseño que la ventana EVENTO: grandes, en dos columnas */
 dialog#dlgBot #botCats,dialog#dlgBot #botDets,dialog#dlgBot #botJugs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 dialog#dlgBot #botCats .catbtn,dialog#dlgBot #botDets .optbtn,dialog#dlgBot #botJugs .optbtn{min-height:52px;padding:6px 24px 6px 10px;font-size:16px;font-weight:700;line-height:1.15;display:flex;align-items:center;justify-content:center;text-align:center;border-width:2px;border-radius:2px}
+dialog#dlgBot #botCats .catbtn:not(.active){opacity:.55}
+dialog#dlgBot #botCats .catbtn:not(.active):hover{opacity:.85}
+dialog#dlgBot #botCats .catbtn.active{opacity:1;border-color:var(--red);box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--red)}
 dialog#dlgBot #botCats>.catbtn:last-child:nth-child(odd),dialog#dlgBot #botDets>.optbtn:last-child:nth-child(odd),dialog#dlgBot #botJugs>.optbtn:last-child:nth-child(odd){grid-column:1/-1}
 dialog#dlgBot #botDets>.optbtn.nodet{grid-column:1/-1}
 dialog#dlgBot .botEmpty{grid-column:1/-1}
@@ -1837,7 +1865,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       </div>
       <div class="row" hidden style="display:none">
         <label for="pre">Arrancar antes</label><input type="number" id="pre" min="0" step="0.5" value="5"><label>s</label>
-        <label for="post" style="margin-left:6px">Finalizar en</label><input type="number" id="post" min="0.2" step="0.5" value="10"><label>s</label>
+        <label for="post" style="margin-left:6px">Finalizar en</label><input type="number" id="post" min="0.2" step="0.5" value="5"><label>s</label>
       </div>
       <div class="row" id="botMovRow"><button class="btn" id="btnBotoneraMov" type="button" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">Editar botonera</button></div>
       </div>
@@ -1922,7 +1950,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <h2 style="margin:0">Pintado de acciones</h2>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
           <button type="button" class="btn" id="pintClear" title="Borra todo lo pintado">Limpiar</button>
-          <button type="button" class="btn acfcLink" id="pintToggle" aria-expanded="true" aria-controls="pintBody" title="Ocultar/mostrar las herramientas de pintado">Ocultar</button>
+          <button type="button" class="btn acfcLink" id="pintToggle" aria-expanded="true" aria-controls="pintBody" title="Cerrar/mostrar las herramientas de pintado">Cerrar</button>
         </div>
       </div>
       <div id="pintBody">
@@ -2197,7 +2225,14 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <button class="btn" id="edZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
       <button class="btn" id="edZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
       <input type="range" id="edZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
+      <button type="button" class="btn acfcLink" id="edRegEvToggle" aria-pressed="false" title="Ver en la línea de tiempo los eventos registrados en el Registro con vídeo">Ver eventos registrados</button>
       <button type="button" class="btn acfcLink" id="edCtlAllToggle" title="Ocultar/mostrar toda la barra de botones (A/B, marcas de partes) y los datos del evento">Ocultar controles</button>
+    </div>
+    <div id="edRegEv" hidden>
+      <div class="catLabels" id="edRegLbl"></div>
+      <div class="edRegTrack" id="edRegTrack" title="Haz clic en un evento para ir a ese instante del vídeo">
+        <div class="edRegZoom" id="edRegZoom"><div id="edRegRows"></div><div class="edRegHead" id="edRegHead"></div></div>
+      </div>
     </div>
     <div class="row" style="margin:6px 0"><button class="btn acfcLink" id="edCtlToggle" title="Ocultar/mostrar los botones de corte, marcas y datos de este bloque">Ocultar</button></div>
     <div class="controls" id="edCtl1">
@@ -2637,7 +2672,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <button type="button" class="btn edGreen" id="botSave" title="Descarga la botonera como archivo">💾 Guardar botonera</button>
         <label class="btn" for="impBot" title="Carga una botonera guardada previamente; se añade a la actual">📂 Cargar botonera</label>
       </div>
-      <button type="button" class="btn" id="botClose" title="Cerrar">❌ Cerrar</button>
+      <button type="button" class="btn primary" id="botClose" title="Cerrar">❌ Cerrar</button>
     </div>
     <p class="botHelp">Define aquí los botones que aparecen al registrar una acción. Los cambios se guardan en este navegador; usa «Guardar botonera» para llevarlos a otro ordenador.</p>
 
@@ -2917,7 +2952,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <div class="tutHr"><h3>Vídeos</h3><span class="tutOc">Ocultar</span></div>
       <div class="tutSrc" hidden><b>1. cortes3.mp4</b><small>1:35:00</small><i>✕</i></div>
       <div class="tutHr"><h3>Tiempo del evento</h3><span class="tutOc">Ocultar</span></div>
-      <div class="tutFr2"><span>Arrancar antes</span><span class="tutNum" data-k="pre">5</span><span>s</span><span>Finalizar en</span><span class="tutNum" data-k="post">10</span><span>s</span></div>
+      <div class="tutFr2"><span>Arrancar antes</span><span class="tutNum" data-k="pre">5</span><span>s</span><span>Finalizar en</span><span class="tutNum" data-k="post">5</span><span>s</span></div>
       <div class="tutHr"><h3>Filtros</h3><span class="tutOc">Ocultar</span></div>
       <div class="tutSelR"><span class="tutB set">Ambos</span><span class="tutB">Mi equipo</span><span class="tutB">Rival</span></div>
       <div class="tutSelR"><span class="tutInp" data-k="flt">Todas ▾</span><span class="tutB trd">Limpiar</span></div>
@@ -3725,7 +3760,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   let playing=null, selEv=null, ceView=null, ceSel=-1, ceHist=[];
   function clipOf(e){ if(e.clip) return e.clip; const t=timeOf(e), d=v.duration||Infinity, ct=catT[e.cat];
     const pre=ct?ct.pre:(+$("pre").value||0);
-    const post=ct?ct.post:Math.max(0.2,+$("post").value||10);
+    const post=ct?ct.post:Math.max(0.2,+$("post").value||5);
     const a=Math.max(0,t-pre), b=Math.max(a+0.2,Math.min(d,t+post)); return {a,b,segs:[{s:a,e:b,off:false}]}; }
   function keptOf(e){ const c=clipOf(e); return c.segs.filter(g=>!g.off).map(g=>({s:Math.max(g.s,c.a),e:Math.min(g.e,c.b)})).filter(r=>r.e-r.s>0.05); }
   // Datos del rótulo del evento para grabarlo dentro del vídeo descargado (el color se resuelve: el lienzo no entiende var(--x))
@@ -4056,7 +4091,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function botTRead(){ // devuelve {err} o {t:null|{pre,post}}
     const sp=$("botCatPre").value.trim(), sq=$("botCatPost").value.trim();
     if(sp===""&&sq==="") return {t:null};
-    const p=sp===""?(+$("pre").value||0):+sp, q=sq===""?Math.max(0.2,+$("post").value||10):+sq;
+    const p=sp===""?(+$("pre").value||0):+sp, q=sq===""?Math.max(0.2,+$("post").value||5):+sq;
     if(!isFinite(p)||p<0||p>600) return {err:"Los segundos antes deben estar entre 0 y 600."};
     if(!isFinite(q)||q<0.2||q>600) return {err:"Los segundos después deben estar entre 0,2 y 600."};
     return {t:{pre:p,post:q}};
@@ -4616,7 +4651,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     document.querySelectorAll("#fltEqBtns .fltEq").forEach(x=>{ const on=(x.dataset.eq==="ambos"?"":x.dataset.eq)===fltEq; x.classList.toggle("active",on); x.setAttribute("aria-pressed",on); });
     refresh();
   };
-  const refresh=()=>{syncRegTlFlt(); renderVidFilter(); renderList(); renderMarks(); renderHalfMarks(); renderClip(); renderPlaylist(); tick();};
+  const refresh=()=>{syncRegTlFlt(); renderVidFilter(); renderList(); renderMarks(); renderHalfMarks(); renderClip(); renderPlaylist(); tick(); document.dispatchEvent(new Event("acfcRegEv"));};
+  // Eventos registrados, de solo lectura, para que el editor los muestre en su línea de tiempo
+  window.acfcRegEvents={ get(){
+    const cats=Object.keys(CATS), out=[];
+    events.forEach(e=>{ if(!CATS[e.cat]) return; const c=clipOf(e); if(!c||!isFinite(c.a)||!isFinite(c.b)) return;
+      out.push({id:e.id,cat:e.cat,color:CATS[e.cat].c,a:c.a,b:c.b,min:e.min,det:e.det||"",jug:e.jug||"",vid:e.vid||""}); });
+    return {cats,events:out}; } };
 
   // ---------- playback ----------
   function go(e,play=true){ if(!v.src) return; active=e.id; if(selEv!==e.id) openClip(e,false); const k=keptOf(e);
@@ -6040,7 +6081,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const liveChk=new Set();
   const liveIco=(svg,title)=>{ const x=el("button",{type:"button",title}); x.setAttribute("aria-label",title);
     x.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+svg+'</svg>'; return x; };
-  const livePrePost=e=>{ const ct=catT[e.cat]; return {pre:ct?ct.pre:(+$("pre").value||0), post:ct?ct.post:Math.max(0.2,+$("post").value||10)}; };
+  const livePrePost=e=>{ const ct=catT[e.cat]; return {pre:ct?ct.pre:(+$("pre").value||0), post:ct?ct.post:Math.max(0.2,+$("post").value||5)}; };
   const liveDurTxt=e=>{ const p=livePrePost(e), s=Math.round(p.pre+p.post); return s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s"; };
   const liveSlug=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\w]+/g,"_").replace(/^_|_$/g,"").slice(0,60);
   function liveRanges(e){
@@ -6640,10 +6681,32 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const th=document.createElement("canvas"); th.width=64; th.height=Math.max(1,Math.round(64*k.canvas.height/k.canvas.width)); th.getContext("2d").drawImage(k.canvas,0,0,th.width,th.height);
       const s=sources.find(x=>x.id===k.srcId);
       const tx=document.createElement("div"); tx.style.cssText="font-size:13px;min-width:0"; tx.textContent="Captura "+(i+1)+" · "+fmt(k.t)+(sources.length>1&&s?" · "+s.name:"");
-      const x=document.createElement("button"); x.type="button"; x.className="btn"; x.textContent="Quitar"; x.title="Quitar esta captura";
-      x.onclick=ev=>{ ev.stopPropagation(); stills.splice(i,1); render(); };
+      const mk=(txt,title,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn"; b.textContent=txt; b.title=title; b.onclick=ev=>{ ev.stopPropagation(); fn(); }; return b; };
+      const nm="captura-"+(i+1)+"-"+fmt(k.t).replace(/[^0-9a-z]+/gi,"-");
+      const acts=document.createElement("div"); acts.style.cssText="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end";
+      acts.append(mk("Abrir","Ver la captura en grande",()=>openStillBig(k,nm)),
+        mk("Exportar","Descargar la captura como imagen PNG",()=>downloadStill(k,nm)),
+        mk("Quitar","Quitar esta captura",()=>{ stills.splice(i,1); render(); }));
+      th.style.cursor="zoom-in"; th.title="Ver en grande"; th.onclick=ev=>{ ev.stopPropagation(); openStillBig(k,nm); };
       row.onclick=()=>{ if(s&&sources[curSrc]===s) V.currentTime=k.t; };
-      row.append(th,tx,x); L.append(row); });
+      row.append(th,tx,acts); L.append(row); });
+  }
+  function downloadStill(k,nm){
+    k.canvas.toBlob(b=>{ if(!b) return; const u=URL.createObjectURL(b), a=document.createElement("a"); a.href=u; a.download=nm+".png"; document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),2000); },"image/png"); }
+  function openStillBig(k,nm){
+    let d=$("edStillBig");
+    if(!d){
+      d=document.createElement("dialog"); d.id="edStillBig"; d.style.cssText="max-width:min(96vw,1400px);width:96vw;padding:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink)";
+      d.innerHTML='<div id="edStillBigImg" style="display:flex;justify-content:center"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button type="button" class="btn primary" id="edStillBigDl">Exportar PNG</button><button type="button" class="btn" id="edStillBigX">Cerrar</button></div>';
+      document.body.append(d);
+      d.querySelector("#edStillBigX").onclick=()=>d.close();
+      d.addEventListener("click",e=>{ if(e.target===d) d.close(); });
+    }
+    const cv=document.createElement("canvas"); cv.width=k.canvas.width; cv.height=k.canvas.height; cv.getContext("2d").drawImage(k.canvas,0,0);
+    cv.style.cssText="max-width:100%;max-height:80vh;height:auto;display:block";
+    d.querySelector("#edStillBigImg").replaceChildren(cv);
+    d.querySelector("#edStillBigDl").onclick=()=>downloadStill(k,nm);
+    d.showModal();
   }
   function edShowView(st){ document.body.classList.toggle("edStillsShow",st); if(document.body.classList.contains("edEvHid")) $("edEvToggle").click(); renderStills(); }
   $("edStillsToggle").onclick=()=>edShowView(true);
@@ -6713,7 +6776,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function render(){
     syncCur();
     const d=dur(), wrap=$("edSegs"); wrap.replaceChildren();
-    renderSources(); renderFilter(); renderTramosList(); renderStills(); renderSel(); renderEvBot();
+    renderSources(); renderFilter(); renderTramosList(); renderStills(); renderSel(); renderEvBot(); renderRegEv();
     const go=sources.reduce((a,s)=>a+(s.dur||0),0);
     $("edTotal").textContent=fmt(filteredTotal());
     $("edResultRow").style.display=added.length?"":"none";
@@ -6755,6 +6818,41 @@ window.renderHalfBands = function(b1,b2,mk,d){
       $("edJug").textContent=jug!=null&&jug>=0?"Tiempo jugado "+fmt(jug):""; }
     $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=true; renderMarks(d); tick(); if(window.acfcABWin&&window.acfcABWin.refresh) window.acfcABWin.refresh(); // el botón «+ Añadir» ya no se muestra: Punto B añade el tramo
   }
+  // ---------- eventos registrados (los del Registro con vídeo), en filas por categoría y de solo lectura ----------
+  var regEvOn=false; try{ regEvOn=localStorage.getItem("acfcEdRegEv")==="1"; }catch(e){}
+  function renderRegEv(){
+    const box=$("edRegEv"), tb=$("edRegEvToggle");
+    tb.setAttribute("aria-pressed",regEvOn); tb.textContent=regEvOn?"Ocultar eventos registrados":"Ver eventos registrados";
+    box.hidden=!regEvOn; if(!regEvOn) return;
+    const lbl=$("edRegLbl"), rows=$("edRegRows"); lbl.replaceChildren(); rows.replaceChildren();
+    const d=dur(), src=sources[curSrc], api=window.acfcRegEvents, say=t=>{ const m=document.createElement("div"); m.className="edRegEmpty"; m.textContent=t; rows.append(m); };
+    if(!d||!src) return say("Carga un vídeo para ver los eventos registrados.");
+    const data=api?api.get():{cats:[],events:[]};
+    // solo los eventos de este vídeo (los que no llevan vídeo asociado valen para cualquiera)
+    const list=data.events.filter(e=>!e.vid||e.vid===src.name);
+    if(!list.length) return say("No hay eventos registrados para este vídeo. Regístralos en «Registro con vídeo».");
+    data.cats.filter(c=>list.some(e=>e.cat===c)).forEach(cat=>{
+      const its=list.filter(e=>e.cat===cat).sort((x,y)=>x.a-y.a), color=its[0].color;
+      const l=document.createElement("div"); l.className="catLabel";
+      const dot=document.createElement("i"); dot.className="dot"; dot.style.background=color;
+      const nm=document.createElement("b"); nm.textContent=cat.charAt(0)+cat.slice(1).toLowerCase();
+      const cn=document.createElement("span"); cn.className="cnt"; cn.textContent=its.length;
+      l.append(dot,nm,cn); lbl.append(l);
+      const row=document.createElement("div"); row.className="catRow";
+      its.forEach(e=>{ if(e.b<=0||e.a>=d) return;
+        const w=Math.max(0.25,(e.b-e.a)/d*100), chip=document.createElement("div");
+        chip.className="chip"; chip.style.left=(e.a/d*100)+"%"; chip.style.minWidth="max("+w+"%, 8px)"; chip.style.background=color;
+        chip.title=e.min+" · "+e.cat+(e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+" · "+fmt(e.b-e.a);
+        row.append(chip); });
+      row.onclick=ev=>{ // clic en la fila: salta al evento bajo el cursor, o al más cercano
+        const r=$("edRegZoom").getBoundingClientRect(), t=(ev.clientX-r.left)/r.width*d;
+        const hit=its.find(x=>t>=x.a&&t<=x.b)||its.reduce((p,x)=>Math.abs(x.a-t)<Math.abs(p.a-t)?x:p,its[0]);
+        V.currentTime=Math.max(0,hit.a); tick(); };
+      rows.append(row); });
+    tick(); }
+  $("edRegEvToggle").onclick=()=>{ regEvOn=!regEvOn; try{ localStorage.setItem("acfcEdRegEv",regEvOn?"1":"0"); }catch(e){} renderRegEv(); applyZoom(); };
+  document.addEventListener("acfcRegEv",()=>{ if(regEvOn) renderRegEv(); });
+  $("tabBtnEditor").addEventListener("click",()=>{ if(regEvOn) renderRegEv(); });
   // el rótulo del corte se adapta a su anchura: reduce letra y espaciado hasta que quepa (mínimo 6px; si aun así no cabe, puntos suspensivos)
   function fitEvLbl(b){ if(window.acfcFitEvLbl) window.acfcFitEvLbl(b); }
   var evLblRO=new ResizeObserver(es=>es.forEach(e=>fitEvLbl(e.target)));
@@ -6776,6 +6874,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
     $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
+    $("edRegHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
     if(edZoom>1&&d&&Date.now()-edPanTs>2500){ const f=t/d; if(f<edZv||f>edZv+1/edZoom){ edZv=f-0.5/edZoom; applyZoom(); } } // el zoom sigue al cabezal
     // etiqueta sobre el vídeo (como en el registro de eventos): corte añadido que contiene el cabezal
     const curId=sources[curSrc]&&sources[curSrc].id, ov=$("edOv");
@@ -6852,6 +6951,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function applyZoom(){
     edZoom=Math.max(1,Math.min(ZMAX,edZoom)); edZv=Math.max(0,Math.min(1-1/edZoom,edZv));
     zw.style.width=(edZoom*100)+"%"; zw.style.left=(-edZv*edZoom*100)+"%"; tr.classList.toggle("zoomed",edZoom>1);
+    { const rz=$("edRegZoom"); rz.style.width=(edZoom*100)+"%"; rz.style.left=(-edZv*edZoom*100)+"%"; }
     $("edZoomLbl").textContent="Zoom ×"+(Math.round(edZoom*10)/10);
     $("edZoomPan").hidden=$("edZoomReset").hidden=edZoom<=1;
     $("edZoomPan").value=edZoom>1?Math.round(edZv/(1-1/edZoom)*1000):0; }
@@ -10510,7 +10610,7 @@ $("pintPng").addEventListener("click",()=>{
 function setPanelHidden(hidden){
   bodyEl.hidden=hidden;
   if(clearActionButton) clearActionButton.style.display=hidden?"none":"";
-  toggleBtn.textContent=hidden?"Mostrar":"Ocultar";
+  toggleBtn.textContent=hidden?"Mostrar":"Cerrar";
   toggleBtn.setAttribute("aria-expanded",String(!hidden));
   try{ localStorage.setItem("acfcPintHidden",hidden?"1":"0"); }catch(e){}
 }
@@ -10895,6 +10995,38 @@ function edPintOpen(){
 }
 window.acfcEdPintOpen=edPintOpen;
 g("edPintBtn").addEventListener("click",edPintOpen);
+// Subir mi imagen: se inserta como imagen fija de 5 s en el instante actual del editor (misma vía que «Insertar en el vídeo»)
+if(edBlock&&edV){
+  const stEd=edBlock.querySelector("#pintStillEd");
+  const imgIn=document.createElement("input"); imgIn.type="file"; imgIn.accept="image/png,image/jpeg,image/webp,image/gif"; imgIn.hidden=true; imgIn.id="pintImgFileEd";
+  const imgBtn=document.createElement("button"); imgBtn.type="button"; imgBtn.className="pintTool"; imgBtn.id="pintImgEd";
+  imgBtn.dataset.label="Subir imagen al vídeo (5 s)"; imgBtn.setAttribute("aria-label","Subir imagen al vídeo (5 s)");
+  imgBtn.title="Elige una imagen de tu ordenador y la inserta como imagen fija de 5 segundos dentro del vídeo descargado, en este instante";
+  imgBtn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M5 20h14"/></svg>';
+  if(stEd&&stEd.parentNode){ stEd.after(imgBtn); stEd.parentNode.append(imgIn); }
+  imgBtn.addEventListener("click",()=>{ edV.pause(); imgIn.value=""; imgIn.click(); });
+  imgIn.addEventListener("change",()=>{
+    const f=imgIn.files&&imgIn.files[0]; if(!f) return;
+    const st=g("pintStatusEd"), say=m=>{ if(st) st.textContent=m; };
+    if(!/^image\/(png|jpeg|webp|gif)$/.test(f.type)){ say("Formato no válido: usa PNG, JPG, WebP o GIF."); return; }
+    if(f.size>15*1024*1024){ say("La imagen pesa más de 15 MB."); return; }
+    if(!edV.videoWidth){ say("Carga un vídeo en el editor."); return; }
+    const url=URL.createObjectURL(f), im=new Image();
+    im.onload=()=>{
+      try{
+        // Lienzo con la proporción del vídeo; la imagen se centra sin deformarse (bandas negras si hace falta)
+        const W=edV.videoWidth, H=edV.videoHeight, cv=document.createElement("canvas"); cv.width=W; cv.height=H;
+        const c=cv.getContext("2d"); c.fillStyle="#000"; c.fillRect(0,0,W,H);
+        const k=Math.min(W/im.naturalWidth,H/im.naturalHeight), w=im.naturalWidth*k, h=im.naturalHeight*k;
+        c.drawImage(im,(W-w)/2,(H-h)/2,w,h);
+        say(window.acfcEdAddStill?window.acfcEdAddStill(cv,edV.currentTime||0):"El editor no está listo.");
+      }catch(e){ say("No se pudo usar esa imagen."); }
+      finally{ URL.revokeObjectURL(url); }
+    };
+    im.onerror=()=>{ URL.revokeObjectURL(url); say("No se pudo leer esa imagen."); };
+    im.src=url;
+  });
+}
 // Registro sin vídeo: el pintado se activa sobre el vídeo que se añade para sincronizar (ids con sufijo «Lv»)
 const lvPanel=g("liveVidPanel"), lvV=g("liveVid"), lvName=g("liveVidName");
 if(visorBlock&&lvPanel&&lvV){
@@ -11365,7 +11497,7 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
   var AVISO_PREMIUM=false;   // true = el botón «Premium» muestra la ventana «Versión Premium»
   var PREMIUM_PARA_TODOS=true;
   /* Funciones solo Premium: llevan corona (de momento solo el pintado de acciones, en el registro y en el editor) */
-  var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse])","#pintStill","#pintStillEd","#regAddFile","#edAddFile","#edABWin","#botJugTit","#botJugName","#botJugAdd","#newJugAdd","#liveJugAdd","details.pintRoster>summary","details.pintRoster .pintRosterBtns .btn.primary","#tabBtnLive","#liveJugLbl"];
+  var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse])","#pintStill","#pintStillEd","#pintImgEd","#regAddFile","#edAddFile","#edABWin","#botJugTit","#botJugName","#botJugAdd","#newJugAdd","#liveJugAdd","details.pintRoster>summary","details.pintRoster .pintRosterBtns .btn.primary","#tabBtnLive","#liveJugLbl"];
   var LITE=["#play","#vBack4","#vFwd5","#vTagNow","#vFull"];
   var H=document.documentElement, $=function(i){return document.getElementById(i);};
 
