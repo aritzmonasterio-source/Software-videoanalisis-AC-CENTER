@@ -2273,6 +2273,10 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <button class="btn" id="edZoomMinus" title="Alejar la línea de tiempo (Ctrl + rueda del ratón)" aria-label="Alejar">−</button>
       <span class="time" id="edZoomLbl">Zoom ×1</span>
       <button class="btn" id="edZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
+      <span class="vPlayMode" id="edPlayMode" hidden role="group" aria-label="Qué parte del vídeo se ve en la línea de tiempo">
+        <button type="button" class="btn" id="edModePlay" aria-pressed="false" title="Ajusta la línea de tiempo al tiempo de juego (de inicio de 1ª parte a fin del partido)">En juego</button>
+        <button type="button" class="btn" id="edModeAll" aria-pressed="true" title="Vídeo entero: lo anterior, el descanso y lo posterior al partido">Sin juego</button>
+      </span>
       <button class="btn" id="edZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
       <input type="range" id="edZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
       <button type="button" class="btn acfcLink" id="edRegEvToggle" aria-pressed="false" title="Ver en la línea de tiempo los eventos registrados en el Registro con vídeo">Ver eventos registrados</button>
@@ -7061,6 +7065,14 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
         btn.textContent=label; btn.title=label+" · "+fmt(t); }
     });
     window.renderHalfBands($("edBandP1"),$("edBandP2"),marks,d);
+    edModeUI(d);
+  }
+  // «En juego» / «Sin juego»: En juego ajusta la línea de tiempo del editor de inicio de 1ª parte a fin del partido; Sin juego muestra el vídeo entero
+  var edOnly=false;
+  function edModeUI(d){
+    const full=!!d&&[marks.p1,marks.p1e,marks.p2,marks.end].every(x=>typeof x==="number")&&marks.p1<marks.end;
+    const g=$("edPlayMode"); if(!g) return; g.hidden=!full;
+    $("edModePlay").setAttribute("aria-pressed",edOnly); $("edModeAll").setAttribute("aria-pressed",!edOnly);
   }
   $("edMarkP1").onclick=()=>setMark("p1");
   $("edMarkP1E").onclick=()=>setMark("p1e");
@@ -7124,7 +7136,14 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   tr.addEventListener("wheel",e=>{ if(!dur()) return;
     if(e.ctrlKey||e.metaKey){ e.preventDefault(); const r=zw.getBoundingClientRect(); zoomTo(edZoom*(e.deltaY<0?1.25:0.8),(e.clientX-r.left)/r.width); }
     else if(edZoom>1&&(e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))){ e.preventDefault(); edZv+=(e.deltaX||e.deltaY)/tr.clientWidth/edZoom; edPanTs=Date.now(); applyZoom(); } },{passive:false});
-  V.addEventListener("loadedmetadata",()=>{ edZoom=1; edZv=0; applyZoom(); });
+  V.addEventListener("loadedmetadata",()=>{ edZoom=1; edZv=0; applyZoom(); edOnly=false; edModeUI(dur()); });
+  function edSetMode(on){
+    const d=dur(); if(!d||!(marks.p1<marks.end)) return; edOnly=on;
+    if(on){ edZoom=Math.min(ZMAX,d/(marks.end-marks.p1)); edZv=marks.p1/d; } else { edZoom=1; edZv=0; }
+    edPanTs=Date.now(); applyZoom(); edModeUI(d); }
+  $("edModePlay").onclick=()=>edSetMode(true);
+  $("edModeAll").onclick=()=>edSetMode(false);
+  $("edZoomReset").addEventListener("click",()=>{ edOnly=false; edModeUI(dur()); });
   const tAt=e=>{ const r=zw.getBoundingClientRect(); return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*dur(); };
   tr.addEventListener("pointerdown",e=>{ if(!dur()||exporting) return; tr.setPointerCapture(e.pointerId);
     if(e.target.id==="hIn"||e.target.id==="hOut"){ snap(); drag=e.target.id; return; }
