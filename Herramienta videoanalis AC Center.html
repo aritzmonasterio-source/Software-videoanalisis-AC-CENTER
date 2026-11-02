@@ -138,10 +138,11 @@ html.acfc-imm .stageTL{display:none!important}
 .chipHdl.r{right:0;border-radius:0 6px 6px 0}
 .chipHdl:hover{background:rgba(255,255,255,.4)}
 /* asas en los extremos reales del corte (el cuadro del clip tiene un mínimo de 30 px aunque el corte dure menos) */
-.chipHdl.bh{top:6px;bottom:auto;height:28px;width:8px;border-radius:2px;background:var(--ink);opacity:.55;z-index:3;touch-action:none}
-.chipHdl.bh.l{margin-left:-8px}.chipHdl.bh.r{margin-left:0}
-.chipHdl.bh:hover,.chip.dragging~.chipHdl.bh{opacity:1;background:var(--red)}
-.chip.sel+.chipHdl.bh,.chip.sel+.chipHdl.bh+.chipHdl.bh{opacity:.9;width:10px}.chip.sel+.chipHdl.bh.l{margin-left:-10px}
+.chipHdl.bh{top:6px;bottom:auto;height:28px;width:6px;border-radius:2px;background:var(--red);opacity:1;z-index:3;touch-action:none;box-shadow:0 0 0 1px rgba(255,255,255,.85)}
+.chipHdl.bh.l{margin-left:-6px}.chipHdl.bh.r{margin-left:0;right:auto}
+.chipHdl.bh:hover,.chip.dragging~.chipHdl.bh,.chipHdl.bh.drag{background:var(--red-2,var(--red));width:8px}
+.chipHdl.bh.l:hover,.chipHdl.bh.l.drag{margin-left:-8px}
+.chip.sel+.chipHdl.bh,.chip.sel+.chipHdl.bh+.chipHdl.bh{width:8px}.chip.sel+.chipHdl.bh.l{margin-left:-8px}
 /* Eventos registrados en la línea de tiempo del editor (solo lectura) */
 #edRegEv{display:flex;align-items:flex-start;margin-top:8px;border:1px solid var(--line);background:var(--panel);overflow:hidden}
 #edRegEv[hidden]{display:none}
@@ -149,6 +150,7 @@ html.acfc-imm .stageTL{display:none!important}
 .edRegZoom{position:relative;width:100%}
 .edRegZoom .catRow{cursor:pointer}
 .edRegZoom .chip{cursor:pointer;pointer-events:none}
+.edRegZoom .chipHdl.bh{pointer-events:auto}
 .edRegHead{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--red);pointer-events:none;z-index:2}
 .edRegEmpty{padding:10px;font-size:13px;color:var(--muted)}
 html.acfc-imm #edRegEv{display:none}
@@ -1625,7 +1627,7 @@ html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
 }
 /* botonera en ventana emergente: ocupa la ventana desde arriba, sin el hueco de la hoja inferior móvil */
 dialog#dlg.enEmergente{position:static!important;width:100%!important;max-height:none!important;border:0;box-shadow:none;margin:0}
-dialog#dlg.enEmergente #closeBotDlg{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important;font-size:1.15em;font-weight:700;text-transform:uppercase;padding:10px 26px;min-height:44px}
+dialog#dlg.enEmergente #closeBotDlg{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important;font-weight:700;text-transform:uppercase}
 dialog#dlg.enEmergente #closeBotDlg:hover{background:var(--red-2)!important;border-color:var(--red-2)!important}
 dialog#dlg.enEmergente #closeBotDlg::before{content:none!important}
 /* botonera compacta (escritorio): menos relleno y huecos, botones más pequeños; en móvil vertical se mantienen los botones grandes */
@@ -2530,7 +2532,7 @@ dialog#dlgBot .botChk{font-size:12px}
     </div>
     <div class="liveSide">
       <div class="livePanel" id="liveVidPanel" hidden>
-        <h2>Vídeo y sincronización</h2>
+        <h2>Vídeo y sincronización <button type="button" class="btn acfcLink" id="liveSyncToggle" style="margin-left:auto" aria-controls="liveSyncRows" title="Ocultar/mostrar las marcas de sincronización (Inicio partido, Fin 1ª parte…)">Ocultar</button></h2>
         <video id="liveVid" controls playsinline preload="metadata"></video>
         <button type="button" class="btn" id="liveVidPaint" hidden title="Pintar sobre el vídeo: pausa y abre las herramientas de pintado" aria-label="Activar el pintado"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 4.2A8.5 8.5 0 1 0 12 20.5c1.6 0 2.4-.9 2.4-2 0-1.5-1.4-1.7-1.4-3 0-1 .8-1.7 1.9-1.7H17a3.5 3.5 0 0 0 3.5-3.4"/><circle cx="7.5" cy="10.5" r="1.2"/><circle cx="9.5" cy="15.5" r="1.2"/><circle cx="13.5" cy="8" r="1.2"/><path d="M20.5 2.5l-5 5 1.5 1.5 5-5z"/></svg></button>
         <div class="liveHelp" id="liveVidName"></div>
@@ -4557,6 +4559,8 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     h.addEventListener("click",ev=>ev.stopPropagation());
     return h;
   }
+  // el cuadro del corte tiene un mínimo de 30 px: el asa del final va en el borde visible del cuadro, no dentro de él
+  const hdlEnd=(c,d)=>"max("+pct(c.b,0,d)+", calc("+pct(c.a,0,d)+" + 30px))";
   function renderMarks(){
     renderSeekTicks();
     const rows=$("catRows"), labelsEl=$("catLabels"); rows.replaceChildren(); labelsEl.replaceChildren();
@@ -4580,7 +4584,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
         const hdlL=el("div",{className:"chipHdl l",title:"Arrastra para acortar o alargar el inicio del clip"});
         const hdlR=el("div",{className:"chipHdl r",title:"Arrastra para acortar o alargar el final del clip"});
         hdlL.classList.add("bh"); hdlR.classList.add("bh"); // fuera del chip, en el inicio y el final reales
-        hdlL.style.left=pct(c.a,0,d); hdlR.style.left=pct(c.b,0,d); chip._hl=hdlL; chip._hr=hdlR;
+        hdlL.style.left=pct(c.a,0,d); hdlR.style.left=hdlEnd(c,d); chip._hl=hdlL; chip._hr=hdlR;
         chip.onclick=ev=>{ev.stopPropagation(); if(chip.dataset.dragged){delete chip.dataset.dragged; return;} vFitClip(e); go(e);};
         bindEvDrag(e,"move",chip,chip,bar);
         bindEvDrag(e,"l",hdlL,chip,bar);
@@ -4607,7 +4611,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       chip.classList.add("dragging"); bar.classList.add("dragging");
       function place(c){
         chip.style.left=pct(c.a,0,d); chip.style.minWidth="max("+Math.max(0.25,(c.b-c.a)/d*100)+"%, 30px)"; bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%";
-        if(chip._hl){ chip._hl.style.left=pct(c.a,0,d); chip._hr.style.left=pct(c.b,0,d); }
+        if(chip._hl){ chip._hl.style.left=pct(c.a,0,d); chip._hr.style.left=hdlEnd(c,d); }
       }
       function onMove(mv){
         const dx=mv.clientX-startX; if(Math.abs(dx)>3) moved=true;
@@ -4837,11 +4841,12 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   simpleFold("fltToggle","fltHidden",h=>{ $("fltBody").style.display=h?"none":""; },true);
   simpleFold("dlgMinToggle","dlgMinHidden",h=>{ $("dlgMinBody").style.display=h?"none":""; },true);
   simpleFold("liveSecToggle","liveSecHidden",h=>{ $("liveTop").classList.toggle("liveFold",h); });
+  simpleFold("liveSyncToggle","liveSyncHidden",h=>{ $("liveSyncRows").style.display=h?"none":"grid"; $("liveSyncMsg").style.display=h?"none":""; });
   simpleFold("evHideToggle","evHideHidden",h=>{ $("list").style.display=h?"none":""; });
   simpleFold("catTlToggle","catTlHidden",h=>{ document.querySelector(".catTimelineWrap").style.display=h?"none":""; $("clock").parentNode.style.display=h?"none":""; });
   simpleFold("evBotToggle","evBotHidden",h=>{ $("evBotList").style.display=h?"none":""; $("evBotNew").style.display=h?"none":""; });
   // Tono azul según estado: Ocultar (claro) / Mostrar (oscuro)
-  ["liveSecToggle","evBotToggle","catTlToggle","regSrcToggle","evHideToggle","ajToggle","fltToggle","dlgMinToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
+  ["liveSecToggle","liveSyncToggle","evBotToggle","catTlToggle","regSrcToggle","evHideToggle","ajToggle","fltToggle","dlgMinToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
     const el=$(id); if(!el) return;
     el.classList.add("acfcTgl");
     const upd=()=>{ el.dataset.tgl=/mostrar/i.test(el.textContent)?"mostrar":"ocultar"; };
@@ -4883,7 +4888,12 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     const cats=Object.keys(CATS), out=[];
     events.forEach(e=>{ if(!CATS[e.cat]) return; const c=clipOf(e); if(!c||!isFinite(c.a)||!isFinite(c.b)) return;
       out.push({id:e.id,cat:e.cat,color:CATS[e.cat].c,a:c.a,b:c.b,min:e.min,det:e.det||"",jug:e.jug||"",vid:e.vid||""}); });
-    return {cats,events:out}; } };
+    return {cats,events:out}; },
+    // el editor acorta o alarga un evento desde su línea de tiempo (mismo criterio que las asas de la barra del reproductor)
+    setRange(id,a,b){ const e=events.find(x=>x.id===id), d=v.duration; if(!e||!(b>a)) return false;
+      const c=clipEnsure(e); c.a=Math.max(0,a); c.b=d?Math.min(d,b):b;
+      if(c.a<c.segs[0].s) c.segs[0].s=c.a; const L=c.segs[c.segs.length-1]; if(c.b>L.e) L.e=c.b;
+      save(); refresh(); return true; } };
 
   // ---------- playback ----------
   function go(e,play=true){ if(!v.src) return; active=e.id; if(selEv!==e.id) openClip(e,false); const k=keptOf(e);
@@ -7146,11 +7156,11 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     const api=window.acfcRegEvents, say=t=>{ const m=document.createElement("div"); m.className="edRegEmpty"; m.textContent=t; rows.append(m); };
     // cortes añadidos en el editor para este vídeo
     const list=[]; added.forEach((it,i)=>{ if(it.srcId!==src.id) return; const o=edOvOf(it,i);
-      list.push({cat:o.cat,color:o.color,a:it.s,b:it.e,title:o.min+" · "+o.det+" · "+fmt(it.e-it.s)}); });
+      list.push({cat:o.cat,color:o.color,a:it.s,b:it.e,it,title:o.min+" · "+o.det+" · "+fmt(it.e-it.s)}); });
     // eventos del Registro con vídeo de este vídeo (los que no llevan vídeo asociado valen para cualquiera), sin repetir los ya añadidos
     (api?api.get().events:[]).forEach(e=>{ if(e.vid&&e.vid!==src.name) return;
       if(list.some(x=>x.cat===e.cat&&Math.abs(x.a-e.a)<0.2&&Math.abs(x.b-e.b)<0.2)) return;
-      list.push({cat:e.cat,color:e.color,a:e.a,b:e.b,title:e.min+" · "+e.cat+(e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+" · "+fmt(e.b-e.a)}); });
+      list.push({cat:e.cat,color:e.color,a:e.a,b:e.b,id:e.id,title:e.min+" · "+e.cat+(e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+" · "+fmt(e.b-e.a)}); });
     if(!list.length) return say("Aquí aparecerán los cortes y eventos por categoría.");
     [...new Set(list.map(x=>x.cat))].forEach(cat=>{
       const its=list.filter(e=>e.cat===cat).sort((x,y)=>x.a-y.a), color=its[0].color;
@@ -7164,7 +7174,29 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
         if(edPM()&&edPM().out(e.a,e.b)) return; const w=Math.max(0.25,epc(e.b)-epc(e.a)), chip=document.createElement("div");
         chip.className="chip"; chip.style.left=epc(e.a)+"%"; chip.style.minWidth="max("+w+"%, 8px)"; chip.style.background=color;
         chip.title=e.title;
-        row.append(chip); });
+        row.append(chip);
+        // asas en el inicio y el final reales: arrastrar acorta o alarga el corte, como en el reproductor
+        const hl=document.createElement("div"), hr=document.createElement("div"); chip._hl=hl; chip._hr=hr;
+        [[hl,"l"],[hr,"r"]].forEach(([h,sd])=>{
+          h.className="chipHdl bh "+sd; h.title=sd==="l"?"Arrastra para acortar o alargar el inicio del corte":"Arrastra para acortar o alargar el final del corte";
+          // el asa del final va en el borde visible del cuadro (que mide al menos 8 px), o dentro de él si llega al final del vídeo
+          const place=(a,b)=>{ if(sd==="l"){ h.style.left=epc(a)+"%"; return; }
+            h.style.left="max("+epc(b)+"%, calc("+epc(a)+"% + 8px))"; h.style.marginLeft=epc(b)>=99?"-6px":""; };
+          place(e.a,e.b); h._place=place; row.append(h);
+          h.addEventListener("click",ev=>ev.stopPropagation());
+          h.addEventListener("pointerdown",ev=>{ if(ev.button!==0||exporting||!dur()) return; ev.preventDefault(); ev.stopPropagation();
+            let na=e.a, nb=e.b, moved=false;
+            try{ h.setPointerCapture(ev.pointerId); }catch(err){} h.classList.add("drag");
+            const onMove=m=>{ moved=true; edPanTs=Date.now(); const r=$("edRegZoom").getBoundingClientRect(), t=ept((m.clientX-r.left)/r.width); // sin autodesplazar el zoom mientras se arrastra
+              if(sd==="l") na=Math.max(0,Math.min(t,e.b-0.2)); else nb=Math.min(d,Math.max(t,e.a+0.2));
+              chip.style.left=epc(na)+"%"; chip.style.minWidth="max("+Math.max(0.25,epc(nb)-epc(na))+"%, 8px)";
+              hl._place(na,nb); hr._place(na,nb); V.currentTime=sd==="l"?na:nb; tick(); };
+            const onUp=()=>{ h.removeEventListener("pointermove",onMove); h.removeEventListener("pointerup",onUp); h.removeEventListener("pointercancel",onUp); h.classList.remove("drag");
+              if(!moved) return;
+              if(e.it){ snap(); if(e.it===activeAdded){ inP=na; outP=nb; syncActive(); } else { e.it.s=na; e.it.e=nb; } render(); }
+              else if(window.acfcRegEvents&&e.id!=null) window.acfcRegEvents.setRange(e.id,na,nb); };
+            h.addEventListener("pointermove",onMove); h.addEventListener("pointerup",onUp); h.addEventListener("pointercancel",onUp); }); });
+      });
       row.onclick=ev=>{ // clic en la fila: salta al evento bajo el cursor, o al más cercano
         const r=$("edRegZoom").getBoundingClientRect(), t=ept((ev.clientX-r.left)/r.width);
         const hit=its.find(x=>t>=x.a&&t<=x.b)||its.reduce((p,x)=>Math.abs(x.a-t)<Math.abs(p.a-t)?x:p,its[0]);
