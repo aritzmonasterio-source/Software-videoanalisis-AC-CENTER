@@ -6441,7 +6441,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const selOk=it=>!selAdded.size||selAdded.has(it);
   function removeAdded(idx){ if(added[idx]===activeAdded) activeAdded=null; selAdded.delete(added[idx]); added.splice(idx,1); render(); }
   function clearStills(){ stills.length=0; render(); }
-  function clearAdded(){ if(document.body.classList.contains("edStillsShow")) return clearStills(); added=[]; activeAdded=null; render(); }
+  function clearAdded(){ if(document.body.classList.contains("edStillsShow")) return clearStills();
+    if((sources.length||added.length)&&!confirm("Se borrarán todos los eventos y se quitarán todos los vídeos del editor. ¿Continuar?")) return;
+    added=[]; activeAdded=null; selAdded.clear(); stills.length=0;
+    while(sources.length) removeSource(sources.length-1);
+    render(); }
   $("edClearAdded").onclick=clearAdded;
   window.acfcClearEditor=()=>{ added=[]; activeAdded=null; stills.length=0; selAdded.clear(); render(); };
   function halfLabel(s,t){
