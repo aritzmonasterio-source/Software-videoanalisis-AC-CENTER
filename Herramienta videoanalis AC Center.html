@@ -801,7 +801,8 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #tutDlgL .tutClkRow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 #tutDlgL .tutClkRow small{display:block;font-size:9px;color:var(--muted);text-transform:uppercase}
 #tutDlgL .tutClk{font-family:var(--f-disp);font-size:28px;font-weight:700;line-height:1;margin-right:auto}
-#tutDlgL .tutGrid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+#tutDlgL .tutGrid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:4px}
+#tutDlgL .tutCfg{margin-top:6px;align-items:center}
 #tutDlgL .tutGrid4 .tutB,#tutDlgL .tutGrid2 .tutB{text-align:center;white-space:normal}
 #tutDlgL .tutGrid2{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 #tutDlgL .tutB.done{background:var(--ink);border-color:var(--ink);color:var(--bg)}
@@ -977,7 +978,11 @@ html #regPintBtn svg,html #edPintBtn svg{width:26px;height:26px}
 #tabLive .liveLbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 #tabLive .liveClock{font-family:var(--f-disp);font-weight:700;font-size:44px;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
 #tabLive .liveClock.liveMatch{color:var(--red)}
-#tabLive .liveMarks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+#tabLive .liveMarks{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px}
+#tabLive .liveCfg{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:0 0 10px;font-family:var(--f-body);font-size:12px;color:var(--muted);text-transform:uppercase}
+#tabLive .liveCfg label{display:flex;align-items:center;gap:8px}
+#tabLive .liveCfg select,#tabLive .liveCfg input{font:inherit;text-transform:none;color:var(--ink);border:1px solid var(--line);background:var(--panel);border-radius:0;padding:6px 8px}
+#tabLive .liveCfg input{width:76px}
 #tabLive .liveMarks .btn{min-height:48px;padding:6px 4px;font-size:13px;display:grid;gap:2px;line-height:1.15}
 #tabLive .liveMarks .btn small{font-weight:400;color:inherit;opacity:.85}
 #tabLive .liveMarks .btn.done{border-color:var(--ink);background:var(--ink);color:var(--bg)}
@@ -1097,6 +1102,9 @@ html #regPintBtn svg,html #edPintBtn svg{width:26px;height:26px}
   .liveSub{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 12px 0}
   .liveSub button{font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 4px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:0;cursor:pointer;line-height:1.2}
   .liveSub button[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
+  /* «Pantalla completa» junto a «Vídeo + eventos»; el botón de la fila del reloj solo se usa ya dentro de la pantalla completa */
+  #tabLive:not(:fullscreen) .liveClockRow>#liveFull{display:none}
+  .liveSub #liveFullTab[hidden]{display:none}
   #tabLive[data-lv="bot"] .liveSide{display:none}
   #tabLive[data-lv="botev"] #liveVidPanel,#tabLive[data-lv="botev"] #liveActsPanel{display:none}
   #tabLive[data-lv="vid"] .liveMain{display:none}
@@ -1264,6 +1272,16 @@ html.acfc-imm #tabBtnFus::after{content:"";display:block;width:20px;height:20px;
 /* botonera: grupos y equipo */
 .optbtn.g-juego:not(.active){background:#3D4852;border-color:#3D4852;color:#fff}
 .optbtn.g-parado:not(.active){background:#8A8F96;border-color:#8A8F96;color:#fff}
+/* cabeceras de grupo en el editor de botonera */
+.botGrpHead{background:#15181D;border-bottom:5px solid #8A8F96;color:#fff;text-transform:uppercase;letter-spacing:.6px;font-weight:700;font-size:14px;text-align:center;padding:10px 6px}
+.botGrpHead.g-juego{border-bottom-color:#3D4852}
+/* Cabeceras de grupo (Situación jugada / Acción balón parado): negras, para distinguirlas de sus detalles */
+#dlg #fDetBtns .optbtn.grpHead:not(.active){background:#15181D;border-color:#15181D;border-bottom:5px solid #8A8F96;color:#fff;text-transform:uppercase;letter-spacing:.6px}
+#dlg #fDetBtns .optbtn.grpHead.g-juego:not(.active){border-bottom-color:#3D4852}
+#dlg #fDetBtns .optbtn.grpHead.active{border-bottom-width:5px}
+#tabLive #liveDets .optbtn.grpHead:not(.active){background:#15181D;border-color:#15181D;border-bottom:5px solid #8A8F96;color:#fff;text-transform:uppercase;letter-spacing:.6px}
+#tabLive #liveDets .optbtn.grpHead.g-juego:not(.active){border-bottom-color:#3D4852}
+#tabLive #liveDets .optbtn.grpHead.active{border-bottom-width:5px}
 .optbtn[data-eq="propio"]{background:#2e8b4a;border-color:#2e8b4a;color:#fff}
 .optbtn[data-eq="rival"]{background:#D3291E;border-color:#D3291E;color:#fff}
 .optbtn[data-eq="ambos"]{background:#8A8F96;border-color:#8A8F96;color:#fff}
@@ -1528,6 +1546,9 @@ html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
 }
 /* botonera en ventana emergente: ocupa la ventana desde arriba, sin el hueco de la hoja inferior móvil */
 dialog#dlg.enEmergente{position:static!important;width:100%!important;max-height:none!important;border:0;box-shadow:none;margin:0}
+dialog#dlg.enEmergente #closeBotDlg{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important;font-size:1.15em;font-weight:700;text-transform:uppercase;padding:10px 26px;min-height:44px}
+dialog#dlg.enEmergente #closeBotDlg:hover{background:var(--red-2)!important;border-color:var(--red-2)!important}
+dialog#dlg.enEmergente #closeBotDlg::before{content:none!important}
 /* botonera compacta (escritorio): menos relleno y huecos, botones más pequeños; en móvil vertical se mantienen los botones grandes */
 @media (min-width:641px){
   dialog#dlg{padding:8px 10px}
@@ -1649,10 +1670,19 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 @media (min-width:1251px){
   html:not(.acfc-imm) #tabVisor main>aside,html:not(.acfc-imm) #tabEditor:not(:fullscreen) .edgrid>aside{position:sticky;top:96px;align-self:start;max-height:calc(100vh - 108px);min-height:420px}
 }
-/* Móvil: solo quedan las pestañas Editor básico y Registro con vídeo */
-/* (Conversión y Fusiona vuelven a ocultarse en móvil por la regla siguiente) */
+/* Móvil: la cabecera solo muestra Home (icono de casa), Editor básico, Registro con vídeo y Registro sin vídeo, todos con icono */
+/* (Conversión y Fusiona se ocultan en móvil) */
 @media (max-width:640px){
-  header .tab#tabBtnLive,header .tab#tabBtnConv,header .tab#tabBtnFus{display:none!important}
+  header .tab#tabBtnConv,header .tab#tabBtnFus{display:none!important}
+  html header .tab.tabHome,html header .tab.tabHome:hover{font-size:0!important;margin:0!important;padding:0 12px!important}
+  header .tab.tabHome::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11 12 3l9 8'/%3E%3Cpath d='M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11 12 3l9 8'/%3E%3Cpath d='M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E") center/contain no-repeat}
+  header .tab#tabBtnLive{display:flex!important}
+  /* los cuatro iconos reparten por igual el ancho que dejan el logo y el botón de instalar */
+  header{gap:8px}
+  header .tabs{gap:6px;min-width:0;flex:1 1 0;justify-content:stretch}
+  header .tab,html header .tab.tabHome{padding:0!important;flex:1 1 0;min-width:0;justify-content:center}
+  /* Móvil: sin flechas de deshacer y rehacer en la cabecera (dejan sitio a los iconos de las pestañas) */
+  header .acfcGHist{display:none!important}
   /* Móvil: se ocultan «Limpiar proyecto», la estrella (versión gratuita) y la corona (versión premium); siguen en escritorio */
   html header #acfcClearProj,html header #acfcFreeBtn.btn,html header #acfcLicBtn.btn{display:none!important}
 }
@@ -1868,7 +1898,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <input type="number" id="off" step="0.5" value="0">
       </div>
       <div class="row" hidden style="display:none">
-        <label for="pre">Arrancar antes</label><input type="number" id="pre" min="0" step="0.5" value="5"><label>s</label>
+        <label for="pre">Arrancar antes</label><input type="number" id="pre" min="0" step="0.5" value="2"><label>s</label>
         <label for="post" style="margin-left:6px">Finalizar en</label><input type="number" id="post" min="0.2" step="0.5" value="5"><label>s</label>
       </div>
       <div class="row" id="botMovRow"><button class="btn" id="btnBotoneraMov" type="button" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">Editar botonera</button></div>
@@ -2339,18 +2369,23 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
   <nav class="liveSub" id="liveSub" role="tablist" aria-label="Vista del registro">
     <button type="button" role="tab" data-lv="botev" aria-selected="true">Botonera + eventos</button>
     <button type="button" role="tab" data-lv="vid" aria-selected="false">Vídeo + eventos</button>
+    <button type="button" id="liveFullTab" title="Pantalla completa" aria-label="Pantalla completa">⛶ Pantalla completa</button>
   </nav>
   <div class="liveWrap">
     <div class="liveMain">
       <div class="livePanel">
         <h2>Registro sin vídeo</h2>
         <p class="liveHelp">Registra el partido en directo, desde el móvil o el ordenador. Después añade el vídeo y sincroniza el inicio y el final de cada parte para colocar los eventos en su sitio.</p>
+        <div class="liveCfg" id="liveCfg">
+          <span class="liveLbl">Competición</span>
+          <label>Partes <select id="liveParts" aria-label="Número de partes" title="Número de partes de la competición que vas a registrar"></select></label>
+          <label>Minutos por parte <input type="number" id="liveMinPart" min="1" max="120" step="1" inputmode="numeric" aria-label="Minutos por parte" title="Duración de cada parte, en minutos"></label>
+        </div>
         <div class="liveClockRow">
           <div><div class="liveLbl">Minuto de partido</div><div class="liveClock liveMatch" id="liveMatch">0:00</div></div>
-          <button type="button" class="btn" id="liveRun" style="min-height:48px" title="Pausa o reanuda el reloj" disabled>Pausar</button>
+          <button type="button" class="btn" id="liveRun" style="min-height:48px" title="Pausa o reanuda el reloj" disabled>Detener</button>
           <button type="button" class="btn" id="liveNew" style="min-height:48px" title="Pone el cronómetro a cero y borra los eventos y las marcas de este registro">Limpiar</button>
           <button type="button" class="btn" id="liveEdit" style="min-height:48px" title="Corrige el minuto del cronómetro escribiéndolo a mano">Editar</button>
-          <button type="button" class="btn" id="liveTut" style="min-height:48px" title="Guía paso a paso del registro sin vídeo">❓ Tutorial</button>
           <button type="button" class="btn" id="liveFull" style="min-height:48px" title="Pantalla completa" aria-label="Pantalla completa">⛶ Pantalla completa</button>
         </div>
         <div class="liveMarks" id="liveMarks" role="group" aria-label="Marcas de parte"></div>
@@ -2385,6 +2420,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
           <button type="button" class="btn edGreen" id="liveBotSave" title="Descarga solo las categorías, detalles y jugadores (la botonera), sin eventos ni vídeo">💾 Guardar botonera</button>
           <label class="btn" for="impBot" style="text-align:center;cursor:pointer" title="Carga una botonera (categorías, detalles y jugadores) guardada previamente; se añade a la actual">📂 Cargar botonera</label>
           <button type="button" class="btn primary" id="liveBotEdit" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">🎛️ Botonera</button>
+          <button type="button" class="btn" id="liveTut" title="Guía paso a paso del registro sin vídeo">❓ Tutorial</button>
         </div>
       </div>
     </div>
@@ -2697,8 +2733,8 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <button type="button" class="btn primary" id="botCatAdd">Añadir</button>
       </div>
       <div class="row botAdd botTRow">
-        <label for="botCatPre">Segundos antes</label><input id="botCatPre" type="number" min="0" max="600" step="0.5" class="botTNum" placeholder="general" title="Segundos de vídeo antes de la acción. Vacío = valor general («Arrancar antes»)">
-        <label for="botCatPost">Segundos después</label><input id="botCatPost" type="number" min="0.2" max="600" step="0.5" class="botTNum" placeholder="general" title="Segundos de vídeo después de la acción. Vacío = valor general («Finalizar en»)">
+        <label for="botCatPre">Segundos antes</label><input id="botCatPre" type="number" min="0" max="600" step="0.5" value="5" class="botTNum" placeholder="general" title="Segundos de vídeo antes de la acción. Vacío = valor general («Arrancar antes»)">
+        <label for="botCatPost">Segundos después</label><input id="botCatPost" type="number" min="0.2" max="600" step="0.5" value="5" class="botTNum" placeholder="general" title="Segundos de vídeo después de la acción. Vacío = valor general («Finalizar en»)">
       </div>
       <div id="botCatErr" class="botErr"></div>
     </section>
@@ -2956,7 +2992,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <div class="tutHr"><h3>Vídeos</h3><span class="tutOc">Ocultar</span></div>
       <div class="tutSrc" hidden><b>1. cortes3.mp4</b><small>1:35:00</small><i>✕</i></div>
       <div class="tutHr"><h3>Tiempo del evento</h3><span class="tutOc">Ocultar</span></div>
-      <div class="tutFr2"><span>Arrancar antes</span><span class="tutNum" data-k="pre">5</span><span>s</span><span>Finalizar en</span><span class="tutNum" data-k="post">5</span><span>s</span></div>
+      <div class="tutFr2"><span>Arrancar antes</span><span class="tutNum" data-k="pre">2</span><span>s</span><span>Finalizar en</span><span class="tutNum" data-k="post">5</span><span>s</span></div>
       <div class="tutHr"><h3>Filtros</h3><span class="tutOc">Ocultar</span></div>
       <div class="tutSelR"><span class="tutB set">Ambos</span><span class="tutB">Mi equipo</span><span class="tutB">Rival</span></div>
       <div class="tutSelR"><span class="tutInp" data-k="flt">Todas ▾</span><span class="tutB trd">Limpiar</span></div>
@@ -3007,11 +3043,10 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
         <h3>Registro sin vídeo</h3>
         <div class="tutClkRow">
           <div><small>Minuto de partido</small><div class="tutClk" data-k="clock">0:00</div></div>
-          <span class="tutB" data-k="run">Pausar</span><span class="tutB" data-k="clear">Limpiar</span><span class="tutB" data-k="edit">Editar</span><span class="tutB">⛶ Pantalla completa</span>
+          <span class="tutB" data-k="run">Detener</span><span class="tutB" data-k="clear">Limpiar</span><span class="tutB" data-k="edit">Editar</span><span class="tutB">⛶ Pantalla completa</span>
         </div>
-        <div class="tutGrid4">
-          <span class="tutB" data-k="ini">Inicio partido</span><span class="tutB" data-k="f1">Fin 1ª parte</span><span class="tutB" data-k="i2">Inicio 2ª parte</span><span class="tutB" data-k="fin">Fin partido</span>
-        </div>
+        <div class="tutGrid4"></div>
+        <div class="tutChips tutCfg"><span class="tutLbl">Competición</span><span class="tutLbl">Partes</span><span class="tutB" data-k="parts">2 partes ▾</span><span class="tutLbl">Minutos por parte</span><span class="tutB" data-k="min">45</span></div>
       </div>
       <div class="tutPn">
         <h3>Registrar acción</h3>
@@ -3030,10 +3065,7 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
       <div class="tutPn tutVp" hidden>
         <h3>Vídeo y sincronización</h3>
         <div class="tutVidL"><b>partido.mp4</b><em data-k="vt">0:00</em><i class="tutPaintMk" hidden></i></div>
-        <div class="tutSyn"><span>Inicio partido</span><small data-s="ini">—</small><span class="tutB" data-k="m:ini">Marcar</span></div>
-        <div class="tutSyn"><span>Fin 1ª parte</span><small data-s="f1">—</small><span class="tutB" data-k="m:f1">Marcar</span></div>
-        <div class="tutSyn"><span>Inicio 2ª parte</span><small data-s="i2">—</small><span class="tutB" data-k="m:i2">Marcar</span></div>
-        <div class="tutSyn"><span>Fin partido</span><small data-s="fin">—</small><span class="tutB" data-k="m:fin">Marcar</span></div>
+        <div class="tutSyns"></div>
         <div class="tutChips"><span class="tutB trd" data-k="view">Ver solo vídeo + eventos</span><span class="tutB">Cambiar vídeo</span></div>
       </div>
       <div class="tutPn tutPint" hidden>
@@ -3895,7 +3927,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(sel&&sel!=="__new__"&&!detGroup) detGroup=isParado(cat,sel)?"parado":"juego";
       const row=el("span"); row.style.cssText="grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px";
       [["juego","Situación jugada"],["parado","Acción balón parado"]].forEach(([g,t])=>{
-        const gb=el("button",{type:"button",className:"optbtn g-"+g+(detGroup===g?" active":""),textContent:t});
+        const gb=el("button",{type:"button",className:"optbtn grpHead g-"+g+(detGroup===g?" active":""),textContent:t});
         gb.onclick=()=>{ detGroup=g; renderDetBtns(DETS[cat]||[],s.value); };
         row.append(gb);
       });
@@ -4067,6 +4099,17 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const wd=$("botDets"); wd.replaceChildren();
     const L=DETS[botCat]||[];
     if(!L.length) wd.append(el("span",{className:"botEmpty",textContent:"Sin detalles todavía."}));
+    // Gol/Ocasión: dos columnas con su cabecera (Situación jugada / Acción balón parado)
+    const cols={};
+    if(CAT_GOL(botCat)&&L.length){
+      const row=el("div"); row.style.cssText="grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;align-items:start";
+      [["juego","Situación jugada"],["parado","Acción balón parado"]].forEach(([g,t])=>{
+        const col=el("div"); col.style.cssText="display:grid;gap:6px;align-content:start";
+        col.append(el("div",{className:"botGrpHead g-"+g,textContent:t}));
+        cols[g]=col; row.append(col);
+      });
+      wd.append(row);
+    }
     L.forEach(d=>{
       const g=CAT_GOL(botCat)?(isParado(botCat,d)?"parado":"juego"):null;
       const b=el("button",{type:"button",className:"optbtn"+(g?" g-"+g:""),textContent:d});
@@ -4075,7 +4118,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
         const err=renameDet(botCat,d,nv); if(err){ $("botDetErr").textContent=err; return; }
         $("botDetErr").textContent=""; botSync(); renderBot(); refresh(); });
       addDelX(b,d,()=>{ removeDetFrom(botCat,d); botSync(); renderBot(); });
-      wd.append(b);
+      (g&&cols[g]||wd).append(b);
     });
     $("botParadoLbl").hidden=!CAT_GOL(botCat);
     const wj=$("botJugs"); wj.replaceChildren();
@@ -4091,7 +4134,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     });
   }
   // Tiempo previo/posterior de la categoría (segundos). Vacío = valores generales («Arrancar antes» / «Finalizar en»)
-  function botTFill(k){ const t=k&&catT[k]; $("botCatPre").value=t?t.pre:""; $("botCatPost").value=t?t.post:""; }
+  // Categoría nueva (k vacío): 5 s antes y 5 s después por defecto
+  function botTFill(k){ const t=k&&catT[k]; $("botCatPre").value=t?t.pre:(k?"":5); $("botCatPost").value=t?t.post:(k?"":5); }
   function botTRead(){ // devuelve {err} o {t:null|{pre,post}}
     const sp=$("botCatPre").value.trim(), sq=$("botCatPost").value.trim();
     if(sp===""&&sq==="") return {t:null};
@@ -4710,17 +4754,20 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const r=win.getBoundingClientRect();
       const l=Math.max(0,Math.min(innerWidth-r.width,r.left)), t=Math.max(0,Math.min(innerHeight-60,r.top));
       win.style.left=l+"px"; win.style.top=t+"px";
-      win.style.maxHeight=Math.max(120,innerHeight-t-8)+"px";
+      win.style.maxHeight=Math.max(120,Math.min(cap(),innerHeight-t-8))+"px";
     }
-    // Se abre siempre centrada en la pantalla
+    // En móvil (vertical o apaisado) la ventana es una hoja baja anclada abajo: el vídeo queda visible para pintar
+    const isSmall=()=>innerWidth<=640||innerHeight<=500;
+    const cap=()=>isSmall()?Math.round(innerHeight*0.42):innerHeight-16;
+    // Se abre centrada en la pantalla (en móvil, pegada al borde inferior)
     function open(){
-      const small=innerWidth<=640, W=small?innerWidth-16:Math.min(440,innerWidth-16);
+      const small=isSmall(), W=innerWidth<=640?innerWidth-16:Math.min(440,innerWidth-16);
       win.style.width=W+"px";
-      win.style.maxHeight=(innerHeight-16)+"px";
+      win.style.maxHeight=cap()+"px";
       win.hidden=false;
-      const H=Math.min(win.offsetHeight,innerHeight-16);
+      const H=Math.min(win.offsetHeight,cap());
       win.style.left=Math.max(8,(innerWidth-W)/2)+"px";
-      win.style.top=Math.max(8,(innerHeight-H)/2)+"px";
+      win.style.top=small?Math.max(8,innerHeight-H-8)+"px":Math.max(8,(innerHeight-H)/2)+"px";
     }
     x.addEventListener("click",close);
     // Arrastre desde la cabecera «Pintado de acciones» (ratón, lápiz y dedo); los botones y controles no arrastran
@@ -5273,7 +5320,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const cb=$("closeBotDlg");
     const fb=$("fijoDlg"); if(fb) fb.style.display=inPopout?"":"none";
     b.style.display=inPopout?"none":"";
-    if(inPopout){ b.textContent="↩️ Traer de vuelta"; b.title="Cerrar la ventana emergente y volver a mostrar aquí"; cb.textContent="❌ Cerrar botonera"; cb.title="Cerrar la ventana emergente de la botonera"; }
+    if(inPopout){ b.textContent="↩️ Traer de vuelta"; b.title="Cerrar la ventana emergente y volver a mostrar aquí"; cb.textContent="Cerrar"; cb.title="Cerrar la ventana emergente de la botonera"; }
     else { b.textContent="🖥️ EMERGENTE"; b.title="Abrir esta botonera en otra ventana, para moverla a un segundo monitor"; cb.textContent="❌ Cerrar"; cb.title="Cerrar sin guardar"; }
   }
   function closePopoutDlg(){ const w=popoutWin; returnDlgFromPopout(); if(w&&!w.closed) w.close(); }
@@ -5902,9 +5949,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
 
   loadPlaylists(); renderLegend(); refresh();
   // ---------- registro sin vídeo: pestaña independiente del registro de acciones (cronómetro, eventos, vídeo y sincronización propios) ----------
-  const LIVE_KEY="visor_live_v1", LIVE_KEYS=["p1","p1e","p2","end"];
-  const LIVE_LBL={p1:"Inicio partido",p1e:"Fin 1ª parte",p2:"Inicio 2ª parte",end:"Fin partido"};
-  const liveBlank=()=>({run:false,t0:0,acc:0,marks:{p1:null,p1e:null,p2:null,end:null},vm:{p1:null,p1e:null,p2:null,end:null},events:[]});
+  const LIVE_KEY="visor_live_v1", LIVE_MAXP=4;
+  // claves de marca según el nº de partes: p1 (inicio), p1e, p2, p2e… (fin e inicio de cada parte) y end (fin partido); con 2 partes son las de siempre
+  const liveKeysFor=n=>{ const a=["p1"]; for(let i=1;i<n;i++) a.push("p"+i+"e","p"+(i+1)); a.push("end"); return a; };
+  const liveKeys=()=>liveKeysFor(live.cfg.parts);
+  const liveLbl=k=>{ if(k==="p1") return "Inicio partido"; if(k==="end") return "Fin partido"; const n=k.slice(1).replace("e",""); return (k.endsWith("e")?"Fin ":"Inicio ")+n+"ª parte"; };
+  const liveIsPartEnd=k=>/^p\d+e$/.test(k);
+  const liveBlank=()=>({run:false,t0:0,acc:0,cfg:{parts:2,min:45},marks:{},vm:{},events:[]});
   let live=liveBlank(), liveSel=null, liveSeq=0, liveWake=null, liveUrl=null, liveEq="propio";
   const liveNum=x=>typeof x==="number"&&isFinite(x)&&x>=0;
   // marcas del directo (marks, segundos del cronómetro), marcas del vídeo (vm, segundos del vídeo) y eventos de este registro
@@ -5913,7 +5964,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!x||typeof x!=="object") return o;
     if(liveNum(x.acc)) o.acc=x.acc;
     if(x.run===true&&liveNum(x.t0)){ o.run=true; o.t0=x.t0; }
-    LIVE_KEYS.forEach(k=>{ if(x.marks&&liveNum(x.marks[k])) o.marks[k]=x.marks[k]; if(x.vm&&liveNum(x.vm[k])) o.vm[k]=x.vm[k]; });
+    if(x.cfg&&typeof x.cfg==="object"){
+      const p=Math.round(+x.cfg.parts), m=Math.round(+x.cfg.min);
+      if(p>=1&&p<=LIVE_MAXP) o.cfg.parts=p;
+      if(m>=1&&m<=120) o.cfg.min=m;
+    }
+    liveKeysFor(o.cfg.parts).forEach(k=>{ if(x.marks&&liveNum(x.marks[k])) o.marks[k]=x.marks[k]; if(x.vm&&liveNum(x.vm[k])) o.vm[k]=x.vm[k]; });
     if(Array.isArray(x.events)) o.events=x.events.slice(0,2000).filter(e=>e&&typeof e==="object"&&liveNum(e.t)).map((e,i)=>({
       id:String(e.id||"l"+i).slice(0,24), t:e.t, min:String(e.min||"0:00").slice(0,8), cat:CATS[e.cat]?e.cat:"OTRO", eq:e.eq==="rival"?"rival":"propio",
       det:String(e.det||"").slice(0,60), jug:String(e.jug||"").slice(0,40), coment:String(e.coment||"").slice(0,200) }));
@@ -5926,8 +5982,14 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const m=live.marks, f=x=>{ x=Math.max(0,Math.round(x)); return Math.floor(x/60)+":"+String(x%60).padStart(2,"0"); };
     if(m.p1==null) return f(t);
     if(t<m.p1) return "0:00";
-    if(m.p2==null||t<m.p2) return f(t-m.p1);
-    return f(2700+(t-m.p2));
+    const i=liveCurPart(t);
+    return f((i-1)*live.cfg.min*60+(t-(i===1?m.p1:m["p"+i])));
+  }
+  // parte en curso en el instante t del cronómetro: la última cuyo inicio está marcado y ya ha pasado
+  function liveCurPart(t){
+    const m=live.marks; let i=1;
+    for(let j=2;j<=live.cfg.parts;j++){ if(m["p"+j]!=null&&t>=m["p"+j]) i=j; }
+    return i;
   }
   async function liveWakeLock(on){
     try{
@@ -5941,7 +6003,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!$("tabLive")||$("tabLive").hidden) return;
     const t=liveNow();
     $("liveMatch").textContent=liveMinText(t);
-    $("liveRun").textContent=!live.run&&t>0?"Reanudar":"Pausar"; // el reloj arranca con «Inicio partido» o con el primer evento
+    $("liveRun").textContent=!live.run&&t>0?"Reanudar":"Detener"; // el reloj arranca con «Inicio partido» o con el primer evento
     $("liveRun").disabled=!live.run&&t===0;
   }
   setInterval(liveTick,250);
@@ -5953,22 +6015,26 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const q=r.trim().match(/^(\d{1,3})(?:[:.,](\d{1,2}))?$/); if(!q){ alert("Escribe el minuto así: 12:30 o 12."); return; }
     const m=+q[1]*60+(q[2]?+q[2]:0), k=live.marks;
     let t=m;
-    if(k.p1!=null) t=(k.p2!=null&&m>=2700)?k.p2+(m-2700):k.p1+m;
+    if(k.p1!=null){
+      const L=live.cfg.min*60; let i=Math.min(live.cfg.parts,Math.floor(m/L)+1);
+      while(i>1&&k["p"+i]==null) i--; // si esa parte aún no se ha iniciado, se cuenta desde la anterior
+      t=(i===1?k.p1:k["p"+i])+(m-(i-1)*L);
+    }
     live.acc=Math.max(0,t); if(live.run) live.t0=Date.now();
     liveSave(); liveTick();
   };
   function liveRenderMarks(){
     const w=$("liveMarks"); w.replaceChildren();
-    LIVE_KEYS.forEach(k=>{
+    liveKeys().forEach(k=>{
       const set=live.marks[k]!=null;
       // antes de empezar, «Inicio partido» se resalta como primera acción
       const b=el("button",{type:"button",className:"btn"+(set?" done":"")+(k==="p1"&&!set?" next":"")});
-      b.append(el("span",{textContent:LIVE_LBL[k]}),el("small",{textContent:set?"✓ "+fmt(live.marks[k]):"Marcar ahora"}));
+      b.append(el("span",{textContent:liveLbl(k)}),el("small",{textContent:set?"✓ "+fmt(live.marks[k]):"Marcar ahora"}));
       b.onclick=()=>{
-        if(set&&!confirm("«"+LIVE_LBL[k]+"» ya está marcado en "+fmt(live.marks[k])+". ¿Marcarlo de nuevo en este instante?")) return;
+        if(set&&!confirm("«"+liveLbl(k)+"» ya está marcado en "+fmt(live.marks[k])+". ¿Marcarlo de nuevo en este instante?")) return;
         if(!live.run) liveStart();
         live.marks[k]=+liveNow().toFixed(2);
-        if(k==="p1e"||k==="end") livePause(); // al cerrar la 1ª parte o el partido, el reloj se detiene
+        if(liveIsPartEnd(k)||k==="end") livePause(); // al cerrar una parte o el partido, el reloj se detiene
         liveSave(); liveRender();
       };
       w.append(b);
@@ -5993,14 +6059,30 @@ window.renderHalfBands = function(b1,b2,mk,d){
     live.events.push(e); liveSel=e.id; liveCommit();
   }
   const liveCur=()=>live.events.find(e=>e.id===liveSel);
+  let liveDetGroup=null, liveDetEv=null; // grupo de detalles visible ("juego" | "parado") y evento al que pertenece
   function liveRenderCompl(){
-    const e=liveCur(), box=$("liveCur"), dets=$("liveDets"), jugs=$("liveJugs"), com=$("liveComent");
+    const e=liveCur(); if((e&&e.id)!==liveDetEv){ liveDetEv=e&&e.id; liveDetGroup=null; }
+    const box=$("liveCur"), dets=$("liveDets"), jugs=$("liveJugs"), com=$("liveComent");
     dets.replaceChildren(); jugs.replaceChildren(); com.disabled=!e;
     if(!e){ box.textContent="Pulsa una categoría para registrar; aquí completarás el detalle y el jugador."; com.value=""; return; }
     const c=CATS[e.cat]||CATS.OTRO||{c:"#3D4852"};
     box.replaceChildren(el("b",{textContent:e.min+" "}),el("span",{className:"liveCat",textContent:e.cat,style:"background:"+c.c}),
       document.createTextNode(" "+(e.eq==="rival"?"· Rival ":"")+(e.det?"· "+e.det+" ":"")+(e.jug?"· "+e.jug:"")));
-    (DETS[e.cat]||[]).forEach(d=>{ const b=el("button",{type:"button",className:"optbtn"+(e.det===d?" active":""),textContent:d}); b.onclick=()=>{ e.det=e.det===d?"":d; liveCommit(); }; dets.append(b); });
+    // Gol/Ocasión: primero se elige Situación jugada o Acción balón parado; solo se ven los detalles de ese grupo
+    let L=DETS[e.cat]||[];
+    if(CAT_GOL(e.cat)){
+      if(e.det&&!liveDetGroup) liveDetGroup=isParado(e.cat,e.det)?"parado":"juego";
+      const row=el("span"); row.style.cssText="grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px";
+      [["juego","Situación jugada"],["parado","Acción balón parado"]].forEach(([g,t])=>{
+        const gb=el("button",{type:"button",className:"optbtn grpHead g-"+g+(liveDetGroup===g?" active":""),textContent:t});
+        gb.onclick=()=>{ liveDetGroup=g; liveRenderCompl(); };
+        row.append(gb);
+      });
+      dets.append(row);
+      if(liveDetGroup) dets.append(el("div",{className:"liveLbl",textContent:"Tipo",style:"grid-column:1/-1"}));
+      L=liveDetGroup?L.filter(d=>(isParado(e.cat,d)?"parado":"juego")===liveDetGroup):[];
+    } else liveDetGroup=null;
+    L.forEach(d=>{ const g=CAT_GOL(e.cat)?(isParado(e.cat,d)?"parado":"juego"):null; const b=el("button",{type:"button",className:"optbtn"+(g?" g-"+g:"")+(e.det===d?" active":""),textContent:d}); b.onclick=()=>{ e.det=e.det===d?"":d; liveCommit(); }; dets.append(b); });
     const nj=el("button",{type:"button",className:"optbtn nodet"+(e.jug?"":" active"),textContent:"Sin jugador"}); nj.onclick=()=>{ e.jug=""; liveCommit(); }; jugs.append(nj);
     JUGS.forEach(n=>{ const b=el("button",{type:"button",className:"optbtn"+(e.jug===n?" active":""),textContent:n}); b.onclick=()=>{ e.jug=e.jug===n?"":n; liveCommit(); }; jugs.append(b); });
     if(e.jug&&!JUGS.includes(e.jug)){ const b=el("button",{type:"button",className:"optbtn active",textContent:e.jug}); b.onclick=()=>{ e.jug=""; liveCommit(); }; jugs.append(b); }
@@ -6016,7 +6098,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   // Sincronización con el vídeo: cada marca del directo se empareja con la del vídeo; los eventos se colocan por interpolación.
   // Dentro del descanso (fin 1ª → inicio 2ª) se mantiene el ritmo real, porque el vídeo suele recortarlo.
   function liveAnchors(){
-    const A=[]; LIVE_KEYS.forEach(k=>{ if(live.marks[k]!=null&&live.vm[k]!=null) A.push({k,l:live.marks[k],v:live.vm[k]}); });
+    const A=[]; liveKeys().forEach(k=>{ if(live.marks[k]!=null&&live.vm[k]!=null) A.push({k,l:live.marks[k],v:live.vm[k]}); });
     return A.sort((a,b)=>a.l-b.l);
   }
   function liveMap(t,A){
@@ -6024,7 +6106,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(t<=A[0].l) return Math.max(0,A[0].v+(t-A[0].l));
     for(let i=0;i<A.length-1;i++){
       const a=A[i], b=A[i+1];
-      if(t<=b.l){ const dl=b.l-a.l, dv=b.v-a.v, gap=a.k==="p1e"&&b.k==="p2";
+      if(t<=b.l){ const dl=b.l-a.l, dv=b.v-a.v, gap=liveIsPartEnd(a.k)&&/^p\d+$/.test(b.k);
         return Math.max(0,!gap&&dl>0&&dv>0 ? a.v+(t-a.l)*dv/dl : a.v+(t-a.l)); }
     }
     const z=A[A.length-1]; return Math.max(0,z.v+(t-z.l));
@@ -6033,11 +6115,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function liveSyncRender(){
     const pnl=$("liveVidPanel"), w=$("liveSyncRows"), msg=$("liveSyncMsg"); w.replaceChildren();
     const A=liveAnchors(), warn=[];
-    for(let i=0;i<A.length-1;i++){ const a=A[i], b=A[i+1]; if(!(a.k==="p1e"&&b.k==="p2")&&b.l>a.l){ const r=(b.v-a.v)/(b.l-a.l); if(!(r>0.9&&r<1.1)) warn.push(LIVE_LBL[a.k]+" → "+LIVE_LBL[b.k]); } }
-    LIVE_KEYS.forEach(k=>{
+    for(let i=0;i<A.length-1;i++){ const a=A[i], b=A[i+1]; if(!(liveIsPartEnd(a.k)&&/^p\d+$/.test(b.k))&&b.l>a.l){ const r=(b.v-a.v)/(b.l-a.l); if(!(r>0.9&&r<1.1)) warn.push(liveLbl(a.k)+" → "+liveLbl(b.k)); } }
+    liveKeys().forEach(k=>{
       const vt=live.vm[k], lt=live.marks[k], loaded=!!liveVid.getAttribute("src");
       const row=el("div",{className:"liveSyncRow"});
-      const lab=el("div",{},[el("b",{textContent:LIVE_LBL[k]}),el("small",{textContent:"Directo: "+(lt==null?"sin marcar":fmt(lt))+" · Vídeo: "+(vt==null?"sin marcar":fmt(vt))})]);
+      const lab=el("div",{},[el("b",{textContent:liveLbl(k)}),el("small",{textContent:"Directo: "+(lt==null?"sin marcar":fmt(lt))+" · Vídeo: "+(vt==null?"sin marcar":fmt(vt))})]);
       const mk=el("button",{type:"button",className:"btn",textContent:vt==null?"Marcar":"Re-marcar",title:"Usa la posición actual del vídeo"}); mk.disabled=!loaded;
       mk.onclick=()=>{ live.vm[k]=+liveVid.currentTime.toFixed(2); liveSave(); liveRender(); };
       const go=el("button",{type:"button",className:"btn",textContent:"Ir",title:"Ir a la marca del vídeo"}); go.disabled=vt==null||!loaded;
@@ -6046,7 +6128,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     });
     msg.textContent=!liveVid.getAttribute("src")?"Vuelve a cargar el vídeo para sincronizar.":
       !A.length?"Pon el vídeo en cada momento y pulsa «Marcar». Los eventos se colocan solos y, al tocar uno de la lista, el vídeo salta a su momento."
-      :live.events.length+" evento"+(live.events.length===1?"":"s")+" colocado"+(live.events.length===1?"":"s")+" con "+A.length+" marca"+(A.length===1?"":"s")+" de vídeo."+(warn.length?" Ojo: la duración en el vídeo difiere mucho del directo en "+warn.join(", ")+".":"")+(A.length<4?" Faltan marcas por sincronizar.":"");
+      :live.events.length+" evento"+(live.events.length===1?"":"s")+" colocado"+(live.events.length===1?"":"s")+" con "+A.length+" marca"+(A.length===1?"":"s")+" de vídeo."+(warn.length?" Ojo: la duración en el vídeo difiere mucho del directo en "+warn.join(", ")+".":"")+(A.length<liveKeys().length?" Faltan marcas por sincronizar.":"");
     return pnl;
   }
   function liveRenderList(){
@@ -6165,7 +6247,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       });
       tr.append(lane);
     });
-    LIVE_KEYS.forEach(k=>{ if(live.marks[k]!=null) tr.append(el("div",{className:"liveTLMark",title:LIVE_LBL[k],style:"left:"+pc(live.marks[k])})); });
+    liveKeys().forEach(k=>{ if(live.marks[k]!=null) tr.append(el("div",{className:"liveTLMark",title:liveLbl(k),style:"left:"+pc(live.marks[k])})); });
     tr.append(el("div",{className:"liveTLHead",title:liveMinText(now),style:"left:"+pc(now)}));
     w.append(lb,tr,el("div",{className:"liveTLAxis"},[el("span",{textContent:"0:00"}),el("span",{textContent:"Cronómetro "+fmt(total)})]));
   }
@@ -6176,7 +6258,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   $("liveTLBtn").onclick=()=>{ const on=$("liveTLPanel").hidden; liveSetTL(on); if(on) $("liveTLPanel").scrollIntoView({block:"nearest",behavior:"smooth"}); };
   setInterval(()=>{ if(live.run&&!$("liveTLPanel").hidden&&!$("tabLive").hidden) liveRenderTL(); },1000);
-  function liveRender(){ liveRenderMarks(); liveRenderCats(); liveRenderCompl(); liveSyncRender(); liveRenderList(); liveRenderTL(); liveTick(); }
+  // Competición: nº de partes y minutos por parte (el minuto de partido y las marcas se calculan con ellos)
+  { const sp=$("liveParts"), mi=$("liveMinPart");
+    for(let i=1;i<=LIVE_MAXP;i++) sp.append(el("option",{value:i,textContent:i+(i===1?" parte":" partes")}));
+    const apply=()=>{ liveSave(); liveRender(); };
+    sp.onchange=()=>{ live.cfg.parts=+sp.value; apply(); };
+    mi.onchange=()=>{ const m=Math.round(+mi.value); live.cfg.min=m>=1&&m<=120?m:live.cfg.min; apply(); };
+  }
+  function liveRenderCfg(){ $("liveParts").value=live.cfg.parts; $("liveMinPart").value=live.cfg.min; }
+  function liveRender(){ liveRenderCfg(); liveRenderMarks(); liveRenderCats(); liveRenderCompl(); liveSyncRender(); liveRenderList(); liveRenderTL(); liveTick(); }
   // vídeo propio de esta pestaña: se elige en el equipo del usuario
   function liveLoadVideo(f){
     if(!f) return;
@@ -6200,7 +6290,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("liveTut").onclick=()=>window.openTutorialLive&&window.openTutorialLive();
   $("liveVidFull").onclick=()=>$("liveFull").click();
   { const tl=$("tabLive"), fb=$("liveFull");
-    if(!tl.requestFullscreen) fb.hidden=true; // p. ej. iPhone: sin pantalla completa de elementos
+    $("liveFullTab").onclick=()=>fb.click();
+    if(!tl.requestFullscreen){ fb.hidden=true; $("liveFullTab").hidden=true; } // p. ej. iPhone: sin pantalla completa de elementos
     fb.onclick=()=>{ if(document.fullscreenElement===tl) document.exitFullscreen(); else tl.requestFullscreen().catch(()=>{}); };
     document.addEventListener("fullscreenchange",()=>{ fb.textContent=document.fullscreenElement===tl?"⛶ Salir de pantalla completa":"⛶ Pantalla completa"; }); }
   $("liveBot").onclick=()=>$("btnBotoneraMov").click();
@@ -6219,7 +6310,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(Array.isArray(d.pintado)&&window.acfcPintLv) window.acfcPintLv.set(d.pintado);
     }); };
   $("liveNew").onclick=()=>{
-    livePause(); live=liveBlank(); liveSel=null; liveCommit();
+    const cfg=live.cfg; livePause(); live=liveBlank(); live.cfg=cfg; liveSel=null; liveCommit(); // la configuración de la competición se conserva
   };
   window.acfcClearLive=()=>{ livePause(); live=liveBlank(); liveSel=null; liveChk.clear(); liveCommit(); };
   window.acfcLive={render:liveRender};
@@ -7727,8 +7818,13 @@ window.tutPaint=(()=>{
   const sleep=ms=>new Promise(r=>setTimeout(r,ms*tutVoz.k));
   const CATS=[["Gol","var(--c-gol)"],["Ocasión","var(--c-oca)"],["Transición of","var(--c-tra)"],["Salida balón","var(--c-sal)"],["Presión","var(--c-pre)"]];
   const colOf=c=>(CATS.find(x=>x[0]===c)||[0,"var(--c-otr)"])[1];
-  const LBL={ini:"Inicio partido",f1:"Fin 1ª parte",i2:"Inicio 2ª parte",fin:"Fin partido"};
-  const blank=()=>({clock:0,running:false,marks:{},ev:[],sel:-1,eq:"Mi equipo",vid:false,pint:false,mk:false,sync:{},toast:"",hot:null,go:-1});
+  // Marcas según el nº de partes de la competición (Inicio partido, Fin 1ª, Inicio 2ª… Fin partido)
+  const LBL={};
+  const setLbl=n=>{ Object.keys(LBL).forEach(k=>delete LBL[k]); LBL.ini="Inicio partido";
+    for(let p=1;p<n;p++){ LBL["f"+p]="Fin "+p+"ª parte"; LBL["i"+(p+1)]="Inicio "+(p+1)+"ª parte"; } LBL.fin="Fin partido"; };
+  // instante (en segundos de cronómetro) de cada marca: partes seguidas con 5 s de descanso entre ellas
+  const sched=()=>{ const L=S.min*60, out=[["ini",0]]; for(let p=1;p<S.parts;p++){ out.push(["f"+p,p*L+(p-1)*5],["i"+(p+1),p*L+p*5]); } out.push(["fin",S.parts*L+(S.parts-1)*5]); return out; };
+  const blank=()=>({parts:2,min:45,clock:0,running:false,marks:{},ev:[],sel:-1,eq:"Mi equipo",vid:false,pint:false,mk:false,sync:{},toast:"",hot:null,go:-1});
   let S=blank(), token=0, cur=0, playing=true, finished=false;
   const mk=(tag,cls,txt)=>{ const e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; };
   const K=k=>q('[data-k="'+k+'"]');
@@ -7736,7 +7832,15 @@ window.tutPaint=(()=>{
 
   function draw(){
     const CT=q(".tutCats"); if(!CT.children.length) CATS.forEach(([n,c])=>{ const b=mk("span","tutB tchip",n); b.style.background=c; b.dataset.k="cat:"+n; CT.append(b); });
-    K("clock").textContent=fs(S.clock); K("run").textContent=S.running?"Pausar":"Reanudar";
+    setLbl(S.parts);
+    const sig=Object.keys(LBL).join();
+    if(q(".tutGrid4").dataset.sig!==sig){
+      q(".tutGrid4").dataset.sig=sig; q(".tutGrid4").replaceChildren(); q(".tutSyns").replaceChildren();
+      Object.keys(LBL).forEach(k=>{ const b=mk("span","tutB",LBL[k]); b.dataset.k=k; q(".tutGrid4").append(b);
+        const r=mk("div","tutSyn"), s=mk("small","—"), m=mk("span","tutB","Marcar"); s.dataset.s=k; m.dataset.k="m:"+k; r.append(mk("span",null,LBL[k]),s,m); q(".tutSyns").append(r); });
+    }
+    K("parts").textContent=S.parts+(S.parts===1?" parte":" partes")+" ▾"; K("min").textContent=S.min;
+    K("clock").textContent=fs(S.clock); K("run").textContent=S.running?"Detener":"Reanudar";
     Object.keys(LBL).forEach(k=>{ const b=K(k); b.classList.toggle("done",S.marks[k]!=null); b.textContent=LBL[k]+(S.marks[k]!=null?" · "+fs(S.marks[k]):""); });
     qa('[data-k^="eq:"]').forEach(b=>b.classList.toggle("set",b.dataset.k==="eq:"+S.eq));
     const ev=S.ev[S.sel];
@@ -7767,6 +7871,12 @@ window.tutPaint=(()=>{
     for(let i=1;i<=text.length;i++){ S.ev[S.sel].com=text.slice(0,i); draw(); await W(55); } await p; await W(500); }
 
   const STEPS=[
+    {s:"Competición",t:"Elige partes y minutos por parte",
+     d:"Antes de empezar, en «Competición» elige cuántas «Partes» tiene el partido (de 1 a las que haya) y los «Minutos por parte». El minuto de partido y las marcas de parte (Inicio partido, Fin 1ª parte, Inicio 2ª parte… Fin partido) se calculan con ellos. Por defecto: 2 partes de 45 minutos.",
+     pre(){ S.parts=3; S.min=20; },
+     async run(W){ await wait(W,500,"Por defecto, dos partes de cuarenta y cinco minutos");
+       await press(W,"parts","Partes: elige tres"); S.parts=3; draw(); await wait(W,900,"Aparecen las marcas de cada parte");
+       await press(W,"min","Minutos por parte: veinte"); S.min=20; draw(); await wait(W,1200,"El reloj y las marcas usan estos minutos"); }},
     {s:"Empezar",t:"Empieza el registro",
      d:"Pulsa «Inicio partido» en el saque inicial: el reloj arranca y marca el minuto de partido.",
      pre(){ S.marks.ini=0; S.clock=12; S.running=true; },
@@ -7784,12 +7894,11 @@ window.tutPaint=(()=>{
        await press(W,"jug:9 · Williams","Jugador"); S.ev[0].jug="9 · Williams"; draw(); await W(400);
        await typeCom(W,"Buena acción"); await W(600); }},
     {s:"Partes",t:"Marca las partes",
-     d:"Pulsa «Inicio primera parte», «Fin primera parte», «Inicio segunda parte» y «Fin de partido» cuando ocurran. «Pausar» detiene el reloj y «Editar» corrige el minuto a mano. «⛶ Pantalla completa» trabaja a pantalla completa.",
-     pre(){ S.marks={ini:0,f1:45*60,i2:45*60+5,fin:90*60}; S.clock=90*60; S.running=true; },
-     async run(W){ S.clock=44*60+55; draw();
-       const T=[["f1",45*60],["i2",45*60+5],["fin",90*60]];
-       for(const [k,t] of T){ S.running=true; while(S.clock<t){ S.clock+=k==="fin"?300:1; if(S.clock>t) S.clock=t; draw(); await W(60); } await press(W,k,LBL[k]); S.marks[k]=t; draw(); await W(400); }
-       await press(W,"run","Pausar detiene el reloj"); S.running=false; draw(); await W(500);
+     d:"Pulsa cada marca cuando ocurra: «Inicio partido», «Fin 1ª parte», «Inicio 2ª parte»… hasta «Fin partido». Hay tantas como partes hayas elegido, y las ya marcadas muestran su minuto. «Detener» detiene el reloj y «Editar» corrige el minuto a mano. «⛶ Pantalla completa» trabaja a pantalla completa.",
+     pre(){ const T=sched(); S.marks=Object.fromEntries(T); S.clock=T[T.length-1][1]; S.running=true; },
+     async run(W){ const T=sched().slice(1); S.clock=T[0][1]-5; S.marks.ini=0; draw();
+       for(const [k,t] of T){ S.running=true; while(S.clock<t){ const r=t-S.clock; S.clock=Math.min(t,S.clock+(r>30?Math.ceil(r/12):1)); draw(); await W(60); } await press(W,k,LBL[k]); S.marks[k]=t; draw(); await W(400); }
+       await press(W,"run","Detener detiene el reloj"); S.running=false; draw(); await W(500);
        await press(W,"run","Reanudar"); S.running=true; draw(); await W(300);
        await go(W,K("edit"),.5,.5,800,"Editar corrige el minuto a mano"); await W(600); }},
     {s:"Guardar",t:"Guarda el proyecto",
@@ -7801,9 +7910,9 @@ window.tutPaint=(()=>{
      pre(){ S.vid=true; },
      async run(W){ S.toast=""; await press(W,"tov","Añadir el vídeo y sincronizar"); S.vid=true; draw(); await wait(W,1600,"El vídeo aparece en el panel Vídeo y sincronización"); }},
     {s:"Sincronizar",t:"Sincroniza el vídeo",
-     d:"Pon el vídeo en el saque inicial y pulsa «Marcar» en «Inicio partido». Repite con Fin 1ª, Inicio 2ª y Fin partido. Cuantas más marcas, más exacta es la posición de los eventos.",
-     pre(){ S.sync={ini:190,f1:190+45*60,i2:190+45*60+300,fin:190+90*60+300}; },
-     async run(W){ const V={ini:190,f1:190+45*60,i2:190+45*60+300,fin:190+90*60+300}; const vt=K("vt");
+     d:"Pon el vídeo en el saque inicial y pulsa «Marcar» en «Inicio partido». Repite con cada marca de parte (Fin 1ª, Inicio 2ª… Fin partido): son las que hayas elegido en «Competición». Cuantas más marcas, más exacta es la posición de los eventos.",
+     pre(){ S.sync=Object.fromEntries(sched().map(([k,t])=>[k,190+t+(k==="ini"?0:60)])); },
+     async run(W){ const V=Object.fromEntries(sched().map(([k,t])=>[k,190+t+(k==="ini"?0:60)])); const vt=K("vt");
        for(const k of Object.keys(LBL)){ vt.textContent=fs(V[k]); await W(500); await press(W,"m:"+k,k==="ini"?"Marcar en Inicio partido, con el vídeo en el saque inicial":"Marcar "+LBL[k]); S.sync[k]=V[k]; draw(); await W(400); } await W(700); }},
     {s:"Pintar",t:"Pinta sobre el vídeo",
      d:"Pausa el vídeo en la jugada y usa «Pintado de acciones»: flechas, zonas o el foco de un jugador. Lo que pintes se guarda en ese instante y vuelve a aparecer cuando el vídeo llega a él.",
@@ -11470,6 +11579,18 @@ html.acfc-lite .primary:not([data-lite]):not(dialog .primary)::after{background:
 .btn.primary.acfcCrown::after{background:#fff}
 /* Con Premium activo las coronas pasan a verde */
 html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::after,html.acfc-premium .btn.primary.acfcCrown::after{background:#1e9e4a}
+/* Móvil: nada puede ensanchar la página; los hijos de las rejillas pueden encogerse y el texto largo se parte */
+@media (max-width:640px){
+  html,body{max-width:100%;overflow-x:clip}
+  main>*,aside,.stage,.stageControls,.row,.top,#tabVisor,#tabEditor,#tabLive{min-width:0;max-width:100%}
+  aside *{overflow-wrap:anywhere}
+  aside .row{flex-wrap:wrap}
+  aside select,aside input:not([type=checkbox]):not([type=radio]),aside textarea{max-width:100%;min-width:0}
+}
+/* La pestaña «Registro sin vídeo» usa ::after como icono en móvil: la corona no debe sacarlo de su sitio */
+/* (la regla que oculta las coronas también ocultaba este icono: se vuelve a mostrar aquí) */
+@media (max-width:640px){header #tabBtnLive.acfcCrown::after{display:block!important;position:static;top:auto;right:auto;width:20px;height:20px;pointer-events:auto}}
+html.acfc-imm header #tabBtnLive.acfcCrown::after{display:block!important;position:static;top:auto;right:auto;width:20px;height:20px}
 #acfcLicDlg{max-width:min(420px,92vw)}
 #acfcLicDlg input{width:100%;box-sizing:border-box;font:inherit;font-family:var(--f-disp);font-size:20px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0}
 #acfcLicCurso{text-decoration:none;display:inline-flex;align-items:center}
