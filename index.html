@@ -323,7 +323,7 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #vxPrev{width:100%;max-width:100%;display:block}
 #vxInfo{overflow-wrap:anywhere;line-height:1.45}
 #vxX{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;line-height:1;font-size:18px;display:flex;align-items:center;justify-content:center}
-dialog#dlgBot{width:min(620px,94vw);height:calc(100vh - 24px);max-height:calc(100vh - 24px);overflow:auto}
+dialog#dlgBot{width:min(620px,94vw);height:calc(100vh - 24px);max-height:calc(100vh - 24px);overflow:auto;resize:both;min-width:300px;min-height:260px;max-width:calc(100vw - 8px)}
 .botWrap{display:grid;gap:12px}
 .botSec{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:8px}
 .botSec h3{margin:0;font-family:var(--f-disp);font-size:15px;text-transform:uppercase;letter-spacing:.3px}
@@ -840,19 +840,13 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #tabVisor aside .list,#tabEditor aside .list{min-height:220px}
 .pintBlock{flex:none;border-top:1px solid var(--line);padding:10px 14px 14px}
 .pintBlock .pbHead{margin-bottom:8px}
-/* Editor: secciones ocultas (Eventos, Exportación, Pintado) quedan juntas, sin bordes ni huecos entre ellas */
+/* Editor: secciones ocultas (Eventos, Exportación) quedan juntas, sin bordes ni huecos entre ellas */
 html body.edEvHid #tabEditor aside .top{border-bottom:0;padding-bottom:6px}
 html #tabEditor aside .foot:has(#edExpBody[style*="none"]){border-top:0;padding-top:0;padding-bottom:6px}
-html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]){border-top:0;padding-top:0}
-html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:0}
 .pintBar{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px;margin-bottom:6px}
 .pintBar [id^="pintMode"][aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
 .pintMsg{margin:0 0 6px;min-height:16px;font-size:12px;color:var(--muted)}
 .pintRail{border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);padding:8px 10px 12px}
-/* Columna lateral (escritorio): el pintado se queda fijo al pie de la columna mientras se desplaza la lista */
-@media (min-width:1251px){
-  #tabEditor aside>.pintBlock{position:sticky;bottom:0;z-index:3;background:var(--panel);max-height:55vh;overflow-y:auto}
-}
 .pintGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
 .pintGrid4{grid-template-columns:repeat(4,1fr)}
 .pintGrid5{grid-template-columns:repeat(auto-fill,minmax(42px,1fr))}
@@ -898,10 +892,10 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 #pintMode svg,#pintModeEd svg{width:26px;height:26px}
 #pintMode:hover,#pintModeEd:hover{background:var(--red);color:#fff;border-color:var(--red)}
 #pintMode.is-active,#pintModeEd.is-active{background:var(--red);color:#fff;box-shadow:none}
-/* botón de pintado del registro (junto al reproductor): mismo énfasis que el de dibujo */
-html #regPintBtn{border:2px solid var(--red);color:var(--red);background:var(--panel);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 18%,transparent)}
-html #regPintBtn:hover{background:var(--red);color:#fff;border-color:var(--red)}
-html #regPintBtn svg{width:26px;height:26px}
+/* botón de pintado del registro y del editor (junto al reproductor): mismo énfasis que el de dibujo */
+html #regPintBtn,html #edPintBtn{border:2px solid var(--red);color:var(--red);background:var(--panel);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 18%,transparent)}
+html #regPintBtn:hover,html #edPintBtn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+html #regPintBtn svg,html #edPintBtn svg{width:26px;height:26px}
 .pintDiv{display:flex;align-items:center;gap:7px;margin:12px 0 7px;padding-top:9px;border-top:1px solid var(--line);font-family:var(--f-disp);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
 .pintDiv i{width:6px;height:6px;background:var(--red);flex:none}
 .pintDivFollow span{flex:1}
@@ -946,15 +940,15 @@ html #regPintBtn svg{width:26px;height:26px}
   .pintBar{grid-template-columns:repeat(auto-fill,minmax(44px,1fr))}
 }
 /* ventana embebida del pintado: se abre centrada en la pantalla al pulsar el botón de pintar */
-#pintWin{position:fixed;z-index:60;box-sizing:border-box;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:0 8px 24px rgba(0,0,0,.35)}
-#pintWin[hidden]{display:none}
-#pintWin .pintBlock{border-top:0;padding:10px 12px 12px}
-#pintWin .pbHead{padding-right:34px}
-#pintWin .pintWinX{position:absolute;top:6px;right:6px;z-index:1;min-height:28px;padding:2px 6px;display:inline-flex;align-items:center;justify-content:center}
-#pintWin .pintWinX svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:square}
+#pintWin,#edPintWin,#lvPintWin{position:fixed;z-index:60;box-sizing:border-box;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+#pintWin[hidden],#edPintWin[hidden],#lvPintWin[hidden]{display:none}
+#pintWin .pintBlock,#edPintWin .pintBlock,#lvPintWin .pintBlock{border-top:0;padding:10px 12px 12px}
+#pintWin .pbHead,#edPintWin .pbHead,#lvPintWin .pbHead{padding-right:34px}
+#pintWin .pintWinX,#edPintWin .pintWinX,#lvPintWin .pintWinX{position:absolute;top:6px;right:6px;z-index:1;min-height:28px;padding:2px 6px;display:inline-flex;align-items:center;justify-content:center}
+#pintWin .pintWinX svg,#edPintWin .pintWinX svg,#lvPintWin .pintWinX svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:square}
 /* arrastrable desde la cabecera: el cursor avisa y touch-action deja arrastrar con el dedo */
-#pintWin .pbHead{cursor:move;touch-action:none;user-select:none}
-#pintWin .pbHead button{cursor:pointer}
+#pintWin .pbHead,#edPintWin .pbHead,#lvPintWin .pbHead{cursor:move;touch-action:none;user-select:none}
+#pintWin .pbHead button,#edPintWin .pbHead button,#lvPintWin .pbHead button{cursor:pointer}
 /* ===== fin pintado de acciones ===== */
 /* ===== Registro sin vídeo (prefijo live) ===== */
 #tabLive{padding:16px 20px 28px;max-width:1280px;margin:0 auto}
@@ -1063,9 +1057,10 @@ html #regPintBtn svg{width:26px;height:26px}
 #tabLive .liveSyncRow small{display:block;color:var(--muted)}
 #tabLive #liveVid{width:100%;aspect-ratio:16/9;background:#000;display:block}
 #tabLive #liveVidPanel{position:relative}
-#tabLive #liveVidPanel .pintBlock{border-top:1px solid var(--line);margin-top:4px;padding:10px 0 0}
-#tabLive #liveVidPanel .pintBlock:has(#pintBodyLv[hidden]){border-top:0;padding-top:0}
-#tabLive #liveVidPanel .pintBlock:has(#pintBodyLv[hidden]) .pbHead{margin-bottom:0}
+#liveVidPaint{position:absolute;z-index:9;padding:4px 8px;display:inline-flex;align-items:center;border:2px solid var(--red);color:var(--red);background:var(--panel)}
+#liveVidPaint:hover{background:var(--red);color:#fff}
+#liveVidPaint[hidden]{display:none}
+#liveVidPaint svg{width:24px;height:24px}
 #tabLive #liveSyncMsg{font-size:12px;color:var(--muted)}
 /* ===== fin registro sin vídeo ===== */
 /* Registro sin vídeo · vistas en móvil */
@@ -1462,6 +1457,21 @@ html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
 .evPickRen{grid-column:1 / -1;min-width:0;box-sizing:border-box;border:1px solid var(--red);background:var(--bg);color:var(--ink);border-radius:0;padding:8px 10px;font:inherit;font-size:14px}
 .evPick .evPickDel{text-align:center;padding:8px 12px;color:var(--muted)}
 .evPick .evPickSkip{border:0;text-decoration:underline;color:var(--muted);text-align:center;min-height:30px}
+/* Botonera de eventos (columna derecha del editor básico): lista editable de tipos de evento */
+#evBot{display:flex;flex-direction:column;gap:6px;padding:8px 0;border-top:1px solid var(--line)}
+#evBot .evBotH{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#evBot .evBotH h2{margin:0}
+#evBotList{display:flex;flex-direction:column;gap:3px}
+.evBotRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:3px;align-items:center}
+.evBotName{min-width:0;padding:6px 8px;border:1px solid var(--line);font-size:14px;overflow-wrap:anywhere}
+.evBotRow input,.evBotNew input{min-width:0;box-sizing:border-box;border:1px solid var(--red);background:var(--bg);color:var(--ink);border-radius:0;padding:6px 8px;font:inherit;font-size:14px}
+.evBotRow .btn,.evBotNew .btn{min-height:34px;padding:0 10px}
+.evBotNew{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px}
+.evBotNew input{border-color:var(--line)}
+@media (max-width:640px){
+  .evBotRow .btn,.evBotNew .btn{min-height:44px}
+  .evBotNew input{font-size:16px;min-height:44px}
+}
 @media (max-width:640px){
   .evPick button{min-height:44px}
   /* marcas de partido: botones pequeños y con texto reducido */
@@ -1600,6 +1610,21 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   /* Móvil: se ocultan «Limpiar proyecto», la estrella (versión gratuita) y la corona (versión premium); siguen en escritorio */
   html header #acfcClearProj,html header #acfcFreeBtn.btn,html header #acfcLicBtn.btn{display:none!important}
 }
+/* ACFC · BOTONERA NEGRA: la ventana Botonera (nueva o editar) usa la paleta oscura de la marca (tokens propios) */
+dialog#dlgBot{--bg:#0B0D10;--panel:#15181D;--ink:#EDEDEB;--muted:#9AA0A6;--line:#2C3338;
+  color-scheme:dark;background:var(--panel);color:var(--ink);border-top:3px solid var(--red);box-shadow:0 8px 28px rgba(0,0,0,.6)}
+dialog#dlgBot::backdrop{background:rgba(0,0,0,.7)}
+dialog#dlgBot input,dialog#dlgBot select{color:var(--ink);background:var(--bg);border-color:var(--line)}
+dialog#dlgBot input::placeholder{color:var(--muted);opacity:1}
+dialog#dlgBot .botSec{border-top-color:var(--line)}
+dialog#dlgBot .btn:not(.primary):not(.edGreen){background:var(--panel);color:var(--ink);border-color:var(--line)}
+dialog#dlgBot .btn:not(.primary):not(.edGreen):hover{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+/* botones de la botonera con el mismo diseño que la ventana EVENTO: grandes, en dos columnas */
+dialog#dlgBot #botCats,dialog#dlgBot #botDets,dialog#dlgBot #botJugs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+dialog#dlgBot #botCats .catbtn,dialog#dlgBot #botDets .optbtn,dialog#dlgBot #botJugs .optbtn{min-height:52px;padding:6px 24px 6px 10px;font-size:16px;font-weight:700;line-height:1.15;display:flex;align-items:center;justify-content:center;text-align:center;border-width:2px;border-radius:2px}
+dialog#dlgBot #botCats>.catbtn:last-child:nth-child(odd),dialog#dlgBot #botDets>.optbtn:last-child:nth-child(odd),dialog#dlgBot #botJugs>.optbtn:last-child:nth-child(odd){grid-column:1/-1}
+dialog#dlgBot #botDets>.optbtn.nodet{grid-column:1/-1}
+dialog#dlgBot .botEmpty{grid-column:1/-1}
 </style>
 </head>
 <body>
@@ -2106,6 +2131,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <div class="edTlFlt" id="edTlFlt" style="display:none">
           <select id="edTlEv" aria-label="Filtrar eventos por tipo" title="Mostrar en la línea de tiempo solo este tipo de evento"></select>
         </div>
+        <button type="button" class="btn" id="edPintBtn" style="padding:4px 8px;display:inline-flex;align-items:center" title="Pintar sobre el vídeo: pausa y abre las herramientas de pintado" aria-label="Activar el pintado"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 4.2A8.5 8.5 0 1 0 12 20.5c1.6 0 2.4-.9 2.4-2 0-1.5-1.4-1.7-1.4-3 0-1 .8-1.7 1.9-1.7H17a3.5 3.5 0 0 0 3.5-3.4"/><circle cx="7.5" cy="10.5" r="1.2"/><circle cx="9.5" cy="15.5" r="1.2"/><circle cx="13.5" cy="8" r="1.2"/><path d="M20.5 2.5l-5 5 1.5 1.5 5-5z"/></svg></button>
         <button class="btn" id="edBack20" title="Retroceder 10 segundos">-10 seg</button>
         <button class="btn" id="edBack4" title="Retroceder 5 segundos">-5 seg</button>
         <button class="btn" id="edFwd5" title="Avanzar 5 segundos">+5 seg</button>
@@ -2212,6 +2238,17 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     </div>
     <div class="list" id="edList"></div>
     <div id="edStills" style="display:none;flex-direction:column;gap:6px;padding:8px 0"></div>
+    <div id="evBot">
+      <div class="evBotH">
+        <h2>Botonera de eventos</h2>
+        <span class="hint" style="margin:0;font-size:12px;color:var(--muted)">Tipos que usarás al registrar</span>
+      </div>
+      <div id="evBotList"></div>
+      <div class="evBotNew">
+        <input id="evBotInp" type="text" maxlength="60" placeholder="Otro nombre…" aria-label="Nuevo tipo de evento">
+        <button type="button" class="btn primary" id="evBotAdd">Añadir</button>
+      </div>
+    </div>
     <div class="foot" style="flex-direction:column;align-items:stretch">
       <div class="row" style="justify-content:space-between;margin:0">
         <h2 style="margin:0">Exportación</h2>
@@ -2293,6 +2330,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       <div class="livePanel" id="liveVidPanel" hidden>
         <h2>Vídeo y sincronización</h2>
         <video id="liveVid" controls playsinline preload="metadata"></video>
+        <button type="button" class="btn" id="liveVidPaint" hidden title="Pintar sobre el vídeo: pausa y abre las herramientas de pintado" aria-label="Activar el pintado"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 4.2A8.5 8.5 0 1 0 12 20.5c1.6 0 2.4-.9 2.4-2 0-1.5-1.4-1.7-1.4-3 0-1 .8-1.7 1.9-1.7H17a3.5 3.5 0 0 0 3.5-3.4"/><circle cx="7.5" cy="10.5" r="1.2"/><circle cx="9.5" cy="15.5" r="1.2"/><circle cx="13.5" cy="8" r="1.2"/><path d="M20.5 2.5l-5 5 1.5 1.5 5-5z"/></svg></button>
         <div class="liveHelp" id="liveVidName"></div>
         <div id="liveSyncRows" style="display:grid;gap:6px"></div>
         <div id="liveSyncMsg" class="liveHelp" role="status" aria-live="polite"></div>
@@ -2596,16 +2634,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     </section>
 
     <section class="botSec">
-      <h3>Tiempo de la acción · <span id="botTCat"></span></h3>
-      <div class="botHelp">Pulsa una categoría de arriba para asignarle su tiempo de corte. Si no lo cambias, usa los valores generales.</div>
-      <div class="row botAdd">
-        <label for="botTPre">Arrancar antes</label><input type="number" id="botTPre" min="0" max="600" step="0.5" value="5"><label>s</label>
-        <label for="botTPost" style="margin-left:6px">Finalizar en</label><input type="number" id="botTPost" min="0.2" max="600" step="0.5" value="10"><label>s</label>
-        <button type="button" class="btn" id="botTReset" title="Vuelve a los valores generales" hidden>Usar generales</button>
-      </div>
-    </section>
-
-    <section class="botSec">
       <h3>2 · Detalles de <span id="botDetCat"></span></h3>
       <div class="botHelp">Pulsa una categoría de arriba para editar sus detalles.</div>
       <div id="botDets" class="catbtns" role="group" aria-label="Detalles"></div>
@@ -2769,12 +2797,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <span class="tutB pt" data-k="a">PUNTO A · INICIO</span>
         <span class="tutB pt" data-k="b">PUNTO B · FIN</span>
         <span class="tutB tblue">Ocultar</span>
-        <span class="tutB tmk" data-k="p1">Inicio primera parte</span>
-        <span class="tutB tdk">+45 min</span>
-        <span class="tutB tmk" data-k="p1e">Fin primera parte</span>
-        <span class="tutB tmk" data-k="p2">Inicio segunda parte</span>
-        <span class="tutB tdk">+45 min</span>
-        <span class="tutB tmk" data-k="end">Fin de partido</span>
         <span class="tutAB" id="tutAB"></span>
       </div>
     </div>
@@ -3969,8 +3991,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
       wc.append(b);
     });
     $("botDetCat").textContent=botCat.charAt(0)+botCat.slice(1).toLowerCase();
-    $("botTCat").textContent=$("botDetCat").textContent;
-    { const t=catT[botCat]; $("botTPre").value=t?t.pre:(+$("pre").value||0); $("botTPost").value=t?t.post:Math.max(0.2,+$("post").value||10); $("botTReset").hidden=!t; }
     const wd=$("botDets"); wd.replaceChildren();
     const L=DETS[botCat]||[];
     if(!L.length) wd.append(el("span",{className:"botEmpty",textContent:"Sin detalles todavía."}));
@@ -3997,13 +4017,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
       wj.append(b);
     });
   }
-  function botSetT(){
-    const p=+$("botTPre").value, q=+$("botTPost").value;
-    if(!isFinite(p)||!isFinite(q)||p<0||q<0.2) return;
-    catT[botCat]={pre:Math.min(p,600),post:Math.min(q,600)}; saveCatBase(); $("botTReset").hidden=false; refresh();
-  }
-  $("botTPre").onchange=$("botTPost").onchange=botSetT;
-  $("botTReset").onclick=()=>{ delete catT[botCat]; saveCatBase(); renderBot(); refresh(); };
   function botCancelEdit(){ botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor(); renderBot(); }
   function botAddCat(){
     const n=$("botCatName").value.trim().replace(/\s+/g," ").toUpperCase().slice(0,24);
@@ -4133,6 +4146,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("botDetErr").textContent=$("botJugErr").textContent=""; botSync(); renderBot(); refresh();
   };
   $("botClose").onclick=$("botDone").onclick=()=>dlgBot.close();
+  // Tamaño de la ventana de la botonera: se cambia arrastrando la esquina inferior derecha y se recuerda en este navegador
+  const BOT_TAM_KEY="acfcBotTamano";
+  try{ const t=JSON.parse(localStorage.getItem(BOT_TAM_KEY)||"null"); if(t&&t.w&&t.h){ dlgBot.style.width=t.w+"px"; dlgBot.style.height=t.h+"px"; } }catch(_){}
+  if(window.ResizeObserver) new ResizeObserver(()=>{ if(!dlgBot.open) return; try{ localStorage.setItem(BOT_TAM_KEY,JSON.stringify({w:Math.round(dlgBot.offsetWidth),h:Math.round(dlgBot.offsetHeight)})); }catch(_){} }).observe(dlgBot);
   $("botCatCancel").onclick=botCancelEdit;
   $("botCatAdd").onclick=botAddCat; $("botDetAdd").onclick=botAddDet; $("botJugAdd").onclick=botAddJug;
   [["botCatName",botAddCat],["botDetName",botAddDet],["botJugName",botAddJug]].forEach(([id,fn])=>
@@ -4585,49 +4602,53 @@ window.renderHalfBands = function(b1,b2,mk,d){
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
   ["regPintBtn","regPintBtn2"].forEach(id=>{ const b=$(id); if(b) b.addEventListener("click",()=>$("vPintGo").click()); });
-  // Ventana embebida del pintado: el panel sale de la columna y se abre centrada en la pantalla; al cerrarla vuelve a su sitio
-  // El panel del pintado vive solo dentro de esta ventana: ya no aparece en la columna derecha del registro
+  // Ventana flotante del pintado (registro y editor): saca el panel de su columna, lo abre centrado y lo cierra con ✕
+  window.acfcPintFloat=function(blk,winId){
+    const win=document.createElement("div"), x=document.createElement("button");
+    win.id=winId; win.hidden=true; win.setAttribute("role","dialog"); win.setAttribute("aria-label","Pintado de acciones");
+    x.type="button"; x.className="btn pintWinX"; x.title="Cerrar el pintado"; x.setAttribute("aria-label","Cerrar el pintado");
+    x.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
+    win.append(x,blk); document.body.append(win);
+    function close(){ win.hidden=true; }
+    // Mantiene la ventana dentro de la pantalla (si se ha movido o cambia el tamaño de la ventana)
+    function fit(){
+      const r=win.getBoundingClientRect();
+      const l=Math.max(0,Math.min(innerWidth-r.width,r.left)), t=Math.max(0,Math.min(innerHeight-60,r.top));
+      win.style.left=l+"px"; win.style.top=t+"px";
+      win.style.maxHeight=Math.max(120,innerHeight-t-8)+"px";
+    }
+    // Se abre siempre centrada en la pantalla
+    function open(){
+      const small=innerWidth<=640, W=small?innerWidth-16:Math.min(440,innerWidth-16);
+      win.style.width=W+"px";
+      win.style.maxHeight=(innerHeight-16)+"px";
+      win.hidden=false;
+      const H=Math.min(win.offsetHeight,innerHeight-16);
+      win.style.left=Math.max(8,(innerWidth-W)/2)+"px";
+      win.style.top=Math.max(8,(innerHeight-H)/2)+"px";
+    }
+    x.addEventListener("click",close);
+    // Arrastre desde la cabecera «Pintado de acciones» (ratón, lápiz y dedo); los botones y controles no arrastran
+    { let d=null;
+      win.addEventListener("pointerdown",ev=>{
+        if(ev.button!==0||!ev.target.closest(".pbHead")||ev.target.closest("button,input,select,textarea,label,a")) return;
+        const r=win.getBoundingClientRect(); d={id:ev.pointerId,dx:ev.clientX-r.left,dy:ev.clientY-r.top};
+        win.setPointerCapture(ev.pointerId); ev.preventDefault(); });
+      win.addEventListener("pointermove",ev=>{
+        if(!d||ev.pointerId!==d.id) return;
+        win.style.left=(ev.clientX-d.dx)+"px"; win.style.top=(ev.clientY-d.dy)+"px"; fit(); });
+      const end=ev=>{ if(!d||ev.pointerId!==d.id) return; d=null; };
+      win.addEventListener("pointerup",end); win.addEventListener("pointercancel",end);
+      addEventListener("resize",()=>{ if(!win.hidden) fit(); }); }
+    return {open,close};
+  };
+  // El panel del pintado vive solo dentro de su ventana: ya no aparece en la columna derecha del registro
   const pwBlk=$("pintBlock");
-  const pwWin=document.createElement("div"), pwX=document.createElement("button");
-  pwWin.id="pintWin"; pwWin.hidden=true; pwWin.setAttribute("role","dialog"); pwWin.setAttribute("aria-label","Pintado de acciones");
-  pwX.type="button"; pwX.className="btn pintWinX"; pwX.title="Cerrar el pintado"; pwX.setAttribute("aria-label","Cerrar el pintado");
-  pwX.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
-  pwWin.append(pwX,pwBlk); document.body.append(pwWin);
-  function pintWinClose(){ pwWin.hidden=true; }
-  // Mantiene la ventana dentro de la pantalla (si se ha movido o cambia el tamaño de la ventana)
-  function pwFit(){
-    const r=pwWin.getBoundingClientRect();
-    const l=Math.max(0,Math.min(innerWidth-r.width,r.left)), t=Math.max(0,Math.min(innerHeight-60,r.top));
-    pwWin.style.left=l+"px"; pwWin.style.top=t+"px";
-    pwWin.style.maxHeight=Math.max(120,innerHeight-t-8)+"px";
-  }
-  // Se abre siempre centrada en la pantalla
-  function pintWinOpen(){
-    const small=innerWidth<=640, W=small?innerWidth-16:Math.min(440,innerWidth-16);
-    pwWin.style.width=W+"px";
-    pwWin.style.maxHeight=(innerHeight-16)+"px";
-    pwWin.hidden=false;
-    const H=Math.min(pwWin.offsetHeight,innerHeight-16);
-    pwWin.style.left=Math.max(8,(innerWidth-W)/2)+"px";
-    pwWin.style.top=Math.max(8,(innerHeight-H)/2)+"px";
-  }
-  pwX.addEventListener("click",pintWinClose);
-  // Arrastre desde la cabecera «Pintado de acciones» (ratón, lápiz y dedo); los botones y controles no arrastran
-  { let d=null;
-    pwWin.addEventListener("pointerdown",ev=>{
-      if(ev.button!==0||!ev.target.closest(".pbHead")||ev.target.closest("button,input,select,textarea,label,a")) return;
-      const r=pwWin.getBoundingClientRect(); d={id:ev.pointerId,dx:ev.clientX-r.left,dy:ev.clientY-r.top};
-      pwWin.setPointerCapture(ev.pointerId); ev.preventDefault(); });
-    pwWin.addEventListener("pointermove",ev=>{
-      if(!d||ev.pointerId!==d.id) return;
-      pwWin.style.left=(ev.clientX-d.dx)+"px"; pwWin.style.top=(ev.clientY-d.dy)+"px"; pwFit(); });
-    const pwEnd=ev=>{ if(!d||ev.pointerId!==d.id) return; d=null; };
-    pwWin.addEventListener("pointerup",pwEnd); pwWin.addEventListener("pointercancel",pwEnd);
-    addEventListener("resize",()=>{ if(!pwWin.hidden) pwFit(); }); }
+  const pwFl=window.acfcPintFloat(pwBlk,"pintWin");
   { const b=$("vPintGo"); b.addEventListener("pointerdown",ev=>ev.stopPropagation());
     b.addEventListener("click",()=>{ v.pause();
       const body=$("pintBody"); if(body&&body.hidden&&$("pintToggle")) $("pintToggle").click();
-      pintWinOpen();
+      pwFl.open();
       const t=pwBlk.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=$("pintMode"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); } }); }
   // Zoom de las líneas de tiempo del registro (la de arriba y la de categorías van juntas)
   let vZoom=1, vZv=0, vPanTs=0; const VZMAX=64;
@@ -4736,7 +4757,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   // Vídeo subido: se guarda en IndexedDB para que no se pierda al ir a la portada (Home) y volver
   function vidDb(){ return new Promise((res,rej)=>{ const q=indexedDB.open("acfcVideos",1); q.onupgradeneeded=()=>q.result.createObjectStore("v"); q.onsuccess=()=>res(q.result); q.onerror=()=>rej(q.error); }); }
   async function vidPut(key,f){ try{ const d=await vidDb(); await new Promise((res,rej)=>{ const t=d.transaction("v","readwrite"); t.objectStore("v").put(f,key); t.oncomplete=res; t.onerror=()=>rej(t.error); }); d.close(); }catch(e){} }
-  async function vidGet(key){ try{ const d=await vidDb(); const f=await new Promise((res,rej)=>{ const r=d.transaction("v").objectStore("v").get(key); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); d.close(); return f instanceof Blob?f:null; }catch(e){ return null; } }
+  async function vidGet(key){ try{ const d=await vidDb(); const f=await new Promise((res,rej)=>{ const r=d.transaction("v").objectStore("v").get(key); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); d.close(); return (f instanceof Blob||Array.isArray(f))?f:null; }catch(e){ return null; } }
   window.acfcVidGet=vidGet;
   $("regUseEditor").onclick=()=>{
     const ev=$("edV"), u=ev&&(ev.currentSrc||ev.getAttribute("src"));
@@ -4761,7 +4782,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
   // varios vídeos en el registro (p. ej. 1.ª y 2.ª parte): lista + selector para cambiar entre ellos
   const regVids=window.__regVids=[];
   function isVid(f){ return f&&(f.type.startsWith("video/")||/\.(mp4|m4v|mov|webm)$/i.test(f.name)); }
-  function regVidAdd(f){ if(!regVids.some(x=>x.name===f.name&&x.size===f.size)) regVids.push(f); regVidSync(f); }
+  function regVidAdd(f){ if(!regVids.some(x=>x.name===f.name&&x.size===f.size)) regVids.push(f); regVidSync(f); if(window.__saveAllVids) window.__saveAllVids(); }
+  // añade a la lista del registro un vídeo subido desde el editor, sin cambiar el que se está viendo
+  window.__visorAddFile=f=>{ if(!isVid(f)||regVids.some(x=>x.name===f.name&&x.size===f.size)) return; regVids.push(f); regVidSync(regCur); if(window.__saveAllVids) window.__saveAllVids(); };
+  window.acfcVidPut=vidPut;
   // al volver de la portada: se recupera el último vídeo subido en el registro con vídeo
   vidGet("visor").then(f=>{ if(!f) return; regVidAdd(f); if(v.dataset.url) URL.revokeObjectURL(v.dataset.url);
     const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f; v.dataset.user="1"; v.dataset.url=url;
@@ -4805,7 +4829,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     }); }
   function regVidRemove(i){
     const f=regVids[i]; if(!f) return; const wasCur=regCur&&f.name===regCur.name&&f.size===regCur.size;
-    regVids.splice(i,1); regDurs.delete(f);
+    regVids.splice(i,1); regDurs.delete(f); if(window.__saveAllVids) window.__saveAllVids();
     if(wasCur){ if(regVids.length){ openFile(regVids[Math.min(i,regVids.length-1)]); return; }
       regCur=null; if(v.dataset.url){ URL.revokeObjectURL(v.dataset.url); v.dataset.url=""; } v.pause(); v.removeAttribute("src"); v.load(); $("vidName").textContent=""; }
     regVidSync(null); }
@@ -6183,7 +6207,19 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f;
     sources.push({id:newSrcId(), name, url, file:f, dur:0, segs:null, inP:0, outP:0, hist:[], marks:emptyMarks()});
     if(sources.length===1) switchSource(sources.length-1); else renderSources();
+    // el vídeo queda también en la lista del registro con vídeo
+    if(window.__visorAddFile) try{ window.__visorAddFile(f); }catch(e){}
+    saveAllVids();
   }
+  // Los vídeos del registro y del editor se guardan juntos (IndexedDB) y se recuperan en los dos al volver de la portada
+  let vidsRestored=false; // no se guarda nada hasta haber leído la lista guardada, para no pisarla
+  function saveAllVids(){ if(!vidsRestored) return; const all=[], add=f=>{ if(f&&!all.some(x=>x.name===f.name&&x.size===f.size)) all.push(f); };
+    (window.__regVids||[]).forEach(add); sources.forEach(s=>add(s.file));
+    if(window.acfcVidPut) window.acfcVidPut("all",all); }
+  window.__saveAllVids=saveAllVids;
+  (window.acfcVidGet?window.acfcVidGet("all"):Promise.resolve(null)).then(list=>{
+    if(Array.isArray(list)) list.forEach(f=>{ if(!f) return; if(window.__edAddFileIfNew) window.__edAddFileIfNew(f); if(window.__visorAddFile) window.__visorAddFile(f); });
+    vidsRestored=true; saveAllVids(); });
   function addSourceFromVisor(){
     if(edOneOnly()){ msg(ONE_MSG); return; }
     const vv=$("v"); const u=vv.currentSrc||vv.src; if(!u){ msg("El visor no tiene vídeo cargado."); return; }
@@ -6270,7 +6306,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     [sources[i],sources[j]]=[sources[j],sources[i]]; if(curSrc===i) curSrc=j; else if(curSrc===j) curSrc=i; renderSources(); render(); }
   function removeSource(i){ const s=sources[i]; if(!s) return;
     const wasActive=i===curSrc; if(s.file&&s.url&&s.url.startsWith("blob:")) URL.revokeObjectURL(s.url);
-    sources.splice(i,1); if(curSrc>i) curSrc--; added=added.filter(it=>it.srcId!==s.id); stills=stills.filter(k=>k.srcId!==s.id);
+    sources.splice(i,1); saveAllVids(); if(curSrc>i) curSrc--; added=added.filter(it=>it.srcId!==s.id); stills=stills.filter(k=>k.srcId!==s.id);
     if(!sources.length){ curSrc=-1; segs=[]; inP=0; outP=0; hist=[]; sel=-1; marks=emptyMarks(); V.pause(); V.removeAttribute("src"); V.load();
       msg("Sube uno o varios vídeos, realiza cortes, asigna el nombre al evento y descárgalos a tu ordenador."); renderSources(); render(); return; }
     if(wasActive) switchSource(Math.min(i,sources.length-1)); else { renderSources(); render(); } }
@@ -6567,10 +6603,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const ed=icoBtn('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',"Editar evento"); ed.onclick=ev=>{ev.stopPropagation(); openEditAdded(idx);};
       const pt=icoBtn('<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>',"Pintar sobre este tramo");
       pt.onclick=ev=>{ev.stopPropagation(); gotoAdded(idx,true);
-        // el salto de fuente es asíncrono: se pausa y se abre el panel de pintado cuando el vídeo ya está colocado
-        setTimeout(()=>{ V.pause();
-          const body=$("pintBodyEd"); if(body&&body.hidden&&$("pintToggleEd")) $("pintToggleEd").click();
-          const blk=$("pintBlockEd"); if(blk){ blk.scrollIntoView({behavior:"smooth",block:"start"}); const t=blk.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=$("pintModeEd"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); } } },150); };
+        // el salto de fuente es asíncrono: se abre la ventana de pintado cuando el vídeo ya está colocado
+        setTimeout(()=>{ window.acfcEdPintOpen&&window.acfcEdPintOpen(); },150); };
       const dl=icoBtn('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',"Descargar solo este tramo"); dl.onclick=ev=>{ev.stopPropagation(); exportSeparate([idx]);};
       const b=icoBtn('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/>',"Quitar tramo"); b.onclick=ev=>{ev.stopPropagation(); removeAdded(idx);};
       const acts=document.createElement("div"); acts.style.cssText="display:flex;gap:4px"; acts.append(ed,pt,dl,b);
@@ -6590,7 +6624,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function render(){
     syncCur();
     const d=dur(), wrap=$("edSegs"); wrap.replaceChildren();
-    renderSources(); renderFilter(); renderTramosList(); renderStills(); renderSel();
+    renderSources(); renderFilter(); renderTramosList(); renderStills(); renderSel(); renderEvBot();
     const go=sources.reduce((a,s)=>a+(s.dur||0),0);
     $("edTotal").textContent=fmt(filteredTotal());
     $("edResultRow").style.display=added.length?"":"none";
@@ -6947,6 +6981,38 @@ window.renderHalfBands = function(b1,b2,mk,d){
     evPick=box; setTimeout(()=>{ document.addEventListener("pointerdown",evPickOut,true); document.addEventListener("keydown",evPickKey,true); },0);
     const f=box.querySelector("button"); if(f) f.focus({preventScroll:true});
   }
+  // ---------- botonera de eventos (columna derecha): alta, renombrado y baja de los tipos de evento ----------
+  // misma lista que el selector «Tipo de evento»: los fijos se ocultan al quitarlos y se pueden recuperar al añadir su nombre
+  function removeEvName(n){
+    if(EV_NAMES.indexOf(n)>=0){ if(evHidden.indexOf(n)<0) evHidden.push(n); saveHidden(); }
+    else{ const i=evCustom.indexOf(n); if(i>=0) evCustom.splice(i,1); try{ localStorage.setItem("acfcEvCustom",JSON.stringify(evCustom)); }catch(er){} }
+  }
+  function renderEvBot(){
+    const L=$("evBotList"); if(!L) return; L.replaceChildren();
+    evBase().concat(evCustom).forEach(n=>{
+      const row=document.createElement("div"); row.className="evBotRow";
+      const tx=document.createElement("span"); tx.className="evBotName"; tx.textContent=n;
+      const ed=document.createElement("button"); ed.type="button"; ed.className="btn"; ed.textContent="✎"; ed.title="Renombrar «"+n+"»"; ed.setAttribute("aria-label","Renombrar "+n);
+      const dl=document.createElement("button"); dl.type="button"; dl.className="btn"; dl.textContent="✕"; dl.title="Quitar «"+n+"» de la botonera"; dl.setAttribute("aria-label","Quitar "+n);
+      // ✎ convierte el nombre en un campo: Intro o salir del campo guarda, Esc cancela
+      ed.onclick=()=>{
+        const ri=document.createElement("input"); ri.type="text"; ri.maxLength=60; ri.value=n; ri.setAttribute("aria-label","Nuevo nombre para "+n);
+        let done=false;
+        const finish=save=>{ if(done) return; done=true;
+          const v=ri.value.trim();
+          if(save&&v&&v!==n){ renameEv(n,v); render(); } else renderEvBot(); };
+        ri.onkeydown=k=>{ k.stopPropagation(); if(k.key==="Enter"){ k.preventDefault(); finish(true); } else if(k.key==="Escape"){ k.preventDefault(); finish(false); } };
+        ri.onblur=()=>finish(true);
+        row.replaceChildren(ri); ri.focus(); ri.select(); };
+      dl.onclick=()=>{ removeEvName(n); render(); };
+      row.append(tx,ed,dl); L.append(row);
+    });
+  }
+  const evBotInp=$("evBotInp");
+  const evBotAdd=()=>{ const v=evBotInp.value.trim(); if(!v) return; addCustomName(v); evBotInp.value=""; render(); };
+  evBotInp.onkeydown=k=>{ k.stopPropagation(); if(k.key==="Enter") evBotAdd(); };
+  $("evBotAdd").onclick=evBotAdd;
+  renderEvBot();
   $("edUndo").onclick=undo; $("edUndo2").onclick=undo; $("edRedo").onclick=redo;
   $("edReset").onclick=()=>{ if(dur()){ segs=[{s:0,e:dur(),off:false}]; inP=0; outP=dur(); sel=-1; hist=[]; activeAdded=null; render(); } };
 
@@ -7206,16 +7272,8 @@ window.tutPaint=(()=>{
      pre(){ S.vid=true; },
      async run(W){ await go(W,q('.tutB[data-k="up"]'),.5,.5,900,"Subir vídeo: puedes subir uno o varios vídeos"); S.hot="up"; draw(); await tap(W); S.hot=null; S.vid=true; draw(); await wait(W,1200,"Vídeo cargado");
        await go(W,q('[data-k="addv"]'),.5,.5,900,"Añadir vídeo: suma más vídeos cuando quieras"); await W(700); }},
-    {s:"Partes",t:"Marca las partes",opt:true,
-     d:"Con el vídeo en su sitio, pulsa «Inicio primera parte», «Fin primera parte», «Inicio segunda parte» y «Fin de partido». «+45 min» avanza 45 minutos el vídeo para llegar antes a la 2ª parte. Estas mismas marcas sirven en el registro de acciones.",
-     pre(){ S.marks={p1:4,p1e:46,p2:54,end:97}; S.head=97; },
-     async run(W){ const seq=[["p1",4],["p1e",46],["p2",54],["end",97]];
-       const L={p1:"Inicio primera parte",p1e:"Fin primera parte",p2:"Inicio segunda parte",end:"Fin del partido"};
-       for(const [k,p] of seq){ await go(W,q(".tutTrack"),p/100,.5,700,""); S.head=p; draw(); await W(400);
-         await go(W,q('.tutB[data-k="'+k+'"]'),.5,.5,700,L[k]); S.hot=k; draw(); await tap(W); S.hot=null; S.marks[k]=p; draw(); await W(500); }
-       await W(1000); }},
     {s:"Punto A",t:"Punto A: inicio del tramo",opt:false,
-     d:"Sitúate donde empieza la jugada y pulsa «Punto A · inicio».",
+     d:"Para hacer un corte, sitúate donde empieza la jugada y pulsa «Punto A · inicio».",
      pre(){ S.showH=true; S.inP=20; S.head=20; },
      async run(W){ await setPoint(W,"in",20); await W(800); }},
     {s:"Punto B",t:"Punto B: fin del tramo y evento",opt:false,
@@ -10698,16 +10756,16 @@ return api;
 // ---------- montaje: registro de acciones y editor de vídeo ----------
 (()=>{
 const g=id=>document.getElementById(id);
-const visorBlock=g("pintBlock"), edAside=document.querySelector("#tabEditor aside");
-// El panel del editor es una copia del del registro, con ids propios (sufijo «Ed»).
-let edBlock=null;
-if(visorBlock&&edAside){
+const visorBlock=g("pintBlock");
+// El panel del editor es una copia del del registro, con ids propios (sufijo «Ed»). Vive en su propia ventana flotante, como en el registro
+let edBlock=null, edFl=null;
+if(visorBlock){
   edBlock=visorBlock.cloneNode(true);
   edBlock.id+="Ed";
   edBlock.querySelectorAll("[id]").forEach(el=>{ el.id+="Ed"; });
   edBlock.querySelectorAll("[aria-controls]").forEach(el=>el.setAttribute("aria-controls",el.getAttribute("aria-controls")+"Ed"));
   edBlock.querySelector("#pintFullEd").dataset.full="edFullEditor";
-  edAside.appendChild(edBlock);
+  edFl=window.acfcPintFloat(edBlock,"edPintWin");
 }
 // Botón «Pantalla completa» del panel de pintado: delega en el de registro o editor de su pestaña
 document.addEventListener("click",e=>{ const b=e.target.closest(".pintBlock [data-full]"); if(b) g(b.dataset.full)?.click(); });
@@ -10738,6 +10796,16 @@ acfcPintMount({
   onStill:(cap,t)=>window.acfcEdAddStill?window.acfcEdAddStill(cap,t):"El editor no está listo.",
   watch:fn=>{ if(edV) ["loadedmetadata","emptied"].forEach(ev=>edV.addEventListener(ev,fn)); }
 });
+// Botón de pintar bajo el reproductor del editor: pausa, abre la ventana centrada y deja el lápiz activo (igual que en el registro)
+function edPintOpen(){
+  if(!edFl) return;
+  edV.pause();
+  const body=g("pintBodyEd"); if(body&&body.hidden&&g("pintToggleEd")) g("pintToggleEd").click();
+  edFl.open();
+  const t=edBlock.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=g("pintModeEd"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); }
+}
+window.acfcEdPintOpen=edPintOpen;
+g("edPintBtn").addEventListener("click",edPintOpen);
 // Registro sin vídeo: el pintado se activa sobre el vídeo que se añade para sincronizar (ids con sufijo «Lv»)
 const lvPanel=g("liveVidPanel"), lvV=g("liveVid"), lvName=g("liveVidName");
 if(visorBlock&&lvPanel&&lvV){
@@ -10746,12 +10814,29 @@ if(visorBlock&&lvPanel&&lvV){
   lvBlock.querySelectorAll("[id]").forEach(el=>{ el.id+="Lv"; });
   lvBlock.querySelectorAll("[aria-controls]").forEach(el=>el.setAttribute("aria-controls",el.getAttribute("aria-controls")+"Lv"));
   lvBlock.querySelector("#pintFullLv").remove(); // el registro sin vídeo no tiene pantalla completa propia
-  lvPanel.appendChild(lvBlock);
+  const lvFl=window.acfcPintFloat(lvBlock,"lvPintWin");
   acfcPintMount({
     video:lvV, host:lvPanel, block:lvBlock, sfx:"Lv", expose:"acfcPintLv", freeze:true,
     keyPrefix:"acfcPintLv:", keyOf:()=>lvName?lvName.textContent:"",
     watch:fn=>{ if(lvName) new MutationObserver(fn).observe(lvName,{childList:true,characterData:true,subtree:true}); }
   });
+  // Icono de pintar sobre el reproductor (esquina superior derecha): pausa, abre la ventana centrada y deja el lápiz activo
+  const lvBtn=g("liveVidPaint");
+  function lvPlaceBtn(){
+    const has=!!(lvV.currentSrc||lvV.src)&&!lvPanel.hidden; lvBtn.hidden=!has; if(!has) return;
+    lvBtn.style.top=(lvV.offsetTop+8)+"px"; lvBtn.style.left=(lvV.offsetLeft+lvV.offsetWidth-lvBtn.offsetWidth-8)+"px";
+  }
+  ["loadedmetadata","emptied","resize"].forEach(ev=>lvV.addEventListener(ev,lvPlaceBtn));
+  addEventListener("resize",lvPlaceBtn);
+  if(window.ResizeObserver) new ResizeObserver(lvPlaceBtn).observe(lvV);
+  new MutationObserver(lvPlaceBtn).observe(lvPanel,{attributes:true,attributeFilter:["hidden"]});
+  lvBtn.addEventListener("click",()=>{
+    lvV.pause();
+    const body=g("pintBodyLv"); if(body&&body.hidden&&g("pintToggleLv")) g("pintToggleLv").click();
+    lvFl.open();
+    const t=lvBlock.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=g("pintModeLv"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); }
+  });
+  lvPlaceBtn();
 }
 })();
 </script>
