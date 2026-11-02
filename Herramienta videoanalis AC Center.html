@@ -346,7 +346,7 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #vxPrev{width:100%;max-width:100%;display:block}
 #vxInfo{overflow-wrap:anywhere;line-height:1.45}
 #vxX{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;line-height:1;font-size:18px;display:flex;align-items:center;justify-content:center}
-dialog#dlgBot{width:min(620px,94vw);height:calc(100vh - 24px);max-height:calc(100vh - 24px);overflow:auto;resize:both;min-width:300px;min-height:260px;max-width:calc(100vw - 8px)}
+dialog#dlgBot{width:min(620px,94vw);height:auto;max-height:calc(100vh - 24px);overflow:auto;resize:horizontal;min-width:300px;max-width:calc(100vw - 8px)}
 .botWrap{display:grid;gap:12px}
 .botSec{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:8px}
 .botSec h3{margin:0;font-family:var(--f-disp);font-size:15px;text-transform:uppercase;letter-spacing:.3px}
@@ -990,6 +990,8 @@ html #regPintBtn svg,html #edPintBtn svg{width:26px;height:26px}
 #tabLive .liveMain,#tabLive .liveSide{display:grid;gap:14px;align-content:start;min-width:0}
 #tabLive .livePanel{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);padding:14px;display:grid;gap:10px;min-width:0}
 #tabLive .livePanel h2{margin:0;font-family:var(--f-disp);font-size:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+#tabLive:not(:fullscreen) #liveTop.liveFold>:not(h2):not(.liveClockRow){display:none!important}
+#tabLive #liveSecToggle{text-transform:none;letter-spacing:0;font-size:13px}
 #tabLive .livePanel h2::before{content:"";width:6px;height:6px;background:var(--red);flex:none}
 #tabLive .liveHelp{margin:0;font-size:13px;color:var(--muted)}
 #tabLive .liveClockRow{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap}
@@ -1586,11 +1588,22 @@ dialog#dlg.enEmergente #closeBotDlg::before{content:none!important}
   dialog#dlg #manInfo{font-size:12px;margin-top:3px}
 }
 /* botonera de la ventana EVENTO (equipo, categoría, detalle y jugador): mismo diseño, con botones grandes en dos columnas */
-#dlg #fCatBtns,#dlg #fEqBtns,#dlg #fDetBtns,#dlg #fJugBtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-#dlg #fCatBtns .catbtn,#dlg #fEqBtns .optbtn,#dlg #fDetBtns .optbtn,#dlg #fJugBtns .optbtn{min-height:52px;padding:6px 24px 6px 10px;font-size:16px;font-weight:700;line-height:1.15;display:flex;align-items:center;justify-content:center;text-align:center;border-width:2px;border-radius:2px}
+#dlg #fCatBtns,#dlg #fEqBtns,#dlg #fDetBtns,#dlg #fJugBtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}
+#dlg #fCatBtns .catbtn,#dlg #fEqBtns .optbtn,#dlg #fDetBtns .optbtn,#dlg #fJugBtns .optbtn{min-height:30px;padding:3px 20px 3px 8px;font-size:12.5px;font-weight:700;line-height:1.1;display:flex;align-items:center;justify-content:center;text-align:center;border-width:2px;border-radius:2px}
 #dlg #fCatBtns>.catbtn:last-child:nth-child(odd),#dlg #fDetBtns>.optbtn:last-child:nth-child(odd),#dlg #fJugBtns>.optbtn:last-child:nth-child(odd){grid-column:1/-1}
 #dlg #fDetBtns>.optbtn.nodet{grid-column:1/-1}
 #dlg #fEqBtns .optbtn[data-eq]:not(.active){background:var(--panel);border-color:var(--line);color:var(--ink)}
+/* botonera compacta: menos alto en todos los tamaños (también móvil e inmersivo) */
+#dlg #fCatBtns .catbtn,#dlg #fEqBtns .optbtn,#dlg #fDetBtns .optbtn,#dlg #fJugBtns .optbtn,html.acfc-imm #dlg #fCatBtns .catbtn,html.acfc-imm #dlg #fEqBtns .optbtn,html.acfc-imm #dlg #fDetBtns .optbtn,html.acfc-imm #dlg #fJugBtns .optbtn{min-height:30px;padding:3px 20px 3px 8px;font-size:12.5px;line-height:1.1}
+#dlg #fCatBtns .catbtn.add,#dlg #fDetBtns .optbtn.add,#dlg #fJugBtns .optbtn.add{padding-right:8px}
+#dlg #fDetBtns .optbtn.grpHead:not(.active){border-bottom-width:3px;letter-spacing:.3px;font-size:11.5px}
+#dlg #fCatBtns .catbtn .btnE,#dlg #fCatBtns .catbtn .btnX,#dlg #fDetBtns .optbtn .btnE,#dlg #fDetBtns .optbtn .btnX,#dlg #fJugBtns .optbtn .btnE,#dlg #fJugBtns .optbtn .btnX{transform:scale(.8)}
+#dlg .row,#dlg #fCatBtns,#dlg #fEqBtns,#dlg #fDetBtns,#dlg #fJugBtns{row-gap:3px}
+dialog#dlg h2{font-size:16px}
+dialog#dlg label{font-size:12px;margin:0}
+dialog#dlg form{gap:4px}
+dialog#dlg .btn{padding:3px 8px;font-size:12px;min-height:0}
+dialog#dlg input,dialog#dlg select{padding:4px 6px;font-size:13px}
 /* botón Instalar app */
 #btnInstalar[hidden]{display:none!important}
 header #btnInstalar{align-self:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
@@ -1649,23 +1662,23 @@ html header .tab.tabHome{margin-right:10px}
 html header .hdrOpt{display:none!important}
 /* Limpiar y Ocultar/Mostrar: mismo fondo, borde y texto en toda la herramienta */
 html #fltClear,html #pintClear,html #edClearAdded,html #delAllEv,
-html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
+html #liveSecToggle,html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
 html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edEvToggle,html #edExpToggle{
   background:var(--panel);border:1px solid var(--line);color:var(--ink);text-decoration:none;filter:none;
   font-size:12px;font-weight:600;padding:5px 12px;min-height:0;letter-spacing:.02em;text-transform:none}
 html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover,html #delAllEv:hover,
-html #regSrcToggle:hover,html #evHideToggle:hover,html #ajToggle:hover,html #fltToggle:hover,html #plListToggle:hover,html #pintToggle:hover,html #pintNumsToggle:hover,html #pintStyleToggle:hover,
+html #liveSecToggle:hover,html #regSrcToggle:hover,html #evHideToggle:hover,html #ajToggle:hover,html #fltToggle:hover,html #plListToggle:hover,html #pintToggle:hover,html #pintNumsToggle:hover,html #pintStyleToggle:hover,
 html #expOptsToggle:hover,html #pbToggle:hover,html #edCtlToggle:hover,html #edSrcToggle:hover,html #edEvToggle:hover,html #edExpToggle:hover{
   background:var(--bg);border-color:var(--red);color:var(--red);text-decoration:none;filter:none}
 /* Para verlos rápido: Ocultar/Mostrar = fondo azul, Limpiar = fondo rojo */
-html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
+html #liveSecToggle,html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
 html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edEvToggle,html #edExpToggle{
   background:#1F6FD1;border-color:#1F6FD1;color:#fff}
 html #fltClear,html #pintClear,html #edClearAdded{background:var(--red);border-color:var(--red);color:#fff}
-html #regSrcToggle:hover,html #evHideToggle:hover,html #ajToggle:hover,html #fltToggle:hover,html #plListToggle:hover,html #pintToggle:hover,html #pintNumsToggle:hover,html #pintStyleToggle:hover,
+html #liveSecToggle:hover,html #regSrcToggle:hover,html #evHideToggle:hover,html #ajToggle:hover,html #fltToggle:hover,html #plListToggle:hover,html #pintToggle:hover,html #pintNumsToggle:hover,html #pintStyleToggle:hover,
 html #expOptsToggle:hover,html #pbToggle:hover,html #edCtlToggle:hover,html #edSrcToggle:hover,html #edEvToggle:hover,html #edExpToggle:hover,
 html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{filter:brightness(.88);color:#fff}
-html #regSrcToggle:hover,html #evHideToggle:hover,html #ajToggle:hover,html #fltToggle:hover,html #plListToggle:hover,html #pintToggle:hover,html #pintNumsToggle:hover,html #pintStyleToggle:hover,
+html #liveSecToggle:hover,html #regSrcToggle:hover,html #evHideToggle:hover,html #ajToggle:hover,html #fltToggle:hover,html #plListToggle:hover,html #pintToggle:hover,html #pintNumsToggle:hover,html #pintStyleToggle:hover,
 html #expOptsToggle:hover,html #pbToggle:hover,html #edCtlToggle:hover,html #edSrcToggle:hover,html #edEvToggle:hover,html #edExpToggle:hover{background:#1F6FD1;border-color:#1F6FD1}
 /* Ocultar: azul; Mostrar: azul claro */
 html button.acfcTgl[data-tgl="ocultar"],html button.acfcTgl[data-tgl="ocultar"]:hover{background:#1F6FD1;border-color:#1F6FD1;color:#fff}
@@ -1677,7 +1690,7 @@ html button.acfcTgl[data-tgl="ocultar"],html button.acfcTgl[data-tgl="ocultar"]:
 html button.acfcTgl[data-tgl="mostrar"],html button.acfcTgl[data-tgl="mostrar"]:hover,html button.acfcTgl[data-tgl="mostrar"]:focus{background:#6FB1F5!important;border-color:#6FB1F5!important;color:#0B2545!important}
 /* Tamaño y formato idénticos en todos los Mostrar/Ocultar (cualquier contexto: aside, diálogo, móvil, inmersivo) */
 html button.acfcTgl,html #dlgMinToggle,
-html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
+html #liveSecToggle,html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
 html #pintToggleEd,html #pintNumsToggleEd,html #pintStyleToggleEd,
 html #pintToggleLv,html #pintNumsToggleLv,html #pintStyleToggleLv,
 html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edEvToggle,html #edExpToggle{
@@ -1723,6 +1736,24 @@ dialog#dlgBot #botCats .catbtn.active{opacity:1;border-color:var(--red);box-shad
 dialog#dlgBot #botCats>.catbtn:last-child:nth-child(odd),dialog#dlgBot #botDets>.optbtn:last-child:nth-child(odd),dialog#dlgBot #botJugs>.optbtn:last-child:nth-child(odd){grid-column:1/-1}
 dialog#dlgBot #botDets>.optbtn.nodet{grid-column:1/-1}
 dialog#dlgBot .botEmpty{grid-column:1/-1}
+/* Botonera compacta: botones y textos más pequeños, más columnas y menos separación */
+dialog#dlgBot{padding:12px 14px}
+dialog#dlgBot .botWrap{gap:8px}
+dialog#dlgBot .botSec{padding-top:6px;gap:5px}
+dialog#dlgBot .botSec h3{font-size:13px}
+dialog#dlgBot h2#botTitle{font-size:18px}
+dialog#dlgBot .botHelp{font-size:11px;line-height:1.3}
+dialog#dlgBot .btn{padding:5px 9px;font-size:12px;min-height:0}
+dialog#dlgBot input,dialog#dlgBot select{padding:5px 8px;font-size:12px}
+dialog#dlgBot #botSel{padding:5px 8px;font-size:12px}
+dialog#dlgBot #botCats,dialog#dlgBot #botDets,dialog#dlgBot #botJugs{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:4px}
+dialog#dlgBot #botCats .catbtn,dialog#dlgBot #botDets .optbtn,dialog#dlgBot #botJugs .optbtn{min-height:32px;padding:3px 18px 3px 6px;font-size:12px;font-weight:600;border-width:1px}
+dialog#dlgBot #botCats .catbtn.active{box-shadow:0 0 0 1px var(--panel),0 0 0 2px var(--red)}
+dialog#dlgBot #botCats>.catbtn:last-child:nth-child(odd),dialog#dlgBot #botDets>.optbtn:last-child:nth-child(odd),dialog#dlgBot #botJugs>.optbtn:last-child:nth-child(odd){grid-column:auto}
+dialog#dlgBot .botTRow{margin-top:2px;gap:6px}
+dialog#dlgBot .botTRow input.botTNum{width:56px}
+dialog#dlgBot .botColor{width:34px!important;padding:1px!important}
+dialog#dlgBot .botChk{font-size:12px}
 /* Botones de añadir: fondo azul (--add-bg) en toda la herramienta */
 :root{--add-bg:#1F6FD1;--add-bg-h:#1858a8}
 #edAddSel,#edFsAdd,#edAddFile,#regAddFile,#evBotAdd,#liveJugAdd,#pintRosterAdd,#liveToVideo,#newCatAdd,#newDetAdd,#newJugAdd,#botCatAdd,#botDetAdd,#botJugAdd,#plNewAdd,label[for="fileAdd"],label[for="fusFile"],.optbtn.add{background:var(--add-bg)!important;border:1px solid var(--add-bg)!important;color:#fff!important;filter:none!important}
@@ -2399,8 +2430,8 @@ dialog#dlgBot .botEmpty{grid-column:1/-1}
   </nav>
   <div class="liveWrap">
     <div class="liveMain">
-      <div class="livePanel">
-        <h2>Registro sin vídeo</h2>
+      <div class="livePanel" id="liveTop">
+        <h2>Registro sin vídeo <button type="button" class="btn acfcLink" id="liveSecToggle" style="margin-left:auto" aria-controls="liveTop" title="Ocultar/mostrar toda esta sección">Ocultar</button></h2>
         <p class="liveHelp">Registra el partido en directo, desde el móvil o el ordenador. Después añade el vídeo y sincroniza el inicio y el final de cada parte para colocar los eventos en su sitio.</p>
         <div class="liveCfg" id="liveCfg">
           <span class="liveLbl">Competición</span>
@@ -4334,10 +4365,10 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     $("botDetErr").textContent=$("botJugErr").textContent=""; botSync(); renderBot(); refresh();
   };
   $("botClose").onclick=$("botDone").onclick=()=>dlgBot.close();
-  // Tamaño de la ventana de la botonera: se cambia arrastrando la esquina inferior derecha y se recuerda en este navegador
+  // Ancho de la ventana de la botonera: se cambia arrastrando la esquina inferior derecha y se recuerda en este navegador. El alto se ajusta solo al contenido
   const BOT_TAM_KEY="acfcBotTamano";
-  try{ const t=JSON.parse(localStorage.getItem(BOT_TAM_KEY)||"null"); if(t&&t.w&&t.h){ dlgBot.style.width=t.w+"px"; dlgBot.style.height=t.h+"px"; } }catch(_){}
-  if(window.ResizeObserver) new ResizeObserver(()=>{ if(!dlgBot.open) return; try{ localStorage.setItem(BOT_TAM_KEY,JSON.stringify({w:Math.round(dlgBot.offsetWidth),h:Math.round(dlgBot.offsetHeight)})); }catch(_){} }).observe(dlgBot);
+  try{ const t=JSON.parse(localStorage.getItem(BOT_TAM_KEY)||"null"); if(t&&t.w){ dlgBot.style.width=t.w+"px"; } }catch(_){}
+  if(window.ResizeObserver) new ResizeObserver(()=>{ if(!dlgBot.open) return; try{ localStorage.setItem(BOT_TAM_KEY,JSON.stringify({w:Math.round(dlgBot.offsetWidth)})); }catch(_){} }).observe(dlgBot);
   $("botCatCancel").onclick=botCancelEdit;
   $("botCatAdd").onclick=botAddCat; $("botDetAdd").onclick=botAddDet; $("botJugAdd").onclick=botAddJug;
   [["botCatName",botAddCat],["botDetName",botAddDet],["botJugName",botAddJug]].forEach(([id,fn])=>
@@ -4734,11 +4765,12 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   simpleFold("ajToggle","ajHidden",h=>{ $("ajBody").style.display=h?"none":"contents"; },true);
   simpleFold("fltToggle","fltHidden",h=>{ $("fltBody").style.display=h?"none":""; },true);
   simpleFold("dlgMinToggle","dlgMinHidden",h=>{ $("dlgMinBody").style.display=h?"none":""; },true);
+  simpleFold("liveSecToggle","liveSecHidden",h=>{ $("liveTop").classList.toggle("liveFold",h); });
   simpleFold("evHideToggle","evHideHidden",h=>{ $("list").style.display=h?"none":""; });
   simpleFold("catTlToggle","catTlHidden",h=>{ document.querySelector(".catTimelineWrap").style.display=h?"none":""; $("clock").parentNode.style.display=h?"none":""; });
   simpleFold("evBotToggle","evBotHidden",h=>{ $("evBotList").style.display=h?"none":""; $("evBotNew").style.display=h?"none":""; });
   // Tono azul según estado: Ocultar (claro) / Mostrar (oscuro)
-  ["evBotToggle","catTlToggle","regSrcToggle","evHideToggle","ajToggle","fltToggle","dlgMinToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
+  ["liveSecToggle","evBotToggle","catTlToggle","regSrcToggle","evHideToggle","ajToggle","fltToggle","dlgMinToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
     const el=$(id); if(!el) return;
     el.classList.add("acfcTgl");
     const upd=()=>{ el.dataset.tgl=/mostrar/i.test(el.textContent)?"mostrar":"ocultar"; };
@@ -4989,7 +5021,6 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     if(typeof claude==="undefined"){ note("Vídeo abierto solo en esta sesión."); return; }
     try{
       const assets=await claude.use("assets"); if(!assets) return;
-      if(f.size>20*1024*1024){ note("Vídeo abierto solo en esta sesión: pesa más de 20 MB y no se puede guardar en el visor."); return; }
       note("Guardando el vídeo en el visor…");
       const r=await assets.upload(f);
       const db=await claude.use("db"); if(db) await db.doc("config/video").set({id:r.id,name:f.name.slice(0,80)});
@@ -6487,7 +6518,6 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   async function tryFallback(){
     const f=pendingFile; V.dataset.fallback=""; if(!f) return;
     const s=sources[curSrc];
-    if(f.size>20*1024*1024){ msg("El navegador no deja abrir este archivo directamente y pesa más de 20 MB. Comprímelo por debajo de 20 MB y vuelve a subirlo."); return; }
     try{ const assets=await claude.use("assets"); if(!assets) throw {code:"not_granted"};
       msg("Subiendo el vídeo al editor…"); const r=await assets.upload(f);
       if(s){ if(s.url&&s.url.startsWith("blob:")) URL.revokeObjectURL(s.url); s.url=r.url; }
@@ -6756,6 +6786,13 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
     const m=s&&s.marks; if(!m||m.p1==null) return "";
     return (m.p2!=null&&t>=m.p2)?"2ª parte":"1ª parte";
   }
+  // minuto de partido de un instante de la fuente s (el mismo que muestran los puntos A/B); sin marcas, tiempo de vídeo
+  function srcClock(s,t){
+    const m=(s&&sources[curSrc]===s)?marks:(s&&s.marks); if(!m||m.p1==null) return fmtHM(t);
+    if(t<m.p1) return "0:00";
+    if(m.p2==null||t<m.p2) return fmtHM(t-m.p1);
+    return fmtHM(2700+(t-m.p2));
+  }
   const EV_NAMES=["Gol a favor","Gol en contra","Ocasión a favor","Ocasión en contra","Salida de balón","Presión","Cambio de orientación","Duelo"];
   let evCustom=[]; try{ evCustom=(JSON.parse(localStorage.getItem("acfcEvCustom")||"[]")||[]).filter(n=>typeof n==="string"&&n&&EV_NAMES.indexOf(n)<0).slice(0,50); }catch(e){}
   // nombres fijos que el usuario ha quitado del selector
@@ -6901,7 +6938,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
       const ck=document.createElement("input"); ck.type="checkbox"; ck.checked=selAdded.has(it); ck.title="Marcar para descargar"; ck.setAttribute("aria-label","Seleccionar el tramo "+(idx+1)+" para descargar");
       ck.onclick=ev=>ev.stopPropagation(); ck.onkeydown=k=>k.stopPropagation();
       ck.onchange=()=>{ if(ck.checked) selAdded.add(it); else selAdded.delete(it); renderSel(); };
-      const tx=document.createElement("div"); const r=document.createElement("div"); r.className="rng"; r.textContent=fmt(it.s)+" – "+fmt(it.e);
+      const tx=document.createElement("div"); const r=document.createElement("div"); r.className="rng"; r.textContent=srcClock(s,it.s)+" – "+srcClock(s,it.e); r.title="Minuto de partido · tiempo de vídeo "+fmt(it.s)+" – "+fmt(it.e);
       const sm=document.createElement("small");
       const half=halfLabel(s,it.s);
       sm.textContent=(sources.length>1?(s?s.name:"?")+" · ":"")+(half?half+" · ":"")+fmt(it.e-it.s);
