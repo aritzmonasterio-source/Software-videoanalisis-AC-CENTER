@@ -1770,10 +1770,10 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 @media (min-width:1251px){
   html:not(.acfc-imm) #tabVisor main>aside,html:not(.acfc-imm) #tabEditor:not(:fullscreen) .edgrid>aside{position:sticky;top:96px;align-self:start;max-height:calc(100vh - 108px);min-height:420px}
 }
-/* Móvil: la cabecera solo muestra Home (icono de casa), Editor básico, Registro con vídeo y Registro sin vídeo, todos con icono */
-/* (Conversión y Fusiona se ocultan en móvil) */
+/* Móvil: la cabecera solo muestra Home (icono de casa), Editor básico y Registro sin vídeo, todos con icono */
+/* (Registro con vídeo, Conversión y Fusiona se ocultan en móvil) */
 @media (max-width:640px){
-  header .tab#tabBtnConv,header .tab#tabBtnFus{display:none!important}
+  header .tab#tabBtnConv,header .tab#tabBtnFus,header .tab#tabBtnVisor{display:none!important}
   html header .tab.tabHome,html header .tab.tabHome:hover{font-size:0!important;margin:0!important;padding:0 12px!important}
   header .tab.tabHome::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11 12 3l9 8'/%3E%3Cpath d='M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11 12 3l9 8'/%3E%3Cpath d='M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E") center/contain no-repeat}
   header .tab#tabBtnLive{display:flex!important}
@@ -6589,7 +6589,7 @@ window.renderHalfBands = function(b1,b2,mk,d,compact){
   // Enlaces desde la portada: index.html#editor | #visor | #live | #conv | #fus
   const tabHash={editor:"tabBtnEditor",visor:"tabBtnVisor",live:"tabBtnLive",conv:"tabBtnConv",fus:"tabBtnFus"};
   const [hashTab,...hashRest]=location.hash.slice(1).split("&");
-  if(tabHash[hashTab]) $(tabHash[hashTab]).click();
+  if(tabHash[hashTab]&&!(hashTab==="visor"&&matchMedia("(max-width:640px)").matches)) $(tabHash[hashTab]).click(); // en móvil no hay registro con vídeo
   // Botones de «Proyectos y botoneras» de la portada: index.html#visor&accion=guardar-proyecto | cargar-proyecto | guardar-botonera | cargar-botonera | botonera
   {
     const accionPortada=(hashRest.find(p=>p.startsWith("accion="))||"").slice(7);
