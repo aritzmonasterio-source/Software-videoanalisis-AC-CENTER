@@ -102,8 +102,12 @@
   footer{padding:18px 16px;text-align:center;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
   footer a{color:var(--muted)}
 
+  .soloMovil{display:none}
   @media (max-width:640px){
     main{padding:28px 16px 24px}
+    .soloMovil{display:inline}
+    li.soloMovil{display:list-item}
+    .card.noMovil{display:none} /* en móvil solo Editor básico y Registro sin vídeo */
     .hero p{font-size:14px;line-height:1.45}
     .hdr-in{padding:16px}
     .hdr img{height:44px}
@@ -138,10 +142,11 @@
       <li><b>No requiere instalación:</b> funciona a través de la web.</li>
       <li><b>Compatible con ordenador, Android e iOS.</b></li>
       <li><b>Tus datos son tuyos:</b> tanto los vídeos como los datos introducidos en el software se alojan en el dispositivo del usuario.</li>
+      <li class="soloMovil"><b>Más herramientas en ordenador:</b> en la versión de ordenador podrás utilizar más herramientas.</li>
     </ul>
   </section>
 
-  <h2 class="sec-title">Herramientas</h2>
+  <h2 class="sec-title">Herramientas<span class="soloMovil"> para móvil</span></h2>
   <nav class="grid" aria-label="Herramientas de videoanálisis">
 
     <div class="card">
@@ -154,7 +159,7 @@
       <a class="tut" href="index.html#tut-editor">▶ Tutorial</a>
     </div>
 
-    <div class="card">
+    <div class="card noMovil">
       <a class="card-link" href="index.html#visor">
         <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="13" height="12" rx="1.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/><circle cx="9" cy="12" r="1.6" fill="currentColor"/></svg></span>
         <h2>Registro con vídeo</h2>
@@ -174,7 +179,7 @@
       <a class="tut" href="index.html#tut-live">▶ Tutorial</a>
     </div>
 
-    <div class="card">
+    <div class="card noMovil">
       <a class="card-link" href="index.html#conv">
         <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5"/><path d="M19.5 3.5v4h-4"/><path d="M9 10.5l2 2-2 2"/></svg></span>
         <h2>Conversión de vídeos</h2>
@@ -184,7 +189,7 @@
       <a class="tut" href="index.html#tut-conv">▶ Tutorial</a>
     </div>
 
-    <div class="card">
+    <div class="card noMovil">
       <a class="card-link" href="index.html#fus">
         <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="8" height="6" rx="1"/><rect x="2.5" y="13" width="8" height="6" rx="1"/><path d="M11 8h3M11 16h3M14 8v8"/><rect x="14" y="9" width="7.5" height="6" rx="1"/></svg></span>
         <h2>Fusionar vídeos</h2>
